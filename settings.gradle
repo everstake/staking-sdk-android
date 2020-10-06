@@ -1,0 +1,4 @@
+include ':crypto-helper'
+include ':staking-sdk'
+include ':sample'
+rootProject.name = "Everstake Staking SDK"
