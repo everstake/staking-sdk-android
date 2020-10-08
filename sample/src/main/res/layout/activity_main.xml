@@ -3,12 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context="com.everstake.staking.sample.MainActivity">
 
-    <TextView
+    <Button
+        android:id="@+id/btnStaking"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Hello World!" />
+        android:text="Open Staking" />
 
 </FrameLayout>

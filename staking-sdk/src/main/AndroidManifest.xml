@@ -1,5 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.everstake.staking.sdk">
 
-    /
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application>
+        <activity
+            android:name=".ui.coin.list.CoinListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/EverstakeTheme" />
+    </application>
 </manifest>
