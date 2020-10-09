@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.everstake.staking.sdk.R
 import com.everstake.staking.sdk.data.model.ui.CoinListModel
 import com.everstake.staking.sdk.ui.base.BaseActivity
+import com.everstake.staking.sdk.ui.base.list.RecyclerClickListener
 import com.everstake.staking.sdk.ui.base.list.decorator.DecoratorData
 import com.everstake.staking.sdk.ui.base.list.decorator.DividerDecorator
 import com.everstake.staking.sdk.ui.base.list.decorator.TextDividerDecorator
@@ -32,12 +33,19 @@ internal class CoinListActivity : BaseActivity<CoinListViewModel, CoinListNaviga
         DividerDecorator(marginLeft = dpToPx(72))
     }
     private val textDecorator: TextDividerDecorator by lazy { TextDividerDecorator(this) }
+    private val clickListener: RecyclerClickListener<CoinListModel> =
+        object : RecyclerClickListener<CoinListModel>() {
+            override fun onClick(pos: Int, model: CoinListModel?) {
+                Toast.makeText(this@CoinListActivity, "Not Implemented", Toast.LENGTH_SHORT).show()
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setSupportActionBar(toolbar)
         coinListRecycler.layoutManager = LinearLayoutManager(this)
         coinListRecycler.adapter = adapter
+        adapter.setClickListener(clickListener)
         coinListRecycler.addItemDecoration(dividerDecorator)
         coinListRecycler.addItemDecoration(textDecorator)
         // TODO remove mocks
