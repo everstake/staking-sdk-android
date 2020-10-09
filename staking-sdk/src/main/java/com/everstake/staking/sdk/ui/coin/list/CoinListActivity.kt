@@ -11,6 +11,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.everstake.staking.sdk.R
 import com.everstake.staking.sdk.data.model.ui.CoinListModel
 import com.everstake.staking.sdk.ui.base.BaseActivity
+import com.everstake.staking.sdk.ui.base.list.decorator.DecoratorData
+import com.everstake.staking.sdk.ui.base.list.decorator.DividerDecorator
+import com.everstake.staking.sdk.ui.base.list.decorator.TextDividerDecorator
+import com.everstake.staking.sdk.util.bindString
+import com.everstake.staking.sdk.util.dpToPx
 import kotlinx.android.synthetic.main.activity_coin_list.*
 
 /**
@@ -23,12 +28,25 @@ internal class CoinListActivity : BaseActivity<CoinListViewModel, CoinListNaviga
     }
 
     private val adapter: CoinListAdapter by lazy { CoinListAdapter() }
+    private val dividerDecorator: DividerDecorator by lazy {
+        DividerDecorator(marginLeft = dpToPx(72))
+    }
+    private val textDecorator: TextDividerDecorator by lazy { TextDividerDecorator(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setSupportActionBar(toolbar)
         coinListRecycler.layoutManager = LinearLayoutManager(this)
         coinListRecycler.adapter = adapter
+        coinListRecycler.addItemDecoration(dividerDecorator)
+        coinListRecycler.addItemDecoration(textDecorator)
+        // TODO remove mocks
+        textDecorator.setData(
+            listOf(
+                DecoratorData(0, bindString(this, R.string.coin_list_staked)),
+                DecoratorData(1, bindString(this, R.string.coin_list_ready_to_stake))
+            )
+        )
         adapter.setNewData(
             listOf(
                 CoinListModel(
@@ -71,6 +89,12 @@ internal class CoinListActivity : BaseActivity<CoinListViewModel, CoinListNaviga
             true
         }
         else -> super.onOptionsItemSelected(item)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        coinListRecycler.removeItemDecoration(dividerDecorator)
+        coinListRecycler.removeItemDecoration(textDecorator)
     }
 
     override fun provideLayoutRes(): Int = R.layout.activity_coin_list

@@ -5,6 +5,7 @@ import com.bumptech.glide.Glide
 import com.everstake.staking.sdk.R
 import com.everstake.staking.sdk.data.model.ui.CoinListModel
 import com.everstake.staking.sdk.ui.base.list.BaseViewHolder
+import com.everstake.staking.sdk.util.bindString
 import kotlinx.android.synthetic.main.item_stake_coin.view.*
 
 /**
@@ -28,7 +29,7 @@ internal class CoinListViewHolder(itemView: View) : BaseViewHolder<CoinListModel
         itemView.stakeCoinTitle.text = name
 
         val subtitle: String = if (isActive) apr
-        else itemView.context.getString(R.string.coin_list_coming_soon)
+        else bindString(itemView.context, R.string.coin_list_coming_soon)
         itemView.stakeCoinSubtitle.text = subtitle
 
         itemView.stakeCoinAmount.visibility =
