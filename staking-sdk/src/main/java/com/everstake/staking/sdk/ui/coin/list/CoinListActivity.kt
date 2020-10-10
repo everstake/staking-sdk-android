@@ -7,9 +7,11 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.everstake.staking.sdk.R
 import com.everstake.staking.sdk.data.model.ui.CoinListModel
+import com.everstake.staking.sdk.data.model.ui.SectionData
 import com.everstake.staking.sdk.ui.base.BaseActivity
 import com.everstake.staking.sdk.ui.base.list.RecyclerClickListener
 import com.everstake.staking.sdk.ui.base.list.decorator.DecoratorData
@@ -18,6 +20,9 @@ import com.everstake.staking.sdk.ui.base.list.decorator.TextDividerDecorator
 import com.everstake.staking.sdk.util.bindString
 import com.everstake.staking.sdk.util.dpToPx
 import kotlinx.android.synthetic.main.activity_coin_list.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * created by Alex Ivanov on 07.10.2020.
@@ -48,41 +53,10 @@ internal class CoinListActivity : BaseActivity<CoinListViewModel, CoinListNaviga
         adapter.setClickListener(clickListener)
         coinListRecycler.addItemDecoration(dividerDecorator)
         coinListRecycler.addItemDecoration(textDecorator)
-        // TODO remove mocks
-        textDecorator.setData(
-            listOf(
-                DecoratorData(0, bindString(this, R.string.coin_list_staked)),
-                DecoratorData(1, bindString(this, R.string.coin_list_ready_to_stake))
-            )
-        )
-        adapter.setNewData(
-            listOf(
-                CoinListModel(
-                    "0",
-                    "Tezos",
-                    "https://s2.coinmarketcap.com/static/img/coins/64x64/2011.png",
-                    "10%",
-                    true,
-                    "1000 XTZ"
-                ),
-                CoinListModel(
-                    "1",
-                    "Cosmos",
-                    "https://s2.coinmarketcap.com/static/img/coins/64x64/3794.png",
-                    "20%",
-                    true,
-                    null
-                ),
-                CoinListModel(
-                    "2",
-                    "BAND",
-                    "https://s2.coinmarketcap.com/static/img/coins/64x64/4679.png",
-                    "0%",
-                    false,
-                    null
-                )
-            )
-        )
+
+        viewModel.sectionData.observe(this) {
+            updateList(it)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -111,4 +85,22 @@ internal class CoinListActivity : BaseActivity<CoinListViewModel, CoinListNaviga
         ViewModelProvider(this).get(CoinListViewModel::class.java)
 
     override fun provideNavigator(): CoinListNavigator = object : CoinListNavigator {}
+
+    private fun updateList(list: List<SectionData<CoinListModel>>) {
+        lifecycleScope.launch {
+            var offset = 0
+            val decoratorData: List<DecoratorData> =
+                list.map { sectionData: SectionData<CoinListModel> ->
+                    DecoratorData(
+                        offset,
+                        bindString(this@CoinListActivity, sectionData.sectionTitleRes)
+                    ).also { offset += sectionData.sectionData.size }
+                }
+            adapter.applyChanges(list.flatMap { it.sectionData })
+            withContext(Dispatchers.Main) {
+                textDecorator.setData(decoratorData)
+                coinListRecycler.invalidateItemDecorations()
+            }
+        }
+    }
 }

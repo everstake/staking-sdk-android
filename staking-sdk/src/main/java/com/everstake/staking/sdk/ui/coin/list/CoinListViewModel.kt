@@ -1,10 +1,12 @@
 package com.everstake.staking.sdk.ui.coin.list
 
-import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.everstake.staking.sdk.data.repository.CoinListRepository
+import com.everstake.staking.sdk.data.model.ui.CoinListModel
+import com.everstake.staking.sdk.data.model.ui.SectionData
+import com.everstake.staking.sdk.data.usecase.GetCoinListUseCase
 import com.everstake.staking.sdk.ui.base.BaseViewModel
-import com.google.gson.Gson
 import kotlinx.coroutines.launch
 
 /**
@@ -12,10 +14,14 @@ import kotlinx.coroutines.launch
  */
 internal class CoinListViewModel : BaseViewModel<CoinListNavigator>() {
 
+    private val coinListUseCase: GetCoinListUseCase by lazy { GetCoinListUseCase() }
+
+    val sectionData: LiveData<List<SectionData<CoinListModel>>> =
+        coinListUseCase.getCoinListUIFlow().asLiveData()
+
     init {
         viewModelScope.launch {
-            val result = CoinListRepository.instance.loadCoinList()
-            Log.d("<<SS", Gson().toJson(result))
+            coinListUseCase.updateData()
         }
     }
 }

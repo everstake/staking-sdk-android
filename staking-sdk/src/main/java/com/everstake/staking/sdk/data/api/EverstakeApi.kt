@@ -16,5 +16,5 @@ internal interface EverstakeApi {
     suspend fun getSupportedCoins(): List<GetCoinsResponseModel>
 
     @PUT("/stake")
-    suspend fun getStakedInfo(@Body body: PutStakeBodyModel): List<PutStakeResponseModel>
+    suspend fun getStakedInfo(@Body body: List<PutStakeBodyModel>): List<PutStakeResponseModel>
 }

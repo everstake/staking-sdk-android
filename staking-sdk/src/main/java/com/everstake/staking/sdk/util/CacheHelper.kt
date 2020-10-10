@@ -7,10 +7,9 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onStart
 import java.io.*
-import java.lang.IllegalStateException
 import java.util.*
-import java.util.concurrent.Callable
 
 /**
  * created by Alex Ivanov on 07.10.2020.
@@ -28,7 +27,11 @@ internal enum class CacheType {
 internal data class CacheData(
     val dataJson: String,
     val serializationTimestamp: Long = System.currentTimeMillis()
-)
+) {
+    companion object {
+        val empty: CacheData = CacheData("", 0)
+    }
+}
 
 private val gson: Gson = Gson()
 
@@ -100,8 +103,12 @@ internal fun readCacheAsFlow(
     val channel: Channel<Unit> = updateChannels[cacheType]
         ?: throw IllegalStateException("Missing Channel for type: $cacheType")
 
+    emit(readCacheFile(context, cacheType) ?: CacheData.empty)
     for (signal in channel) {
-        val result: CacheData = readCacheFile(context, cacheType) ?: continue
+        val result: CacheData = readCacheFile(context, cacheType) ?: CacheData.empty
         emit(result)
     }
+}.onStart {
+    val result: CacheData = readCacheFile(context, cacheType) ?: CacheData.empty
+    emit(result)
 }
