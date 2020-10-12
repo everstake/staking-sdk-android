@@ -49,6 +49,6 @@ internal class CoinListRepository private constructor() {
     fun getCoinListFlow(): Flow<List<GetCoinsResponseModel>> = readCacheAsFlow(
         EverstakeStaking.app, CacheType.COIN
     ).distinctUntilChanged().map { cachedData: CacheData ->
-        Gson().parseList(cachedData.dataJson)
+        Gson().parseWithType(cachedData.dataJson)
     }
 }

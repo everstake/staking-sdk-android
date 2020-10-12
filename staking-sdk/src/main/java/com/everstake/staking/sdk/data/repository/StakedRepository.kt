@@ -49,6 +49,6 @@ internal class StakedRepository private constructor() {
     fun getStakedFlow(): Flow<List<PutStakeResponseModel>> = readCacheAsFlow(
         EverstakeStaking.app, CacheType.STAKE
     ).distinctUntilChanged().map { cachedData: CacheData ->
-        Gson().parseList(cachedData.dataJson)
+        Gson().parseWithType(cachedData.dataJson)
     }
 }

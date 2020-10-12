@@ -8,7 +8,7 @@ import java.lang.reflect.Type
 /**
  * created by Alex Ivanov on 10.10.2020.
  */
-internal inline fun <reified T> Gson.parseList(json: String): T {
+internal inline fun <reified T> Gson.parseWithType(json: String): T {
     val listType: Type = object : TypeToken<T>() {}.type
     return fromJson(json, listType)
 }
