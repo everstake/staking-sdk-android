@@ -9,11 +9,13 @@ import com.everstake.staking.sdk.data.model.ui.SectionData
 import com.everstake.staking.sdk.data.repository.CoinListRepository
 import com.everstake.staking.sdk.data.repository.StakedRepository
 import com.everstake.staking.sdk.util.bindString
+import com.everstake.staking.sdk.util.formatAmount
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 
 /**
@@ -46,14 +48,18 @@ internal class GetCoinListUseCase(
                     R.string.common_apr_format,
                     apiModel.apr
                 )
+                val stakedAmount: String? =
+                    stakedList.find { it.coinId == apiModel.id }
+                        ?.takeIf { it.amount > BigDecimal.ZERO }
+                        ?.let { formatAmount(it.amount, apiModel.precision, apiModel.symbol) }
+
                 CoinListModel(
                     id = apiModel.id,
                     name = apiModel.name,
                     iconUrl = apiModel.iconUrl,
                     apr = apr,
                     isActive = apiModel.isActive,
-                    // TODO FIX MOCS
-                    stakedAmount = if (apiModel.id == "0") "1000 XTZ" else null
+                    stakedAmount = stakedAmount
                 )
             }
         }.map { coinList: List<CoinListModel> ->
