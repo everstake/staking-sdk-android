@@ -36,4 +36,9 @@ internal class CoinListViewHolder(itemView: View) : BaseViewHolder<CoinListModel
             if (stakedAmount.isNullOrBlank()) View.GONE else View.VISIBLE
         itemView.stakeCoinAmount.text = stakedAmount
     }
+
+    override fun clearUp() {
+        super.clearUp()
+        Glide.with(itemView).clear(itemView.stakeCoinImage)
+    }
 }

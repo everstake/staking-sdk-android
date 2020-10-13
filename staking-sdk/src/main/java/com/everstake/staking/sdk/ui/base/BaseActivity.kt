@@ -24,7 +24,6 @@ internal abstract class BaseActivity<VM : BaseViewModel<N>, N : BaseNavigator> :
     }
 
     abstract fun provideLayoutRes(): Int
-
     abstract fun provideViewModel(): VM
     abstract fun provideNavigator(): N
 }

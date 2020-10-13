@@ -4,7 +4,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
 
-
 /**
  * created by Alex Ivanov on 10.10.2020.
  */

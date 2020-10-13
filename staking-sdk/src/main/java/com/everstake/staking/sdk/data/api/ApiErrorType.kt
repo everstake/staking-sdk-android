@@ -3,7 +3,7 @@ package com.everstake.staking.sdk.data.api
 /**
  * created by Alex Ivanov on 09.10.2020.
  */
-enum class ApiErrorType(private val httpCode: Int) {
+internal enum class ApiErrorType(private val httpCode: Int) {
     RequestTimeout(-2),
     NoInternet(-1),
     Unknown(0),

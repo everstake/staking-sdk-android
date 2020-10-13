@@ -10,7 +10,6 @@ import com.everstake.staking.sdk.R
 import com.everstake.staking.sdk.util.bindColor
 import com.everstake.staking.sdk.util.dpToPx
 
-
 /**
  * created by Alex Ivanov on 08.10.2020.
  */
@@ -35,7 +34,6 @@ internal class DividerDecorator(
                 drawable.setBounds(left, top, right, bottom)
                 drawable.draw(c)
             }
-
         }
     }
 

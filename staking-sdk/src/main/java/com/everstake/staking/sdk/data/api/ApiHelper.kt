@@ -25,7 +25,6 @@ private object ApiProvider {
     private fun <T : Any> provideAPIService(serviceClass: Class<T>, url: String): T {
         val clientBuilder = OkHttpClient.Builder()
 
-        //ADDING HEADERS
         if (BuildConfig.DEBUG) {
             val interceptor = HttpLoggingInterceptor()
             interceptor.level = HttpLoggingInterceptor.Level.BODY

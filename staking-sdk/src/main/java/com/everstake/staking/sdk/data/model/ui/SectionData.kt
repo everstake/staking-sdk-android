@@ -5,7 +5,7 @@ import androidx.annotation.StringRes
 /**
  * created by Alex Ivanov on 10.10.2020.
  */
-data class SectionData<T>(
+internal data class SectionData<T>(
     @StringRes val sectionTitleRes: Int,
     val sectionData: List<T>
 )

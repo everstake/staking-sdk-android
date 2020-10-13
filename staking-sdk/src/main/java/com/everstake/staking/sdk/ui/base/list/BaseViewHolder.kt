@@ -12,6 +12,7 @@ internal abstract class BaseViewHolder<M>(itemView: View) : RecyclerView.ViewHol
     protected var clickListener: RecyclerClickListener<M>? = null
 
     fun bind(model: M, clickListener: RecyclerClickListener<M>?) {
+        this.clearUp()
         this.clickListener = clickListener
         this.model = model
         bind(model)
@@ -22,5 +23,4 @@ internal abstract class BaseViewHolder<M>(itemView: View) : RecyclerView.ViewHol
     open fun clearUp() {
         clickListener = null
     }
-
 }

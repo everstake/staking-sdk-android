@@ -39,8 +39,8 @@ internal class GetCoinListUseCase(
 
     fun getCoinListUIFlow(): Flow<List<SectionData<CoinListModel>>> =
         coinListRepository.getCoinListFlow().combine(stakedRepository.getStakedFlow())
-        { coinList: List<GetCoinsResponseModel>, stakedList: List<PutStakeResponseModel> ->
-            coinList.sortedBy {
+        { coinList: List<GetCoinsResponseModel>?, stakedList: List<PutStakeResponseModel>? ->
+            (coinList ?: emptyList()).sortedBy {
                 it.order
             }.map { apiModel: GetCoinsResponseModel ->
                 val apr: String = bindString(
@@ -49,7 +49,7 @@ internal class GetCoinListUseCase(
                     apiModel.apr
                 )
                 val stakedAmount: String? =
-                    stakedList.find { it.coinId == apiModel.id }
+                    stakedList?.find { it.coinId == apiModel.id }
                         ?.takeIf { it.amount > BigDecimal.ZERO }
                         ?.let { formatAmount(it.amount, apiModel.precision, apiModel.symbol) }
 

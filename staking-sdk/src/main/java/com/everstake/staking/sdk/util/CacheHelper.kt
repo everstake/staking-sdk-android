@@ -14,7 +14,6 @@ import java.util.*
 /**
  * created by Alex Ivanov on 07.10.2020.
  */
-
 internal enum class CacheType {
     COIN,
     STAKE;

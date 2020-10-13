@@ -6,7 +6,7 @@ import java.math.BigInteger
 /**
  * created by Alex Ivanov on 09.10.2020.
  */
-data class GetCoinsResponseModel(
+internal data class GetCoinsResponseModel(
     val id: String,
     val name: String,
     val iconUrl: String,

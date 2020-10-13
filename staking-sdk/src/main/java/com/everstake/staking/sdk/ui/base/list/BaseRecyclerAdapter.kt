@@ -64,6 +64,4 @@ internal abstract class BaseRecyclerAdapter<M : DiffCompared> :
         super.onViewRecycled(holder)
         holder.clearUp()
     }
-
-
 }
