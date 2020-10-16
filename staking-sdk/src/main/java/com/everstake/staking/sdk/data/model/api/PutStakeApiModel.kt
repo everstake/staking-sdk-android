@@ -10,5 +10,6 @@ internal class PutStakeBodyModel(val id: String, val address: String)
 internal class PutStakeResponseModel(
     val coinId: String,
     val amount: BigDecimal,
-    val amountToClaim: BigDecimal?
+    val amountToClaim: BigDecimal?,
+    val validator: GetValidatorsApiResponse?
 )

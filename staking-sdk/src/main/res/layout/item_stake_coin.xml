@@ -4,10 +4,10 @@
     android:id="@+id/stakeCoinContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?selectableItemBackground"
     android:gravity="center_vertical"
     android:minHeight="72dp"
     android:orientation="horizontal"
-    android:background="?selectableItemBackground"
     android:padding="16dp">
 
     <ImageView
@@ -31,18 +31,15 @@
             android:layout_height="wrap_content"
             android:letterSpacing="0.01"
             android:lineSpacingExtra="5sp"
-            android:textColor="@color/textColorPrimary"
+            android:textColor="@color/everstakeTextColorPrimary"
             android:textSize="16sp"
             tools:text="Tezos" />
 
         <TextView
             android:id="@+id/stakeCoinSubtitle"
+            style="@style/EverstakeTheme.Info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:letterSpacing="0.02"
-            android:lineSpacingExtra="4sp"
-            android:textColor="@color/textColorSecondary"
-            android:textSize="14sp"
             tools:text="10%" />
 
     </LinearLayout>
@@ -53,7 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:letterSpacing="0.03"
-        android:textColor="@color/textColorPrimary"
+        android:textColor="@color/everstakeTextColorPrimary"
         android:textSize="14sp"
         tools:text="0.124 XTZ" />
 

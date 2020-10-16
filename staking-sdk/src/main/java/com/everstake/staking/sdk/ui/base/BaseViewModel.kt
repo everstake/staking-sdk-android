@@ -6,7 +6,7 @@ import java.lang.ref.WeakReference
 /**
  * created by Alex Ivanov on 07.10.2020.
  */
-internal open class BaseViewModel<N : BaseNavigator> : ViewModel() {
+internal open class BaseNavigatorViewModel<N : BaseNavigator> : ViewModel() {
     private var navigatorRef: WeakReference<N?> = WeakReference(null)
 
     var navigator: N?
@@ -15,3 +15,5 @@ internal open class BaseViewModel<N : BaseNavigator> : ViewModel() {
             navigatorRef = WeakReference(value)
         }
 }
+
+internal open class BaseViewModel : BaseNavigatorViewModel<EmptyNavigator>()

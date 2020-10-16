@@ -6,13 +6,14 @@ import androidx.lifecycle.viewModelScope
 import com.everstake.staking.sdk.data.model.ui.CoinListModel
 import com.everstake.staking.sdk.data.model.ui.SectionData
 import com.everstake.staking.sdk.data.usecase.GetCoinListUseCase
+import com.everstake.staking.sdk.ui.base.BaseNavigatorViewModel
 import com.everstake.staking.sdk.ui.base.BaseViewModel
 import kotlinx.coroutines.launch
 
 /**
  * created by Alex Ivanov on 07.10.2020.
  */
-internal class CoinListViewModel : BaseViewModel<CoinListNavigator>() {
+internal class CoinListViewModel : BaseViewModel() {
 
     private val coinListUseCase: GetCoinListUseCase by lazy { GetCoinListUseCase() }
 

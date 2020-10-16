@@ -6,7 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 /**
  * created by Alex Ivanov on 07.10.2020.
  */
-internal abstract class BaseActivity<VM : BaseViewModel<N>, N : BaseNavigator> : AppCompatActivity() {
+internal abstract class BaseNavigatorActivity<VM : BaseNavigatorViewModel<N>, N : BaseNavigator> :
+    AppCompatActivity() {
     protected lateinit var viewModel: VM
     protected lateinit var navigator: N
 
@@ -26,4 +27,9 @@ internal abstract class BaseActivity<VM : BaseViewModel<N>, N : BaseNavigator> :
     abstract fun provideLayoutRes(): Int
     abstract fun provideViewModel(): VM
     abstract fun provideNavigator(): N
+}
+
+internal abstract class BaseActivity<VM : BaseViewModel> :
+    BaseNavigatorActivity<VM, EmptyNavigator>() {
+    override fun provideNavigator(): EmptyNavigator = EmptyNavigator
 }

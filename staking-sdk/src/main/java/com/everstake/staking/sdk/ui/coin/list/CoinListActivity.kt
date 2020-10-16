@@ -17,6 +17,7 @@ import com.everstake.staking.sdk.ui.base.list.RecyclerClickListener
 import com.everstake.staking.sdk.ui.base.list.decorator.DecoratorData
 import com.everstake.staking.sdk.ui.base.list.decorator.DividerDecorator
 import com.everstake.staking.sdk.ui.base.list.decorator.TextDividerDecorator
+import com.everstake.staking.sdk.ui.coin.details.CoinDetailsActivity
 import com.everstake.staking.sdk.util.bindString
 import com.everstake.staking.sdk.util.dpToPx
 import kotlinx.android.synthetic.main.activity_coin_list.*
@@ -27,7 +28,7 @@ import kotlinx.coroutines.withContext
 /**
  * created by Alex Ivanov on 07.10.2020.
  */
-internal class CoinListActivity : BaseActivity<CoinListViewModel, CoinListNavigator>() {
+internal class CoinListActivity : BaseActivity<CoinListViewModel>() {
 
     companion object {
         fun getIntent(context: Context): Intent = Intent(context, CoinListActivity::class.java)
@@ -41,7 +42,8 @@ internal class CoinListActivity : BaseActivity<CoinListViewModel, CoinListNaviga
     private val clickListener: RecyclerClickListener<CoinListModel> =
         object : RecyclerClickListener<CoinListModel>() {
             override fun onClick(pos: Int, model: CoinListModel?) {
-                Toast.makeText(this@CoinListActivity, "Not Implemented", Toast.LENGTH_SHORT).show()
+                model ?: return
+                startActivity(CoinDetailsActivity.getIntent(this@CoinListActivity, model.id))
             }
         }
 
@@ -83,8 +85,6 @@ internal class CoinListActivity : BaseActivity<CoinListViewModel, CoinListNaviga
 
     override fun provideViewModel(): CoinListViewModel =
         ViewModelProvider(this).get(CoinListViewModel::class.java)
-
-    override fun provideNavigator(): CoinListNavigator = object : CoinListNavigator {}
 
     private fun updateList(list: List<SectionData<CoinListModel>>) {
         lifecycleScope.launch {

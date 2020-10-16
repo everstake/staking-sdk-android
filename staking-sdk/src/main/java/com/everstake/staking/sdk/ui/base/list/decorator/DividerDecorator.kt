@@ -41,7 +41,7 @@ internal class DividerDecorator(
         val drawable = GradientDrawable()
         drawable.shape = GradientDrawable.RECTANGLE
         drawable.setSize(-1, dpToPx(1))
-        drawable.setColor(bindColor(context, R.color.divider))
+        drawable.setColor(bindColor(context, R.color.everstakeDivider))
         return drawable
     }
 }

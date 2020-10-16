@@ -20,5 +20,10 @@ internal data class GetCoinsResponseModel(
     val needsClaiming: Boolean,
     val intervalStake: BigInteger,
     val intervalUnstake: BigInteger,
-    val toUsd: BigDecimal
+    val toUsd: BigDecimal,
+    val fee: FeeRange,
+    val about: String,
+    val aboutUrl: String
 )
+
+internal data class FeeRange(val min: BigDecimal, val max: BigDecimal)
