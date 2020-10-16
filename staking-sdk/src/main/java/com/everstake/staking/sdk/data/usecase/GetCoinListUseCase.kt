@@ -10,13 +10,10 @@ import com.everstake.staking.sdk.data.repository.CoinListRepository
 import com.everstake.staking.sdk.data.repository.StakedRepository
 import com.everstake.staking.sdk.util.bindString
 import com.everstake.staking.sdk.util.formatAmount
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import java.math.BigDecimal
-import java.util.concurrent.TimeUnit
 
 /**
  * created by Alex Ivanov on 10.10.2020.
@@ -26,17 +23,6 @@ internal class GetCoinListUseCase(
     private val stakedRepository: StakedRepository = StakedRepository.instance
 ) {
 
-    suspend fun updateData(updateTimeout: Long = TimeUnit.MINUTES.toMillis(10)): Unit =
-        coroutineScope {
-            val updateCoinList = async {
-                coinListRepository.refreshCoinList(updateTimeout)
-            }
-            val updateStaked = async {
-                stakedRepository.refreshStaked(updateTimeout)
-            }
-            updateCoinList.await() + updateStaked.await()
-        }
-
     fun getCoinListUIFlow(): Flow<List<SectionData<CoinListModel>>> =
         coinListRepository.getCoinListFlow().combine(stakedRepository.getStakedFlow())
         { coinList: List<GetCoinsResponseModel>?, stakedList: List<PutStakeResponseModel>? ->
@@ -45,7 +31,7 @@ internal class GetCoinListUseCase(
             }.map { apiModel: GetCoinsResponseModel ->
                 val apr: String = bindString(
                     EverstakeStaking.app,
-                    R.string.common_apr_format,
+                    R.string.common_percent_format,
                     apiModel.apr
                 )
                 val stakedAmount: String? =

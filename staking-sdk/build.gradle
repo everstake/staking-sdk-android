@@ -40,6 +40,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
     implementation "androidx.constraintlayout:constraintlayout:2.0.2"
     implementation 'com.google.android.material:material:1.2.1'
+    implementation "androidx.browser:browser:1.2.0"
 
     //NETWORK
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
