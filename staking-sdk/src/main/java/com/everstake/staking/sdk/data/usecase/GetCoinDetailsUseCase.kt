@@ -41,11 +41,11 @@ internal class GetCoinDetailsUseCase(
                 R.string.common_percent_format,
                 coinInfo.apr
             )
-            val fee: String = bindString(
-                EverstakeStaking.app,
-                R.string.common_percent_format,
-                coinInfo.fee.let { "${it.min}-${it.max}" }
-            )
+            val fee: String = coinInfo.fee.let { (min: BigDecimal, max: BigDecimal) ->
+                if (min != max) "$min-$max" else min.toString()
+            }.let {
+                bindString(EverstakeStaking.app, R.string.common_percent_format, it)
+            }
 
             val showStaked: Boolean =
                 coinInfo.isActive && stakedInfo != null && stakedInfo.amount > BigDecimal.ZERO

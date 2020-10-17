@@ -3,7 +3,7 @@ package com.everstake.staking.sdk.data.model.ui
 /**
  * created by Alex Ivanov on 16.10.2020.
  */
-data class CoinDetailsModel(
+internal data class CoinDetailsModel(
     val id: String,
     val displayName: String,
     val iconUrl: String,

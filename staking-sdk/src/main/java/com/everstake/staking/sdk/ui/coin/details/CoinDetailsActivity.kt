@@ -4,9 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.text.Spannable.SPAN_INCLUSIVE_EXCLUSIVE
-import android.text.SpannableStringBuilder
-import android.text.style.ForegroundColorSpan
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -20,6 +17,7 @@ import com.everstake.staking.sdk.data.model.ui.CoinDetailsModel
 import com.everstake.staking.sdk.ui.base.BaseActivity
 import com.everstake.staking.sdk.util.bindColor
 import com.everstake.staking.sdk.util.bindString
+import com.everstake.staking.sdk.util.getDataInfoSpan
 import kotlinx.android.synthetic.main.activity_coin_details.*
 
 /**
@@ -105,23 +103,16 @@ internal class CoinDetailsActivity : BaseActivity<CoinDetailsViewModel>() {
         @ColorInt
         val headerSpanColor: Int = bindColor(this, R.color.everstakeTextColorPrimaryInverted)
 
-        coinDetailsAPR.text =
-            SpannableStringBuilder(bindString(this, R.string.coin_details_apr))
-                .append(' ')
-                .append(
-                    apr,
-                    ForegroundColorSpan(headerSpanColor),
-                    SPAN_INCLUSIVE_EXCLUSIVE
-                )
-
-        coinDetailsServiceFee.text =
-            SpannableStringBuilder(bindString(this, R.string.coin_details_service_fee))
-                .append(' ')
-                .append(
-                    serviceFee,
-                    ForegroundColorSpan(headerSpanColor),
-                    SPAN_INCLUSIVE_EXCLUSIVE
-                )
+        coinDetailsAPR.text = getDataInfoSpan(
+            bindString(this, R.string.coin_details_apr),
+            apr,
+            headerSpanColor
+        )
+        coinDetailsServiceFee.text = getDataInfoSpan(
+            bindString(this, R.string.coin_details_service_fee),
+            serviceFee,
+            headerSpanColor
+        )
 
         coinDetailsStakedContainer.visibility =
             if (showStakedSection) View.VISIBLE else View.GONE
@@ -130,36 +121,26 @@ internal class CoinDetailsActivity : BaseActivity<CoinDetailsViewModel>() {
         @ColorInt
         val stakedSpanColor: Int = bindColor(this, R.color.everstakeTextColorPrimary)
 
-        coinDetailsStakedValidator.text =
-            SpannableStringBuilder(bindString(this, R.string.coin_details_validator))
-                .append(' ')
-                .append(
-                    validatorName,
-                    ForegroundColorSpan(stakedSpanColor),
-                    SPAN_INCLUSIVE_EXCLUSIVE
-                )
-
-        coinDetailsStakeYearProfit.text =
-            SpannableStringBuilder(bindString(this, R.string.coin_details_income))
-                .append(' ')
-                .append(
-                    yearlyIncome,
-                    ForegroundColorSpan(stakedSpanColor),
-                    SPAN_INCLUSIVE_EXCLUSIVE
-                )
+        coinDetailsStakedValidator.text = getDataInfoSpan(
+            bindString(this, R.string.coin_details_validator),
+            validatorName,
+            stakedSpanColor
+        )
+        coinDetailsStakeYearProfit.text = getDataInfoSpan(
+            bindString(this, R.string.coin_details_income),
+            yearlyIncome,
+            stakedSpanColor
+        )
 
         val claimVisibility: Int = if (showClaimSection) View.VISIBLE else View.GONE
         coinDetailsStakeClaimButton.visibility = claimVisibility
         coinDetailsAvailableClaim.visibility = claimVisibility
 
-        coinDetailsAvailableClaim.text =
-            SpannableStringBuilder(bindString(this, R.string.coin_details_available_rewards))
-                .append(' ')
-                .append(
-                    availableToClaim,
-                    ForegroundColorSpan(stakedSpanColor),
-                    SPAN_INCLUSIVE_EXCLUSIVE
-                )
+        coinDetailsAvailableClaim.text = getDataInfoSpan(
+            bindString(this, R.string.coin_details_available_rewards),
+            availableToClaim,
+            stakedSpanColor
+        )
 
         coinDetailsAboutText.text = about
     }
