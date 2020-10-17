@@ -10,11 +10,13 @@ import android.text.style.ForegroundColorSpan
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.everstake.staking.sdk.R
+import com.everstake.staking.sdk.data.model.ui.CoinDetailsModel
 import com.everstake.staking.sdk.ui.base.BaseActivity
 import com.everstake.staking.sdk.util.bindColor
 import com.everstake.staking.sdk.util.bindString
@@ -42,83 +44,19 @@ internal class CoinDetailsActivity : BaseActivity<CoinDetailsViewModel>() {
         val coinId: String = getCoinId(intent) ?: return Unit.also { finish() }
         viewModel.setCoinId(coinId)
 
-        viewModel.coinDetails.observe(this) { (
-                                                  _: String,
-                                                  displayName: String,
-                                                  iconUrl: String,
-                                                  about: String,
-                                                  _: String,
-                                                  apr: String,
-                                                  serviceFee: String,
-                                                  showStakedSection: Boolean,
-                                                  stakedAmount: String,
-                                                  validatorName: String,
-                                                  yearlyIncome: String,
-                                                  showClaimSection: Boolean,
-                                                  availableToClaim: String) ->
-            coinDetailsCoinTitle.text = displayName
-            Glide.with(this).load(iconUrl).into(coinDetailsCoinImage)
+        viewModel.coinDetails.observe(this) { updateUI(it) }
 
-            @ColorInt
-            val headerSpanColor: Int = bindColor(this, R.color.everstakeTextColorPrimaryInverted)
-
-            coinDetailsAPR.text =
-                SpannableStringBuilder(bindString(this, R.string.coin_details_apr))
-                    .append(' ')
-                    .append(
-                        apr,
-                        ForegroundColorSpan(headerSpanColor),
-                        SPAN_INCLUSIVE_EXCLUSIVE
-                    )
-
-            coinDetailsServiceFee.text =
-                SpannableStringBuilder(bindString(this, R.string.coin_details_service_fee))
-                    .append(' ')
-                    .append(
-                        serviceFee,
-                        ForegroundColorSpan(headerSpanColor),
-                        SPAN_INCLUSIVE_EXCLUSIVE
-                    )
-
-            coinDetailsStakedContainer.visibility =
-                if (showStakedSection) View.VISIBLE else View.GONE
-            coinDetailsStakedAmount.text = stakedAmount
-
-            @ColorInt
-            val stakedSpanColor: Int = bindColor(this, R.color.everstakeTextColorPrimary)
-
-            coinDetailsStakedValidator.text =
-                SpannableStringBuilder(bindString(this, R.string.coin_details_validator))
-                    .append(' ')
-                    .append(
-                        validatorName,
-                        ForegroundColorSpan(stakedSpanColor),
-                        SPAN_INCLUSIVE_EXCLUSIVE
-                    )
-
-            coinDetailsStakeYearProfit.text =
-                SpannableStringBuilder(bindString(this, R.string.coin_details_income))
-                    .append(' ')
-                    .append(
-                        yearlyIncome,
-                        ForegroundColorSpan(stakedSpanColor),
-                        SPAN_INCLUSIVE_EXCLUSIVE
-                    )
-
-            val claimVisibility: Int = if (showClaimSection) View.VISIBLE else View.GONE
-            coinDetailsStakeClaimButton.visibility = claimVisibility
-            coinDetailsAvailableClaim.visibility = claimVisibility
-
-            coinDetailsAvailableClaim.text =
-                SpannableStringBuilder(bindString(this, R.string.coin_details_available_rewards))
-                    .append(' ')
-                    .append(
-                        availableToClaim,
-                        ForegroundColorSpan(stakedSpanColor),
-                        SPAN_INCLUSIVE_EXCLUSIVE
-                    )
-
-            coinDetailsAboutText.text = about
+        coinDetailsStakeButton.setOnClickListener {
+            Toast.makeText(this, "Not implemented", Toast.LENGTH_SHORT).show()
+        }
+        coinDetailsCalculatorButton.setOnClickListener {
+            Toast.makeText(this, "Not implemented", Toast.LENGTH_SHORT).show()
+        }
+        coinDetailsUnstakeButton.setOnClickListener {
+            Toast.makeText(this, "Not implemented", Toast.LENGTH_SHORT).show()
+        }
+        coinDetailsStakeClaimButton.setOnClickListener {
+            Toast.makeText(this, "Not implemented", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -144,4 +82,85 @@ internal class CoinDetailsActivity : BaseActivity<CoinDetailsViewModel>() {
 
     override fun provideViewModel(): CoinDetailsViewModel =
         ViewModelProvider(this).get(CoinDetailsViewModel::class.java)
+
+    private fun updateUI(coinDetails: CoinDetailsModel) {
+        val (
+            _: String,
+            displayName: String,
+            iconUrl: String,
+            about: String,
+            _: String,
+            apr: String,
+            serviceFee: String,
+            showStakedSection: Boolean,
+            stakedAmount: String,
+            validatorName: String,
+            yearlyIncome: String,
+            showClaimSection: Boolean,
+            availableToClaim: String) = coinDetails
+
+        coinDetailsCoinTitle.text = displayName
+        Glide.with(this).load(iconUrl).into(coinDetailsCoinImage)
+
+        @ColorInt
+        val headerSpanColor: Int = bindColor(this, R.color.everstakeTextColorPrimaryInverted)
+
+        coinDetailsAPR.text =
+            SpannableStringBuilder(bindString(this, R.string.coin_details_apr))
+                .append(' ')
+                .append(
+                    apr,
+                    ForegroundColorSpan(headerSpanColor),
+                    SPAN_INCLUSIVE_EXCLUSIVE
+                )
+
+        coinDetailsServiceFee.text =
+            SpannableStringBuilder(bindString(this, R.string.coin_details_service_fee))
+                .append(' ')
+                .append(
+                    serviceFee,
+                    ForegroundColorSpan(headerSpanColor),
+                    SPAN_INCLUSIVE_EXCLUSIVE
+                )
+
+        coinDetailsStakedContainer.visibility =
+            if (showStakedSection) View.VISIBLE else View.GONE
+        coinDetailsStakedAmount.text = stakedAmount
+
+        @ColorInt
+        val stakedSpanColor: Int = bindColor(this, R.color.everstakeTextColorPrimary)
+
+        coinDetailsStakedValidator.text =
+            SpannableStringBuilder(bindString(this, R.string.coin_details_validator))
+                .append(' ')
+                .append(
+                    validatorName,
+                    ForegroundColorSpan(stakedSpanColor),
+                    SPAN_INCLUSIVE_EXCLUSIVE
+                )
+
+        coinDetailsStakeYearProfit.text =
+            SpannableStringBuilder(bindString(this, R.string.coin_details_income))
+                .append(' ')
+                .append(
+                    yearlyIncome,
+                    ForegroundColorSpan(stakedSpanColor),
+                    SPAN_INCLUSIVE_EXCLUSIVE
+                )
+
+        val claimVisibility: Int = if (showClaimSection) View.VISIBLE else View.GONE
+        coinDetailsStakeClaimButton.visibility = claimVisibility
+        coinDetailsAvailableClaim.visibility = claimVisibility
+
+        coinDetailsAvailableClaim.text =
+            SpannableStringBuilder(bindString(this, R.string.coin_details_available_rewards))
+                .append(' ')
+                .append(
+                    availableToClaim,
+                    ForegroundColorSpan(stakedSpanColor),
+                    SPAN_INCLUSIVE_EXCLUSIVE
+                )
+
+        coinDetailsAboutText.text = about
+    }
 }
