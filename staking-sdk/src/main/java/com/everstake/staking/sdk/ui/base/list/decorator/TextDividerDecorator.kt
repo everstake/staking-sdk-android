@@ -20,7 +20,7 @@ internal class TextDividerDecorator(context: Context) : RecyclerView.ItemDecorat
     private val textPaddingHorizontal: Int = dpToPx(16)
     private val textPaddingVertical: Int = dpToPx(16)
     private val textPaint: Paint = Paint().apply {
-        color = bindColor(context, R.color.textColorPrimary)
+        color = bindColor(context, R.color.everstakeTextColorPrimary)
         alpha = 0x66 //40% opaque
         textSize = spToPx(14)
     }.also { paint ->

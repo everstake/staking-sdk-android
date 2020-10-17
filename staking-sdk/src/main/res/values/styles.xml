@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="EverstakeTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowBackground">@color/windowBackground</item>
+    <style name="EverstakeTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/everstakeColorPrimary</item>
+        <item name="colorPrimaryVariant">@color/everstakeColorPrimaryDark</item>
+        <item name="colorOnPrimary">@color/everstakeTextColorPrimary</item>
+        <item name="colorSecondary">@color/everstakeColorAccent</item>
+        <item name="colorOnSecondary">@color/everstakeTextColorPrimaryInverted</item>
+        <item name="android:windowBackground">@color/everstakeWindowBackground</item>
+    </style>
+
+    <style name="EverstakeTheme.HeaderInfo">
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineSpacingExtra">4sp</item>
+        <item name="android:alpha">0.4</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="EverstakeTheme.Info">
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineSpacingExtra">4sp</item>
+        <item name="android:textColor">@color/everstakeTextColorSecondary</item>
+        <item name="android:letterSpacing">0.02</item>
+    </style>
+
+    <style name="EverstakeTheme.PrimaryButton" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/everstakeTextColorPrimaryInverted</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:letterSpacing">0.04</item>
+        <item name="backgroundTint">@color/everstakeColorAccent</item>
+        <item name="cornerRadius">4dp</item>
+        <item name="android:padding">16dp</item>
     </style>
 
 </resources>

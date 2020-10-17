@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--  Common  -->
-    <string name="common_apr_format">%s%%</string>
+    <string name="common_percent_format">%s%%</string>
     <!--  Stake(coin list)  -->
     <string name="coin_list_title">Stake</string>
     <string name="coin_list_info_menu">Staking info</string>
     <string name="coin_list_staked">Staked</string>
     <string name="coin_list_ready_to_stake">Ready to stake</string>
     <string name="coin_list_coming_soon">Coming soon</string>
+    <!--  Coin Details  -->
+    <string name="coin_details_info">Coin info</string>
+    <string name="coin_details_apr">APR:</string>
+    <string name="coin_details_service_fee">Service fee:</string>
+    <string name="coin_details_stake">Stake</string>
+    <string name="coin_details_calculator">Open Calculator</string>
+    <string name="coin_details_staked">Staked</string>
+    <string name="coin_details_unstake">Unstake</string>
+    <string name="coin_details_validator">Validator:</string>
+    <string name="coin_details_income">Yearly income</string>
+    <string name="coin_details_claim">Claim Rewards</string>
+    <string name="coin_details_available_rewards">Available rewards:</string>
+    <string name="coin_details_about">About</string>
 </resources>
