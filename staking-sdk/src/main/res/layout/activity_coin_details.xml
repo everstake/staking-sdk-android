@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/coinDetailsToolbar"
@@ -14,227 +15,234 @@
         app:navigationIcon="@drawable/ic_back_white"
         app:title="" />
 
-    <ScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="?actionBarSize">
+        android:background="@color/everstakeDetailsHeaderBg"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/coinDetailsCoinImage"
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:contentDescription="@string/coin_details_info"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_info_white" />
+
+        <TextView
+            android:id="@+id/coinDetailsCoinTitle"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginStart="16dp"
+            android:textColor="@color/everstakeTextColorPrimaryInverted"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/coinDetailsCoinImage"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Tezos (XTZ)" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/coinDetailsAPR"
+            style="@style/EverstakeTheme.SecondaryInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/everstakeTextColorSecondaryInverted"
+            app:layout_constraintStart_toStartOf="@+id/coinDetailsCoinTitle"
+            app:layout_constraintTop_toBottomOf="@+id/coinDetailsCoinTitle"
+            tools:text="APR: 10%" />
+
+        <TextView
+            android:id="@+id/coinDetailsServiceFee"
+            style="@style/EverstakeTheme.SecondaryInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:textColor="@color/everstakeTextColorSecondaryInverted"
+            app:layout_constraintStart_toEndOf="@+id/coinDetailsAPR"
+            app:layout_constraintTop_toTopOf="@+id/coinDetailsAPR"
+            tools:text="Service fee: 1-3%" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/coinDetailsHeaderBarrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="coinDetailsCoinImage,coinDetailsAPR,coinDetailsServiceFee" />
+
+        <Button
+            android:id="@+id/coinDetailsStakeButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="4dp"
+            android:text="@string/coin_details_stake"
+            app:layout_constraintEnd_toStartOf="@+id/coinDetailsCalculatorButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/coinDetailsHeaderBarrier" />
+
+        <Button
+            android:id="@+id/coinDetailsCalculatorButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="@string/coin_details_calculator"
+            android:textColor="@color/everstakeTextColorPrimaryInverted"
+            app:backgroundTint="#26FFFFFF"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/coinDetailsStakeButton"
+            app:layout_constraintTop_toTopOf="@+id/coinDetailsStakeButton" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/coinDetailsGuidelineStart"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/everstakeDetailsHeaderBg"
                 android:orientation="vertical"
-                android:padding="16dp">
+                app:layout_constraintGuide_begin="16dp" />
 
-                <ImageView
-                    android:id="@+id/coinDetailsCoinImage"
-                    android:layout_width="54dp"
-                    android:layout_height="54dp"
-                    android:contentDescription="@string/coin_details_info"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:src="@drawable/ic_info_white" />
-
-                <TextView
-                    android:id="@+id/coinDetailsCoinTitle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:textColor="@color/everstakeTextColorPrimaryInverted"
-                    android:textSize="24sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/coinDetailsCoinImage"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="Tezos (XTZ)" />
-
-                <TextView
-                    android:id="@+id/coinDetailsAPR"
-                    style="@style/EverstakeTheme.SecondaryInfo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:textColor="@color/everstakeTextColorSecondaryInverted"
-                    app:layout_constraintStart_toStartOf="@+id/coinDetailsCoinTitle"
-                    app:layout_constraintTop_toBottomOf="@+id/coinDetailsCoinTitle"
-                    tools:text="APR: 10%" />
-
-                <TextView
-                    android:id="@+id/coinDetailsServiceFee"
-                    style="@style/EverstakeTheme.SecondaryInfo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:textColor="@color/everstakeTextColorSecondaryInverted"
-                    app:layout_constraintStart_toEndOf="@+id/coinDetailsAPR"
-                    app:layout_constraintTop_toTopOf="@+id/coinDetailsAPR"
-                    tools:text="Service fee: 1-3%" />
-
-                <androidx.constraintlayout.widget.Barrier
-                    android:id="@+id/coinDetailsHeaderBarrier"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:barrierDirection="bottom"
-                    app:constraint_referenced_ids="coinDetailsCoinImage,coinDetailsAPR,coinDetailsServiceFee" />
-
-                <Button
-                    android:id="@+id/coinDetailsStakeButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginEnd="4dp"
-                    android:text="@string/coin_details_stake"
-                    app:layout_constraintEnd_toStartOf="@+id/coinDetailsCalculatorButton"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/coinDetailsHeaderBarrier" />
-
-                <Button
-                    android:id="@+id/coinDetailsCalculatorButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:text="@string/coin_details_calculator"
-                    android:textColor="@color/everstakeTextColorPrimaryInverted"
-                    app:backgroundTint="#26FFFFFF"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/coinDetailsStakeButton"
-                    app:layout_constraintTop_toTopOf="@+id/coinDetailsStakeButton" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/coinDetailsStakedContainer"
-                android:layout_width="match_parent"
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/coinDetailsGuidelineEnd"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp">
-
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/coinDetailsGuidelineStart"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_begin="16dp" />
-
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/coinDetailsGuidelineEnd"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_end="16dp" />
-
-                <TextView
-                    android:id="@+id/coinDetailsStakeHeader"
-                    style="@style/EverstakeTheme.HeaderInfo"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/coin_details_staked"
-                    app:layout_constraintEnd_toEndOf="@+id/coinDetailsGuidelineEnd"
-                    app:layout_constraintStart_toStartOf="@+id/coinDetailsGuidelineStart"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/coinDetailsStakedAmount"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:lineSpacingExtra="4sp"
-                    android:textColor="@color/everstakeTextColorPrimary"
-                    android:textSize="24sp"
-                    app:layout_constraintEnd_toStartOf="@+id/coinDetailsUnstakeButton"
-                    app:layout_constraintStart_toStartOf="@+id/coinDetailsGuidelineStart"
-                    app:layout_constraintTop_toTopOf="@+id/coinDetailsUnstakeButton"
-                    tools:text="0.124 XTZ" />
-
-                <Button
-                    android:id="@+id/coinDetailsUnstakeButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="#D0D0D0"
-                    android:insetTop="0dp"
-                    android:insetBottom="0dp"
-                    android:minHeight="0dp"
-                    android:paddingVertical="8dp"
-                    android:text="@string/coin_details_unstake"
-                    app:elevation="0dp"
-                    app:layout_constraintEnd_toEndOf="@id/coinDetailsGuidelineEnd"
-                    app:layout_constraintTop_toBottomOf="@id/coinDetailsStakeHeader" />
-
-                <androidx.constraintlayout.widget.Barrier
-                    android:id="@+id/coinDetailsStakeInfoBarrier"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:barrierDirection="bottom"
-                    app:constraint_referenced_ids="coinDetailsStakedAmount,coinDetailsUnstakeButton" />
-
-                <TextView
-                    android:id="@+id/coinDetailsStakedValidator"
-                    style="@style/EverstakeTheme.SecondaryInfo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    app:layout_constraintStart_toStartOf="@id/coinDetailsGuidelineStart"
-                    app:layout_constraintTop_toTopOf="@id/coinDetailsStakeInfoBarrier"
-                    tools:text="Validator: Everstake" />
-
-                <TextView
-                    android:id="@+id/coinDetailsStakeYearProfit"
-                    style="@style/EverstakeTheme.SecondaryInfo"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    app:layout_constraintEnd_toEndOf="@id/coinDetailsGuidelineEnd"
-                    app:layout_constraintStart_toEndOf="@+id/coinDetailsStakedValidator"
-                    app:layout_constraintTop_toTopOf="@+id/coinDetailsStakedValidator"
-                    tools:text="Yearly Income: 8%" />
-
-                <Button
-                    android:id="@+id/coinDetailsStakeClaimButton"
-                    style="@style/EverstakeTheme.PrimaryButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:padding="12dp"
-                    android:text="@string/coin_details_claim"
-                    android:textSize="16sp"
-                    app:layout_constraintEnd_toEndOf="@id/coinDetailsGuidelineEnd"
-                    app:layout_constraintStart_toStartOf="@id/coinDetailsGuidelineStart"
-                    app:layout_constraintTop_toBottomOf="@+id/coinDetailsStakeYearProfit" />
-
-                <TextView
-                    android:id="@+id/coinDetailsAvailableClaim"
-                    style="@style/EverstakeTheme.SecondaryInfo"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintEnd_toEndOf="@id/coinDetailsGuidelineEnd"
-                    app:layout_constraintStart_toStartOf="@id/coinDetailsGuidelineStart"
-                    app:layout_constraintTop_toBottomOf="@+id/coinDetailsStakeClaimButton"
-                    tools:text="Available rewards: 0.024 XTZ" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:background="@color/everstakeDivider"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/coinDetailsAvailableClaim" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="16dp" />
 
             <TextView
+                android:id="@+id/coinDetailsStakeHeader"
+                style="@style/EverstakeTheme.HeaderInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/coin_details_staked"
+                app:layout_constraintEnd_toEndOf="@+id/coinDetailsGuidelineEnd"
+                app:layout_constraintStart_toStartOf="@+id/coinDetailsGuidelineStart"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/coinDetailsStakedAmount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:lineSpacingExtra="4sp"
+                android:textColor="@color/everstakeTextColorPrimary"
+                android:textSize="24sp"
+                app:layout_constraintEnd_toStartOf="@+id/coinDetailsUnstakeButton"
+                app:layout_constraintStart_toStartOf="@+id/coinDetailsGuidelineStart"
+                app:layout_constraintTop_toTopOf="@+id/coinDetailsUnstakeButton"
+                tools:text="0.124 XTZ" />
+
+            <Button
+                android:id="@+id/coinDetailsUnstakeButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#D0D0D0"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:minHeight="0dp"
+                android:paddingVertical="8dp"
+                android:text="@string/coin_details_unstake"
+                app:elevation="0dp"
+                app:layout_constraintEnd_toEndOf="@id/coinDetailsGuidelineEnd"
+                app:layout_constraintTop_toBottomOf="@id/coinDetailsStakeHeader" />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/coinDetailsStakeInfoBarrier"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="coinDetailsStakedAmount,coinDetailsUnstakeButton" />
+
+            <TextView
+                android:id="@+id/coinDetailsStakedValidator"
+                style="@style/EverstakeTheme.SecondaryInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:layout_constraintStart_toStartOf="@id/coinDetailsGuidelineStart"
+                app:layout_constraintTop_toTopOf="@id/coinDetailsStakeInfoBarrier"
+                tools:text="Validator: Everstake" />
+
+            <TextView
+                android:id="@+id/coinDetailsStakeYearProfit"
+                style="@style/EverstakeTheme.SecondaryInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                app:layout_constraintEnd_toEndOf="@id/coinDetailsGuidelineEnd"
+                app:layout_constraintStart_toEndOf="@+id/coinDetailsStakedValidator"
+                app:layout_constraintTop_toTopOf="@+id/coinDetailsStakedValidator"
+                tools:text="Yearly Income: 8%" />
+
+            <Button
+                android:id="@+id/coinDetailsStakeClaimButton"
+                style="@style/EverstakeTheme.PrimaryButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:padding="12dp"
+                android:text="@string/coin_details_claim"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@id/coinDetailsGuidelineEnd"
+                app:layout_constraintStart_toStartOf="@id/coinDetailsGuidelineStart"
+                app:layout_constraintTop_toBottomOf="@+id/coinDetailsStakeYearProfit" />
+
+            <TextView
+                android:id="@+id/coinDetailsAvailableClaim"
+                style="@style/EverstakeTheme.SecondaryInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="@id/coinDetailsGuidelineEnd"
+                app:layout_constraintStart_toStartOf="@id/coinDetailsGuidelineStart"
+                app:layout_constraintTop_toBottomOf="@+id/coinDetailsStakeClaimButton"
+                tools:text="Available rewards: 0.024 XTZ" />
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/coinDetailsClaimGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="coinDetailsStakeClaimButton,coinDetailsAvailableClaim" />
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/coinDetailsStakedGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="coinDetailsStakeHeader,coinDetailsStakedAmount,coinDetailsUnstakeButton,coinDetailsStakedValidator,coinDetailsStakeYearProfit,stakedDivider" />
+
+            <View
+                android:id="@+id/stakedDivider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/everstakeDivider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/coinDetailsAvailableClaim" />
+
+            <TextView
+                android:id="@+id/coinDetailsAboutLabel"
                 style="@style/EverstakeTheme.HeaderInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="16dp"
-                android:text="@string/coin_details_about" />
+                android:text="@string/coin_details_about"
+                app:layout_constraintEnd_toEndOf="@id/coinDetailsGuidelineEnd"
+                app:layout_constraintStart_toStartOf="@id/coinDetailsGuidelineStart"
+                app:layout_constraintTop_toBottomOf="@id/stakedDivider" />
 
             <TextView
                 android:id="@+id/coinDetailsAboutText"
@@ -243,10 +251,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginVertical="8dp"
+                android:letterSpacing="0.01"
+                android:lineSpacingExtra="6sp"
+                android:textColor="@color/everstakeTextColorPrimary"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/coinDetailsGuidelineEnd"
+                app:layout_constraintStart_toStartOf="@id/coinDetailsGuidelineStart"
+                app:layout_constraintTop_toBottomOf="@id/coinDetailsAboutLabel"
                 tools:text="This is text about some coin bla bla" />
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
 
-</FrameLayout>
+</LinearLayout>

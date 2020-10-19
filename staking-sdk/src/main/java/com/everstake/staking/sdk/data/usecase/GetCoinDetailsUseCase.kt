@@ -54,14 +54,8 @@ internal class GetCoinDetailsUseCase(
                 precision = coinInfo.precision,
                 symbol = coinInfo.symbol
             )
-            // TODO Clarify logic of yearly income
-            val income: String = stakedInfo?.validator?.fee?.let { validatorFee: BigDecimal ->
-                bindString(
-                    EverstakeStaking.app,
-                    R.string.common_percent_format,
-                    (coinInfo.apr - validatorFee)
-                )
-            } ?: ""
+            val income: String =
+                bindString(EverstakeStaking.app, R.string.common_percent_format, coinInfo.apr)
 
             val claimAmount: BigDecimal = stakedInfo?.amountToClaim ?: BigDecimal.ZERO
             val showClaim: Boolean = showStaked && claimAmount > BigDecimal.ZERO
