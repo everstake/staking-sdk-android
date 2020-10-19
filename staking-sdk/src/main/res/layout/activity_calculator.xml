@@ -211,7 +211,7 @@
                 android:id="@+id/calculatorReinvestCheckBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/calculator_reinvest"
                 android:textColor="@color/everstakeTextColorPrimary"
                 android:textSize="18sp"
