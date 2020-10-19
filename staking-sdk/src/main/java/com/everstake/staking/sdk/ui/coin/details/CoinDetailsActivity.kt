@@ -114,7 +114,7 @@ internal class CoinDetailsActivity : BaseActivity<CoinDetailsViewModel>() {
             headerSpanColor
         )
 
-        coinDetailsStakedContainer.visibility =
+        coinDetailsStakedGroup.visibility =
             if (showStakedSection) View.VISIBLE else View.GONE
         coinDetailsStakedAmount.text = stakedAmount
 
@@ -132,9 +132,7 @@ internal class CoinDetailsActivity : BaseActivity<CoinDetailsViewModel>() {
             stakedSpanColor
         )
 
-        val claimVisibility: Int = if (showClaimSection) View.VISIBLE else View.GONE
-        coinDetailsStakeClaimButton.visibility = claimVisibility
-        coinDetailsAvailableClaim.visibility = claimVisibility
+        coinDetailsClaimGroup.visibility = if (showClaimSection) View.VISIBLE else View.GONE
 
         coinDetailsAvailableClaim.text = getDataInfoSpan(
             bindString(this, R.string.coin_details_available_rewards),
