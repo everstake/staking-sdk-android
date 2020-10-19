@@ -102,7 +102,6 @@ internal fun readCacheAsFlow(
     val channel: Channel<Unit> = updateChannels[cacheType]
         ?: throw IllegalStateException("Missing Channel for type: $cacheType")
 
-    emit(readCacheFile(context, cacheType) ?: CacheData.empty)
     for (signal in channel) {
         val result: CacheData = readCacheFile(context, cacheType) ?: CacheData.empty
         emit(result)

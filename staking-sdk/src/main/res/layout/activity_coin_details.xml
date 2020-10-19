@@ -54,7 +54,7 @@
 
                 <TextView
                     android:id="@+id/coinDetailsAPR"
-                    style="@style/EverstakeTheme.Info"
+                    style="@style/EverstakeTheme.SecondaryInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
@@ -65,7 +65,7 @@
 
                 <TextView
                     android:id="@+id/coinDetailsServiceFee"
-                    style="@style/EverstakeTheme.Info"
+                    style="@style/EverstakeTheme.SecondaryInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
@@ -172,7 +172,7 @@
 
                 <TextView
                     android:id="@+id/coinDetailsStakedValidator"
-                    style="@style/EverstakeTheme.Info"
+                    style="@style/EverstakeTheme.SecondaryInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
@@ -182,7 +182,7 @@
 
                 <TextView
                     android:id="@+id/coinDetailsStakeYearProfit"
-                    style="@style/EverstakeTheme.Info"
+                    style="@style/EverstakeTheme.SecondaryInfo"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
@@ -206,7 +206,7 @@
 
                 <TextView
                     android:id="@+id/coinDetailsAvailableClaim"
-                    style="@style/EverstakeTheme.Info"
+                    style="@style/EverstakeTheme.SecondaryInfo"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -238,14 +238,11 @@
 
             <TextView
                 android:id="@+id/coinDetailsAboutText"
+                style="@style/EverstakeTheme.PrimaryInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginVertical="8dp"
-                android:letterSpacing="0.01"
-                android:lineSpacingExtra="6sp"
-                android:textColor="@color/everstakeTextColorPrimary"
-                android:textSize="14sp"
                 tools:text="This is text about some coin bla bla" />
 
         </LinearLayout>

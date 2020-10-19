@@ -2,6 +2,8 @@
 <resources>
     <!--  Common  -->
     <string name="common_percent_format">%s%%</string>
+    <string name="common_fee_format">Fee: %s</string>
+    <string name="common_reliable">Reliable</string>
     <!--  Stake(coin list)  -->
     <string name="coin_list_title">Stake</string>
     <string name="coin_list_info_menu">Staking info</string>
@@ -17,8 +19,26 @@
     <string name="coin_details_staked">Staked</string>
     <string name="coin_details_unstake">Unstake</string>
     <string name="coin_details_validator">Validator:</string>
-    <string name="coin_details_income">Yearly income</string>
+    <string name="coin_details_income">Yearly income:</string>
     <string name="coin_details_claim">Claim Rewards</string>
     <string name="coin_details_available_rewards">Available rewards:</string>
     <string name="coin_details_about">About</string>
+    <!--  Calculator  -->
+    <string name="calculator_title">Calculator</string>
+    <string name="calculator_amount_label">Enter amount</string>
+    <string name="calculator_amount_hint">0.00</string>
+    <string name="calculator_options_label">Select options</string>
+    <string name="calculator_yearly_income">Yearly income: %s</string>
+    <string name="calculator_currency_label">Currency</string>
+    <string name="calculator_validator_label">Validator</string>
+    <string name="calculator_daily_income_label">Daily</string>
+    <string name="calculator_monthly_income_label">Monthly</string>
+    <string name="calculator_yearly_income_label">Yearly</string>
+    <string name="calculator_include_fee">Include validation fee</string>
+    <string name="calculator_reinvest">Reinvest earnings</string>
+    <string name="calculator_proceed_to_staking">Proceed to staking</string>
+    <!--  Select currency  -->
+    <string name="select_currency_title">Select currency</string>
+    <!--  Select validator  -->
+    <string name="select_validator_title">Select validator</string>
 </resources>

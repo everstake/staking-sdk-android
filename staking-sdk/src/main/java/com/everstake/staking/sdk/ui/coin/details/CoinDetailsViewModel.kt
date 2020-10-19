@@ -24,7 +24,7 @@ internal class CoinDetailsViewModel : BaseViewModel() {
 
     val coinDetails: LiveData<CoinDetailsModel> = coinDetailsUseCase
         .getCoinDetailsFlow(coinIdChannel.receiveAsFlow().distinctUntilChanged())
-        .asLiveData()
+        .asLiveData(viewModelScope.coroutineContext)
 
     init {
         viewModelScope.launch {
@@ -35,7 +35,6 @@ internal class CoinDetailsViewModel : BaseViewModel() {
     fun setCoinId(coinId: String) {
         viewModelScope.launch {
             coinIdChannel.send(coinId)
-
         }
     }
 
