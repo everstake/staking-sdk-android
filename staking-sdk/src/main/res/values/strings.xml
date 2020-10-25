@@ -38,7 +38,7 @@
     <string name="calculator_reinvest">Reinvest earnings</string>
     <string name="calculator_proceed_to_staking">Proceed to staking</string>
     <!--  Select currency  -->
-    <string name="select_currency_title">Select currency</string>
+    <string name="select_coin_title">Select currency</string>
     <!--  Select validator  -->
     <string name="select_validator_title">Select validator</string>
 </resources>

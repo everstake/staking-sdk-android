@@ -70,7 +70,7 @@ internal class GetCoinDetailsUseCase(
                 serviceFee = fee,
                 showStakedSection = showStaked,
                 stakedAmount = stakedAmount,
-                validatorName = stakedInfo?.validator?.validatorName ?: "",
+                validatorName = stakedInfo?.validator?.name ?: "",
                 yearlyIncome = income,
                 showClaimSection = showClaim,
                 availableToClaim = formatAmount(claimAmount, coinInfo.precision, coinInfo.symbol)

@@ -51,4 +51,16 @@
         <item name="android:background">@null</item>
     </style>
 
+    <style name="EverstakeTheme.ReliableLabel">
+        <item name="android:text">@string/common_reliable</item>
+        <item name="android:background">@drawable/reliable_bg</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineSpacingExtra">2sp</item>
+        <item name="android:textColor">@color/everstakeTextColorPrimaryInverted</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+    </style>
+
 </resources>

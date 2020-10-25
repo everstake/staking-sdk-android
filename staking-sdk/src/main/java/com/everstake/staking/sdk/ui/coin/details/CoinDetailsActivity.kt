@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide
 import com.everstake.staking.sdk.R
 import com.everstake.staking.sdk.data.model.ui.CoinDetailsModel
 import com.everstake.staking.sdk.ui.base.BaseActivity
+import com.everstake.staking.sdk.ui.calculator.CalculatorActivity
 import com.everstake.staking.sdk.util.bindColor
 import com.everstake.staking.sdk.util.bindString
 import com.everstake.staking.sdk.util.getDataInfoSpan
@@ -39,8 +40,8 @@ internal class CoinDetailsActivity : BaseActivity<CoinDetailsViewModel>() {
         setSupportActionBar(coinDetailsToolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
-        val coinId: String = getCoinId(intent) ?: return Unit.also { finish() }
-        viewModel.setCoinId(coinId)
+        val intentCoinId: String = getCoinId(intent) ?: return Unit.also { finish() }
+        viewModel.setCoinId(intentCoinId)
 
         viewModel.coinDetails.observe(this) { updateUI(it) }
 
@@ -48,7 +49,8 @@ internal class CoinDetailsActivity : BaseActivity<CoinDetailsViewModel>() {
             Toast.makeText(this, "Not implemented", Toast.LENGTH_SHORT).show()
         }
         coinDetailsCalculatorButton.setOnClickListener {
-            Toast.makeText(this, "Not implemented", Toast.LENGTH_SHORT).show()
+            val coinId: String = viewModel.coinDetails.value?.id ?: return@setOnClickListener
+            startActivity(CalculatorActivity.getIntent(this, coinId))
         }
         coinDetailsUnstakeButton.setOnClickListener {
             Toast.makeText(this, "Not implemented", Toast.LENGTH_SHORT).show()

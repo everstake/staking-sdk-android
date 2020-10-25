@@ -6,7 +6,7 @@ import com.everstake.staking.sdk.R
 import com.everstake.staking.sdk.data.model.ui.CoinListModel
 import com.everstake.staking.sdk.ui.base.list.BaseViewHolder
 import com.everstake.staking.sdk.util.bindString
-import kotlinx.android.synthetic.main.item_stake_coin.view.*
+import kotlinx.android.synthetic.main.item_coin_info.view.*
 
 /**
  * created by Alex Ivanov on 08.10.2020.
