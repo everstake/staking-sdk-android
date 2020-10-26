@@ -1,5 +1,6 @@
 package com.everstake.staking.sdk.ui.validator.select
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.everstake.staking.sdk.R
 import com.everstake.staking.sdk.data.model.ui.ValidatorListModel
 import com.everstake.staking.sdk.ui.base.BaseActivity
+import com.everstake.staking.sdk.ui.base.list.RecyclerClickListener
 import com.everstake.staking.sdk.ui.base.list.decorator.DividerDecorator
 import com.everstake.staking.sdk.util.dpToPx
 import kotlinx.android.synthetic.main.activity_validator_select.*
@@ -32,6 +34,9 @@ internal class ValidatorSelectActivity : BaseActivity<ValidatorSelectViewModel>(
 
         fun getValidatorId(intent: Intent): String? = intent.getStringExtra(KEY_VALIDATOR_ID)
 
+        private fun getResultIntent(validatorId: String): Intent =
+            Intent().putExtra(KEY_VALIDATOR_ID, validatorId)
+
         private fun getCoinId(intent: Intent): String? = intent.getStringExtra(KEY_COIN_ID)
     }
 
@@ -39,6 +44,14 @@ internal class ValidatorSelectActivity : BaseActivity<ValidatorSelectViewModel>(
     private val decorator: RecyclerView.ItemDecoration by lazy {
         DividerDecorator(marginLeft = dpToPx(72))
     }
+    private val clickListener: RecyclerClickListener<ValidatorListModel> =
+        object : RecyclerClickListener<ValidatorListModel>() {
+            override fun onClick(pos: Int, model: ValidatorListModel?) {
+                model ?: return
+                setResult(Activity.RESULT_OK, getResultIntent(model.id))
+                onBackPressed()
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +63,7 @@ internal class ValidatorSelectActivity : BaseActivity<ValidatorSelectViewModel>(
         setSupportActionBar(selectValidatorToolbar)
         selectValidatorRecycler.addItemDecoration(decorator)
         selectValidatorRecycler.layoutManager = LinearLayoutManager(this)
+        adapter.setClickListener(clickListener)
         selectValidatorRecycler.adapter = adapter
 
         viewModel.listData.observe(this) { validators: List<ValidatorListModel> ->

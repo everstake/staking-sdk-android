@@ -1,11 +1,11 @@
 package com.everstake.staking.sdk.ui.validator.select
 
-import android.util.TypedValue
 import android.view.View
 import com.everstake.staking.sdk.R
 import com.everstake.staking.sdk.data.model.ui.ValidatorListModel
 import com.everstake.staking.sdk.ui.base.list.BaseViewHolder
 import com.everstake.staking.sdk.util.bindString
+import com.everstake.staking.sdk.util.setSelectableItemBackground
 import kotlinx.android.synthetic.main.item_validator_info.view.*
 
 /**
@@ -31,14 +31,7 @@ internal class ValidatorSelectViewHolder(itemView: View) :
             itemView.validatorInfoReliable.visibility = View.VISIBLE
         } else {
             itemView.validatorInfoReliable.visibility = View.GONE
-            with(TypedValue()) {
-                itemView.context.theme.resolveAttribute(
-                    android.R.attr.selectableItemBackground,
-                    this,
-                    true
-                )
-                itemView.validatorInfoContainer.setBackgroundResource(resourceId)
-            }
+            itemView.validatorInfoContainer.setSelectableItemBackground()
         }
     }
 }

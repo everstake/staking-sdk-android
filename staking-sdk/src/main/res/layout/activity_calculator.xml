@@ -156,7 +156,7 @@
                 tools:text="Everstake" />
 
             <TextView
-                android:id="@+id/calculatorValidatorIncome"
+                android:id="@+id/calculatorValidatorFee"
                 style="@style/EverstakeTheme.SecondaryInfo"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -183,7 +183,7 @@
                 android:background="@color/everstakeDivider"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/calculatorGuideStart"
-                app:layout_constraintTop_toBottomOf="@id/calculatorValidatorIncome" />
+                app:layout_constraintTop_toBottomOf="@id/calculatorValidatorFee" />
 
             <include
                 android:id="@+id/calculatorIncomeContainer"
@@ -211,7 +211,6 @@
                 android:id="@+id/calculatorReinvestCheckBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:text="@string/calculator_reinvest"
                 android:textColor="@color/everstakeTextColorPrimary"
                 android:textSize="18sp"
@@ -224,6 +223,7 @@
                 style="@style/EverstakeTheme.PrimaryButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp"
                 android:text="@string/calculator_proceed_to_staking"
                 app:layout_constraintBottom_toBottomOf="parent"
