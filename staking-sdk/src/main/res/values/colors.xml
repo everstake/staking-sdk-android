@@ -13,4 +13,5 @@
     <color name="everstakeDivider">#1F000000</color>
 
     <color name="everstakeDetailsHeaderBg">#1D1D1D</color>
+    <color name="everstakeReliableColor">#7CB518</color>
 </resources>

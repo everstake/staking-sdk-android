@@ -18,8 +18,9 @@ internal class CoinListViewModel : BaseViewModel() {
     private val getCoinListUseCase: GetCoinListUseCase by lazy { GetCoinListUseCase() }
     private val updateCoinListUseCase: UpdateCoinDetailsUseCase by lazy { UpdateCoinDetailsUseCase() }
 
-    val sectionData: LiveData<List<SectionData<CoinListModel>>> =
-        getCoinListUseCase.getCoinListUIFlow().asLiveData()
+    val sectionData: LiveData<List<SectionData<CoinListModel>>> = getCoinListUseCase
+        .getCoinListUIFlow()
+        .asLiveData(viewModelScope.coroutineContext)
 
     init {
         viewModelScope.launch {

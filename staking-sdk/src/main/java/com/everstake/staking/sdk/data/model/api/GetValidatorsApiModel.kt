@@ -7,7 +7,7 @@ import java.math.BigDecimal
  */
 internal data class GetValidatorsApiResponse(
     val id: String,
-    val validatorName: String,
+    val name: String,
     val fee: BigDecimal,
     val isReliable: Boolean
 )

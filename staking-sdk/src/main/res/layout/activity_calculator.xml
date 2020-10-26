@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/calculatorToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        app:navigationIcon="@drawable/ic_back"
+        app:title="@string/calculator_title" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="?actionBarSize">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/calculatorGuideStart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="16dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/calculatorGuideEnd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="16dp" />
+
+            <TextView
+                android:id="@+id/calculatorAmountLabel"
+                style="@style/EverstakeTheme.HeaderInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/calculator_amount_label"
+                app:layout_constraintEnd_toEndOf="@id/calculatorGuideEnd"
+                app:layout_constraintStart_toStartOf="@id/calculatorGuideStart"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <include
+                android:id="@+id/calculatorInput"
+                layout="@layout/view_amount_input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                app:layout_constraintEnd_toEndOf="@id/calculatorGuideEnd"
+                app:layout_constraintStart_toStartOf="@id/calculatorGuideStart"
+                app:layout_constraintTop_toBottomOf="@id/calculatorAmountLabel" />
+
+            <TextView
+                android:id="@+id/calculatorOptionsLabel"
+                style="@style/EverstakeTheme.HeaderInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/calculator_options_label"
+                app:layout_constraintEnd_toEndOf="@+id/calculatorGuideEnd"
+                app:layout_constraintStart_toStartOf="@+id/calculatorGuideStart"
+                app:layout_constraintTop_toBottomOf="@id/calculatorInput" />
+
+            <View
+                android:id="@+id/calculatorOptionsLabelDivider"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="2dp"
+                android:background="@color/everstakeDivider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/calculatorGuideStart"
+                app:layout_constraintTop_toBottomOf="@id/calculatorOptionsLabel" />
+
+            <View
+                android:id="@+id/calculatorSelectCurrencyBg"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="?selectableItemBackground"
+                app:layout_constraintBottom_toTopOf="@id/calculatorCoinDivider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/calculatorOptionsLabelDivider" />
+
+            <TextView
+                android:id="@+id/calculatorCoinName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="16dp"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@color/everstakeTextColorPrimary"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toStartOf="@+id/calculatorCoinLabel"
+                app:layout_constraintStart_toStartOf="@id/calculatorGuideStart"
+                app:layout_constraintTop_toBottomOf="@id/calculatorOptionsLabelDivider"
+                tools:text="Tezos" />
+
+            <TextView
+                android:id="@+id/calculatorCoinIncome"
+                style="@style/EverstakeTheme.SecondaryInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="@id/calculatorCoinName"
+                app:layout_constraintStart_toStartOf="@id/calculatorCoinName"
+                app:layout_constraintTop_toBottomOf="@id/calculatorCoinName"
+                tools:text="Yearly income: 10%" />
+
+            <TextView
+                android:id="@+id/calculatorCoinLabel"
+                style="@style/EverstakeTheme.PrimaryInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/calculator_currency_label"
+                app:layout_constraintEnd_toEndOf="@id/calculatorGuideEnd"
+                app:layout_constraintTop_toTopOf="@id/calculatorCoinName" />
+
+            <View
+                android:id="@+id/calculatorCoinDivider"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="12dp"
+                android:background="@color/everstakeDivider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/calculatorGuideStart"
+                app:layout_constraintTop_toBottomOf="@id/calculatorCoinIncome" />
+
+            <View
+                android:id="@+id/calculatorSelectValidatorBg"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="?selectableItemBackground"
+                app:layout_constraintBottom_toTopOf="@id/calculatorValidatorDivider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/calculatorCoinDivider" />
+
+            <TextView
+                android:id="@+id/calculatorValidatorName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="16dp"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@color/everstakeTextColorPrimary"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toStartOf="@+id/calculatorValidatorLabel"
+                app:layout_constraintStart_toStartOf="@id/calculatorGuideStart"
+                app:layout_constraintTop_toBottomOf="@id/calculatorCoinDivider"
+                tools:text="Everstake" />
+
+            <TextView
+                android:id="@+id/calculatorValidatorFee"
+                style="@style/EverstakeTheme.SecondaryInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="@id/calculatorValidatorName"
+                app:layout_constraintStart_toStartOf="@id/calculatorValidatorName"
+                app:layout_constraintTop_toBottomOf="@id/calculatorValidatorName"
+                tools:text="Fee: 1%" />
+
+            <TextView
+                android:id="@+id/calculatorValidatorLabel"
+                style="@style/EverstakeTheme.PrimaryInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/calculator_validator_label"
+                app:layout_constraintEnd_toEndOf="@id/calculatorGuideEnd"
+                app:layout_constraintTop_toTopOf="@id/calculatorValidatorName" />
+
+            <View
+                android:id="@+id/calculatorValidatorDivider"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="12dp"
+                android:background="@color/everstakeDivider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/calculatorGuideStart"
+                app:layout_constraintTop_toBottomOf="@id/calculatorValidatorFee" />
+
+            <include
+                android:id="@+id/calculatorIncomeContainer"
+                layout="@layout/view_income_summary"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="@id/calculatorGuideEnd"
+                app:layout_constraintStart_toStartOf="@id/calculatorGuideStart"
+                app:layout_constraintTop_toBottomOf="@id/calculatorValidatorDivider" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/calculatorValidatorFeeCheckBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/calculator_include_fee"
+                android:textColor="@color/everstakeTextColorPrimary"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="@id/calculatorGuideEnd"
+                app:layout_constraintStart_toStartOf="@id/calculatorGuideStart"
+                app:layout_constraintTop_toBottomOf="@id/calculatorIncomeContainer" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/calculatorReinvestCheckBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/calculator_reinvest"
+                android:textColor="@color/everstakeTextColorPrimary"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="@id/calculatorGuideEnd"
+                app:layout_constraintStart_toStartOf="@id/calculatorGuideStart"
+                app:layout_constraintTop_toBottomOf="@id/calculatorValidatorFeeCheckBox" />
+
+            <Button
+                android:id="@+id/calculatorStakeButton"
+                style="@style/EverstakeTheme.PrimaryButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/calculator_proceed_to_staking"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/calculatorGuideEnd"
+                app:layout_constraintStart_toStartOf="@id/calculatorGuideStart"
+                app:layout_constraintTop_toBottomOf="@id/calculatorReinvestCheckBox" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+</FrameLayout>

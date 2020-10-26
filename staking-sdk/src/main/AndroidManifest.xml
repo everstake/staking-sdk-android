@@ -13,5 +13,20 @@
             android:name=".ui.coin.details.CoinDetailsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/EverstakeTheme" />
+
+        <activity
+            android:name=".ui.calculator.CalculatorActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/EverstakeTheme" />
+
+        <activity
+            android:name=".ui.coin.select.CoinSelectActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/EverstakeTheme" />
+
+        <activity
+            android:name=".ui.validator.select.ValidatorSelectActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/EverstakeTheme" />
     </application>
 </manifest>

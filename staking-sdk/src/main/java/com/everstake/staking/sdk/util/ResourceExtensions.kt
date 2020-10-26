@@ -5,7 +5,6 @@ import android.util.TypedValue
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import com.everstake.staking.sdk.EverstakeStaking
 import kotlin.math.roundToInt
 
