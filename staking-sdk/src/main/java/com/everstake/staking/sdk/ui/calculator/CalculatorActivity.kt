@@ -95,6 +95,12 @@ internal class CalculatorActivity : BaseActivity<CalculatorViewModel>() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        inputAmount.removeTextChangedListener(amountTextWatcher)
+        amountTextWatcher = null
+    }
+
     override fun provideLayoutRes(): Int = R.layout.activity_calculator
 
     override fun provideViewModel(): CalculatorViewModel =

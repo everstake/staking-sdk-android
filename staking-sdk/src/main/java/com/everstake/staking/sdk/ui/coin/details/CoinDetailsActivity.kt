@@ -20,10 +20,14 @@ import com.everstake.staking.sdk.util.bindColor
 import com.everstake.staking.sdk.util.bindString
 import com.everstake.staking.sdk.util.getDataInfoSpan
 import kotlinx.android.synthetic.main.activity_coin_details.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 
 /**
  * created by Alex Ivanov on 16.10.2020.
  */
+@FlowPreview
+@ExperimentalCoroutinesApi
 internal class CoinDetailsActivity : BaseActivity<CoinDetailsViewModel>() {
 
     companion object {

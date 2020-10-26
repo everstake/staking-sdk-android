@@ -43,7 +43,7 @@ internal class CalculatorViewModel : BaseViewModel() {
     ).asLiveData(viewModelScope.coroutineContext)
 
     init {
-        amountChannel.offer("0.00")
+        amountChannel.offer("0")
         includeFee.offer(false)
         includeReinvest.offer(false)
     }

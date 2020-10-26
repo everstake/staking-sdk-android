@@ -3,7 +3,7 @@ package com.everstake.staking.sdk.data.model.ui
 /**
  * created by Alex Ivanov on 26.10.2020.
  */
-data class CalculatorModel(
+internal data class CalculatorModel(
     val coinId: String,
     val coinName:String,
     val coinSymbol: String,

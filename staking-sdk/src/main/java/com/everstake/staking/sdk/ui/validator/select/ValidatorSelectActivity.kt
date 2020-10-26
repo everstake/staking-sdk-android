@@ -16,11 +16,15 @@ import com.everstake.staking.sdk.ui.base.list.RecyclerClickListener
 import com.everstake.staking.sdk.ui.base.list.decorator.DividerDecorator
 import com.everstake.staking.sdk.util.dpToPx
 import kotlinx.android.synthetic.main.activity_validator_select.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
 
 /**
  * created by Alex Ivanov on 23.10.2020.
  */
+@FlowPreview
+@ExperimentalCoroutinesApi
 internal class ValidatorSelectActivity : BaseActivity<ValidatorSelectViewModel>() {
 
     companion object {

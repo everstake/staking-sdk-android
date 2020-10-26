@@ -8,12 +8,14 @@ import com.everstake.staking.sdk.data.model.api.GetValidatorsApiResponse
 import com.everstake.staking.sdk.data.model.ui.CalculatorModel
 import com.everstake.staking.sdk.data.repository.CoinListRepository
 import com.everstake.staking.sdk.data.repository.ValidatorRepository
+import com.everstake.staking.sdk.util.CalculatorHelper
 import com.everstake.staking.sdk.util.bindString
 import com.everstake.staking.sdk.util.formatAmount
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import java.math.BigDecimal
+import java.math.BigInteger
 
 /**
  * created by Alex Ivanov on 26.10.2020.
@@ -22,11 +24,6 @@ internal class CalculatorUseCase(
     private val coinListRepository: CoinListRepository = CoinListRepository.instance,
     private val validatorRepository: ValidatorRepository = ValidatorRepository.instance
 ) {
-
-    companion object {
-        private const val INTERVAL_SCALE: Int = 5
-    }
-
     fun getCalculatorDataFlow(
         coinIdFlow: Flow<String>,
         validatorIdFlow: Flow<String?>,
@@ -59,39 +56,26 @@ internal class CalculatorUseCase(
             validatorInfo ?: return@combine null
 
             val amount: BigDecimal = amountStr?.toBigDecimalOrNull() ?: BigDecimal.ZERO
-            val periodPercent: BigDecimal = if (includeValidatorFee == true) {
+            val periodScale: BigDecimal = if (includeValidatorFee == true) {
                 coinInfo.yieldPercent * (BigDecimal.ONE - validatorInfo.fee.scaleByPowerOfTen(-2))
             } else {
                 coinInfo.yieldPercent
-            }
+            }.scaleByPowerOfTen(-2)
             // Minutes to Millis
-            val periodMillis: BigDecimal =
-                coinInfo.yieldInterval.toBigDecimal().scaleByPowerOfTen(3)
-            val yearMs: BigDecimal =
-                DateUtils.YEAR_IN_MILLIS.toBigDecimal().setScale(INTERVAL_SCALE)
-            val monthMs: BigDecimal =
-                DateUtils.YEAR_IN_MILLIS.toBigDecimal().setScale(INTERVAL_SCALE)
-                    .divide(BigDecimal(12))
-            val dayMs: BigDecimal =
-                DateUtils.DAY_IN_MILLIS.toBigDecimal().setScale(INTERVAL_SCALE)
+            val periodMillis: BigInteger = coinInfo.yieldInterval.multiply(BigInteger.TEN.pow(3))
+            val calcHelper = CalculatorHelper(amount, periodScale, includeReinvestment ?: false)
 
-            val perYear: BigDecimal = calculateForPeriod(
-                amount = amount,
-                periodPercent = periodPercent,
-                periodCount = yearMs / periodMillis,
-                includeReinvestment = includeReinvestment ?: false
+            val perYear: BigDecimal = calcHelper.calculate(
+                DateUtils.YEAR_IN_MILLIS.toBigInteger(),
+                periodMillis
             )
-            val perMonth: BigDecimal = calculateForPeriod(
-                amount = amount,
-                periodPercent = periodPercent,
-                periodCount = monthMs / periodMillis,
-                includeReinvestment = includeReinvestment ?: false
+            val perMonth: BigDecimal = calcHelper.calculate(
+                (DateUtils.YEAR_IN_MILLIS / 12).toBigInteger(),
+                periodMillis
             )
-            val perDay: BigDecimal = calculateForPeriod(
-                amount = amount,
-                periodPercent = periodPercent,
-                periodCount = dayMs / periodMillis,
-                includeReinvestment = includeReinvestment ?: false
+            val perDay: BigDecimal = calcHelper.calculate(
+                DateUtils.DAY_IN_MILLIS.toBigInteger(),
+                periodMillis
             )
 
             CalculatorModel(
@@ -116,22 +100,5 @@ internal class CalculatorUseCase(
                 yearlyIncome = formatAmount(perYear, coinInfo.precision, coinInfo.symbol)
             )
         }.filterNotNull()
-    }
-
-    private fun calculateForPeriod(
-        amount: BigDecimal,
-        periodPercent: BigDecimal,
-        periodCount: BigDecimal,
-        includeReinvestment: Boolean
-    ): BigDecimal {
-        var count: BigDecimal = periodCount
-        var income: BigDecimal = BigDecimal.ZERO
-        while (count > BigDecimal.ZERO) {
-            val periodSize: BigDecimal = count.min(BigDecimal.ONE)
-            val periodAmount: BigDecimal = if (includeReinvestment) amount + income else amount
-            income += periodAmount * periodPercent.scaleByPowerOfTen(-2) * periodSize
-            count -= periodSize
-        }
-        return income
     }
 }
