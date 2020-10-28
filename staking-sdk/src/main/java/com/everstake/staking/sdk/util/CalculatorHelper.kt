@@ -12,24 +12,33 @@ internal class CalculatorHelper(
     private val includeReinvestment: Boolean
 ) {
     companion object {
+        // Just a random precision number
         private const val INTERVAL_SCALE: Int = 5
     }
 
     fun calculate(duration: BigInteger, periodDuration: BigInteger): BigDecimal {
+        // Calculate number of periods.
+        // Set Scale is required because of how division works in BigDecimal (in our case scale will be 0 and numbers will be divided like integers)
         return calculate(
             duration.toBigDecimal().setScale(INTERVAL_SCALE).div(periodDuration.toBigDecimal())
         )
     }
 
-    fun calculate(periodCount: BigDecimal): BigDecimal {
-        var count: BigDecimal = periodCount
-        var income: BigDecimal = BigDecimal.ZERO
-        while (count > BigDecimal.ZERO) {
-            val periodSize: BigDecimal = count.min(BigDecimal.ONE)
-            val periodAmount: BigDecimal = if (includeReinvestment) amount + income else amount
-            income += periodAmount * periodScale * periodSize
-            count -= periodSize
+    private fun calculate(periodCount: BigDecimal): BigDecimal {
+        var periodIncome: BigDecimal = BigDecimal.ZERO
+        if (this.includeReinvestment) {
+            var count: BigDecimal = periodCount
+            while (count > BigDecimal.ZERO) {
+                val periodSize: BigDecimal = count.min(BigDecimal.ONE)
+                // With reinvest amount will change every time user will be able to claim
+                val periodAmount: BigDecimal = amount + periodIncome
+                periodIncome += periodAmount * periodScale * periodSize
+                count -= periodSize
+            }
+        } else {
+            // We can speed up calculation in this case because amount is static
+            periodIncome = amount * periodScale * periodCount
         }
-        return income
+        return periodIncome
     }
 }

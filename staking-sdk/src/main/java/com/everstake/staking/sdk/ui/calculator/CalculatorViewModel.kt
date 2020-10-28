@@ -8,14 +8,11 @@ import com.everstake.staking.sdk.data.usecase.CalculatorUseCase
 import com.everstake.staking.sdk.data.usecase.UpdateCoinDetailsUseCase
 import com.everstake.staking.sdk.data.usecase.UpdateValidatorListUseCase
 import com.everstake.staking.sdk.ui.base.BaseViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.async
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.launch
 
 /**
  * created by Alex Ivanov on 19.10.2020.
@@ -40,7 +37,7 @@ internal class CalculatorViewModel : BaseViewModel() {
         amountChannel.asFlow().distinctUntilChanged(),
         includeFee.asFlow().distinctUntilChanged(),
         includeReinvest.asFlow().distinctUntilChanged()
-    ).asLiveData(viewModelScope.coroutineContext)
+    ).asLiveData(Dispatchers.IO)
 
     init {
         amountChannel.offer("0")

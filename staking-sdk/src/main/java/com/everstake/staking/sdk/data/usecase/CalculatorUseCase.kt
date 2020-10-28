@@ -1,8 +1,8 @@
 package com.everstake.staking.sdk.data.usecase
 
-import android.text.format.DateUtils
 import com.everstake.staking.sdk.EverstakeStaking
 import com.everstake.staking.sdk.R
+import com.everstake.staking.sdk.data.Constants
 import com.everstake.staking.sdk.data.model.api.GetCoinsResponseModel
 import com.everstake.staking.sdk.data.model.api.GetValidatorsApiResponse
 import com.everstake.staking.sdk.data.model.ui.CalculatorModel
@@ -56,26 +56,28 @@ internal class CalculatorUseCase(
             validatorInfo ?: return@combine null
 
             val amount: BigDecimal = amountStr?.toBigDecimalOrNull() ?: BigDecimal.ZERO
+            /* Fee and percent are received as raw percent values ie. 10% = 10, we need to convert
+            * it to number representation of percent */
             val periodScale: BigDecimal = if (includeValidatorFee == true) {
                 coinInfo.yieldPercent * (BigDecimal.ONE - validatorInfo.fee.scaleByPowerOfTen(-2))
             } else {
                 coinInfo.yieldPercent
             }.scaleByPowerOfTen(-2)
-            // Minutes to Millis
-            val periodMillis: BigInteger = coinInfo.yieldInterval.multiply(BigInteger.TEN.pow(3))
+
+            val periodSeconds: BigInteger = coinInfo.yieldInterval
             val calcHelper = CalculatorHelper(amount, periodScale, includeReinvestment ?: false)
 
             val perYear: BigDecimal = calcHelper.calculate(
-                DateUtils.YEAR_IN_MILLIS.toBigInteger(),
-                periodMillis
+                Constants.YEAR_IN_SECONDS,
+                periodSeconds
             )
             val perMonth: BigDecimal = calcHelper.calculate(
-                (DateUtils.YEAR_IN_MILLIS / 12).toBigInteger(),
-                periodMillis
+                Constants.MONTH_IN_SECONDS,
+                periodSeconds
             )
             val perDay: BigDecimal = calcHelper.calculate(
-                DateUtils.DAY_IN_MILLIS.toBigInteger(),
-                periodMillis
+                Constants.DAY_IN_SECONDS,
+                periodSeconds
             )
 
             CalculatorModel(

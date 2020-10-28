@@ -7,14 +7,13 @@ import com.everstake.staking.sdk.data.model.ui.CoinDetailsModel
 import com.everstake.staking.sdk.data.usecase.GetCoinDetailsUseCase
 import com.everstake.staking.sdk.data.usecase.UpdateCoinDetailsUseCase
 import com.everstake.staking.sdk.ui.base.BaseViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.BroadcastChannel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 /**
@@ -31,7 +30,7 @@ internal class CoinDetailsViewModel : BaseViewModel() {
 
     val coinDetails: LiveData<CoinDetailsModel> = coinDetailsUseCase
         .getCoinDetailsFlow(coinIdChannel.asFlow().distinctUntilChanged())
-        .asLiveData(viewModelScope.coroutineContext)
+        .asLiveData(Dispatchers.IO)
 
     init {
         viewModelScope.launch {

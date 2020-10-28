@@ -14,7 +14,7 @@
         android:layout_weight="1"
         android:hint="@string/calculator_amount_hint"
         android:importantForAutofill="no"
-        android:inputType="number"
+        android:inputType="numberDecimal"
         tools:text="0.02" />
 
     <TextView

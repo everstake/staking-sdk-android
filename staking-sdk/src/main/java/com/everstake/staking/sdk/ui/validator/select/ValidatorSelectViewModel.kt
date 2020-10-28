@@ -7,13 +7,13 @@ import com.everstake.staking.sdk.data.model.ui.ValidatorListModel
 import com.everstake.staking.sdk.data.usecase.GetValidatorsListUseCase
 import com.everstake.staking.sdk.data.usecase.UpdateValidatorListUseCase
 import com.everstake.staking.sdk.ui.base.BaseViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 /**
@@ -33,7 +33,7 @@ internal class ValidatorSelectViewModel : BaseViewModel() {
     val listData: LiveData<List<ValidatorListModel>> = getValidatorUseCase.getValidatorListFlow(
         coinIdChannel.asFlow().distinctUntilChanged(),
         selectedValidatorChannel.asFlow().distinctUntilChanged()
-    ).asLiveData(viewModelScope.coroutineContext)
+    ).asLiveData(Dispatchers.IO)
 
     fun initViewModel(coinId: String, validatorId: String?) {
         viewModelScope.launch {
