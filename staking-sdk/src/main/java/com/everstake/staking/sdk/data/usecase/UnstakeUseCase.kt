@@ -58,7 +58,6 @@ internal class UnstakeUseCase(
             }
             this.previousProgress = progressIn
 
-
             UnstakeModel(
                 balance = formatAmount(totalBalance, coinInfo.precision, coinInfo.symbol),
                 amount = if (amount == initialAmount) amountStr

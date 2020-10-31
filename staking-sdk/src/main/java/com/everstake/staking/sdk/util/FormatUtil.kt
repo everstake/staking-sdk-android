@@ -12,6 +12,6 @@ private fun provideFormat(precision: Int): String = (0 until precision).fold("0"
     }
 }
 
-fun formatAmount(amount: BigDecimal, precision: Int, symbol: String? = null): String =
+internal fun formatAmount(amount: BigDecimal, precision: Int, symbol: String? = null): String =
     if (symbol != null) "${amount.format(provideFormat(precision))} $symbol"
     else amount.format(provideFormat(precision))

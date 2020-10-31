@@ -3,12 +3,13 @@ package com.everstake.staking.sdk.util
 import android.content.Context
 import com.everstake.staking.sdk.R
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 /**
  * created by Alex Ivanov on 31.10.2020.
  */
 internal fun formatTimeSeconds(context: Context, seconds: Long): String {
-    return formatTime(context, seconds * 1000L)
+    return formatTime(context, TimeUnit.SECONDS.toMillis(seconds))
 }
 
 internal fun formatTime(context: Context, millis: Long): String {
