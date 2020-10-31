@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/unstakeToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        app:navigationIcon="@drawable/ic_back"
+        app:title="@string/unstake_title" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="?actionBarSize">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/unstakeGuideStart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="16dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/unstakeGuideEnd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="16dp" />
+
+            <TextView
+                android:id="@+id/unstakeAmountLabel"
+                style="@style/EverstakeTheme.HeaderInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/common_enter_amount_label"
+                app:layout_constraintEnd_toStartOf="@id/unstakeStakedAmount"
+                app:layout_constraintStart_toStartOf="@id/unstakeGuideStart"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/unstakeStakedAmount"
+                style="@style/EverstakeTheme.SecondaryInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                app:layout_constraintEnd_toEndOf="@id/unstakeGuideEnd"
+                app:layout_constraintStart_toEndOf="@id/unstakeAmountLabel"
+                app:layout_constraintTop_toTopOf="@id/unstakeAmountLabel"
+                tools:text="Staked: 0.312 XTZ" />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/unstakeAmountLabelBarrier"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="unstakeAmountLabel,unstakeStakedAmount" />
+
+            <include
+                android:id="@+id/unstakeInput"
+                layout="@layout/view_amount_input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                app:layout_constraintEnd_toEndOf="@id/unstakeGuideEnd"
+                app:layout_constraintStart_toStartOf="@id/unstakeGuideStart"
+                app:layout_constraintTop_toBottomOf="@id/unstakeAmountLabelBarrier" />
+
+            <SeekBar
+                android:id="@+id/unstakeAmountSeekBar"
+                style="@style/EverstakeTheme.AmountSeekBar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/unstakeInput"
+                tools:max="1000"
+                tools:progress="400" />
+
+            <TextView
+                android:id="@+id/unstakeAmountZeroPercentLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="@string/unstake_zero_percent_label"
+                app:layout_constraintEnd_toStartOf="@id/unstakeAmountHundredPercentLabel"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintStart_toStartOf="@id/unstakeGuideStart"
+                app:layout_constraintTop_toBottomOf="@id/unstakeAmountSeekBar" />
+
+            <TextView
+                android:id="@+id/unstakeAmountHundredPercentLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/unstake_hundred_percent_label"
+                app:layout_constraintEnd_toEndOf="@id/unstakeGuideEnd"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintStart_toEndOf="@id/unstakeAmountZeroPercentLabel"
+                app:layout_constraintTop_toTopOf="@id/unstakeAmountZeroPercentLabel" />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/unstakePercentageLabelBarrier"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="unstakeAmountZeroPercentLabel,unstakeAmountHundredPercentLabel" />
+
+            <TextView
+                android:id="@+id/unstakeTimeLabel"
+                style="@style/EverstakeTheme.SecondaryInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/unstake_time_label"
+                app:layout_constraintEnd_toEndOf="@id/unstakeGuideEnd"
+                app:layout_constraintStart_toStartOf="@id/unstakeGuideStart"
+                app:layout_constraintTop_toBottomOf="@id/unstakePercentageLabelBarrier" />
+
+            <TextView
+                android:id="@+id/unstakeTimeInfo"
+                style="@style/EverstakeTheme.PrimaryInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@id/unstakeGuideEnd"
+                app:layout_constraintStart_toStartOf="@id/unstakeGuideStart"
+                app:layout_constraintTop_toBottomOf="@id/unstakeTimeLabel"
+                tools:text="The funds will return in one day" />
+
+            <Button
+                android:id="@+id/unstakeButton"
+                style="@style/EverstakeTheme.PrimaryButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/unstake_button_text"
+                app:layout_constraintEnd_toEndOf="@id/unstakeGuideEnd"
+                app:layout_constraintStart_toStartOf="@id/unstakeGuideStart"
+                app:layout_constraintTop_toBottomOf="@id/unstakeTimeInfo" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+</FrameLayout>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name ='common_day'>
+        <item quantity='one'>%s Day</item>
+        <item quantity='other'>%s Days</item>
+    </plurals>
+    <plurals name ='common_hour'>
+        <item quantity='one'>%s Hour</item>
+        <item quantity='other'>%s Hours</item>
+    </plurals>
+    <plurals name ='common_minute'>
+        <item quantity='one'>%s Minute</item>
+        <item quantity='other'>%s Minutes</item>
+    </plurals>
+    <plurals name ='common_second'>
+        <item quantity='one'>%s Second</item>
+        <item quantity='other'>%s Seconds</item>
+    </plurals>
+</resources>

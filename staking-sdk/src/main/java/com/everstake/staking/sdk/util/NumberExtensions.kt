@@ -17,7 +17,7 @@ private fun provideSymbolsFormat(): DecimalFormatSymbols =
     DecimalFormatSymbols.getInstance(Locale.ENGLISH)
 
 
-fun Number.format(formatPattern: String): String =
+internal fun Number.format(formatPattern: String): String =
     DecimalFormat(formatPattern, provideSymbolsFormat()).apply {
         roundingMode = RoundingMode.FLOOR
     }.format(this)

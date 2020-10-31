@@ -4,6 +4,8 @@
     <string name="common_percent_format">%s%%</string>
     <string name="common_fee_format">Fee: %s</string>
     <string name="common_reliable">Reliable</string>
+    <string name="common_enter_amount_label">Enter amount</string>
+    <string name="common_enter_amount_hint">0.00</string>
     <!--  Stake(coin list)  -->
     <string name="coin_list_title">Stake</string>
     <string name="coin_list_info_menu">Staking info</string>
@@ -25,8 +27,6 @@
     <string name="coin_details_about">About</string>
     <!--  Calculator  -->
     <string name="calculator_title">Calculator</string>
-    <string name="calculator_amount_label">Enter amount</string>
-    <string name="calculator_amount_hint">0.00</string>
     <string name="calculator_options_label">Select options</string>
     <string name="calculator_yearly_income">Yearly income: %s</string>
     <string name="calculator_currency_label">Currency</string>
@@ -41,4 +41,13 @@
     <string name="select_coin_title">Select currency</string>
     <!--  Select validator  -->
     <string name="select_validator_title">Select validator</string>
+    <!--  Unstake  -->
+    <string name="unstake_title">New unstake</string>
+    <string name="unstake_staked">Staked:</string>
+    <string name="unstake_zero_percent_label">0%</string>
+    <string name="unstake_hundred_percent_label">100%</string>
+    <string name="unstake_time_label">Unstake time</string>
+    <string name="unstake_time_immediate">The funds will be returned immediately</string>
+    <string name="unstake_time_format">The funds will return in %s</string>
+    <string name="unstake_button_text">Unstake</string>
 </resources>

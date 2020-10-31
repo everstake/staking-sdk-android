@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/background">
+        <shape>
+            <padding
+                android:bottom="4dp"
+                android:top="4dp" />
+            <corners android:radius="4dp" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <stroke
+                android:width="4dp"
+                android:color="@android:color/transparent" />
+            <solid android:color="#4D000000" />
+            <corners android:radius="4dp" />
+        </shape>
+    </item>
+    <item android:id="@android:id/progress">
+        <scale
+            android:drawable="@drawable/seek_progress"
+            android:scaleWidth="100%" />
+    </item>
+
+    <item
+        android:drawable="@drawable/seek_dots"
+        android:gravity="center_vertical" />
+
+</layer-list>

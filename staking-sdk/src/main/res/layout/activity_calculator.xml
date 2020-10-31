@@ -41,7 +41,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="@string/calculator_amount_label"
+                android:text="@string/common_enter_amount_label"
                 app:layout_constraintEnd_toEndOf="@id/calculatorGuideEnd"
                 app:layout_constraintStart_toStartOf="@id/calculatorGuideStart"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -195,7 +195,7 @@
                 app:layout_constraintStart_toStartOf="@id/calculatorGuideStart"
                 app:layout_constraintTop_toBottomOf="@id/calculatorValidatorDivider" />
 
-            <androidx.appcompat.widget.AppCompatCheckBox
+            <CheckBox
                 android:id="@+id/calculatorValidatorFeeCheckBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -207,7 +207,7 @@
                 app:layout_constraintStart_toStartOf="@id/calculatorGuideStart"
                 app:layout_constraintTop_toBottomOf="@id/calculatorIncomeContainer" />
 
-            <androidx.appcompat.widget.AppCompatCheckBox
+            <CheckBox
                 android:id="@+id/calculatorReinvestCheckBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
