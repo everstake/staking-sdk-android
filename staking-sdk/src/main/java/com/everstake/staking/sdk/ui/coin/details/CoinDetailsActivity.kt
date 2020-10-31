@@ -16,6 +16,7 @@ import com.everstake.staking.sdk.R
 import com.everstake.staking.sdk.data.model.ui.CoinDetailsModel
 import com.everstake.staking.sdk.ui.base.BaseActivity
 import com.everstake.staking.sdk.ui.calculator.CalculatorActivity
+import com.everstake.staking.sdk.ui.unstake.UnstakeActivity
 import com.everstake.staking.sdk.util.bindColor
 import com.everstake.staking.sdk.util.bindString
 import com.everstake.staking.sdk.util.getDataInfoSpan
@@ -57,7 +58,8 @@ internal class CoinDetailsActivity : BaseActivity<CoinDetailsViewModel>() {
             startActivity(CalculatorActivity.getIntent(this, coinId))
         }
         coinDetailsUnstakeButton.setOnClickListener {
-            Toast.makeText(this, "Not implemented", Toast.LENGTH_SHORT).show()
+            val coinId: String = viewModel.coinDetails.value?.id ?: return@setOnClickListener
+            startActivity(UnstakeActivity.getIntent(this, coinId))
         }
         coinDetailsStakeClaimButton.setOnClickListener {
             Toast.makeText(this, "Not implemented", Toast.LENGTH_SHORT).show()
