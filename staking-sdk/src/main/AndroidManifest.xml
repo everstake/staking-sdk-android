@@ -33,5 +33,11 @@
             android:name=".ui.unstake.UnstakeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/EverstakeTheme" />
+
+        <activity
+            android:name=".ui.stake.StakeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/EverstakeTheme" />
+
     </application>
 </manifest>

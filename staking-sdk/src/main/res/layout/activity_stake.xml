@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/stakeToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:navigationIcon="@drawable/ic_back"
+        app:title="@string/stake_title"
+        tools:subtitle="Yearly income: 10%" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/stakeGuideStart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="16dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/stakeGuideEnd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="16dp" />
+
+            <TextView
+                android:id="@+id/stakeAmountLabel"
+                style="@style/EverstakeTheme.HeaderInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/common_enter_amount_label"
+                app:layout_constraintEnd_toStartOf="@id/stakeStakedAmount"
+                app:layout_constraintStart_toStartOf="@id/stakeGuideStart"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/stakeStakedAmount"
+                style="@style/EverstakeTheme.SecondaryInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                app:layout_constraintEnd_toEndOf="@id/stakeGuideEnd"
+                app:layout_constraintStart_toEndOf="@id/stakeAmountLabel"
+                app:layout_constraintTop_toTopOf="@id/stakeAmountLabel"
+                tools:text="Balance: 0.435 XTZ" />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/stakeAmountLabelBarrier"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="stakeAmountLabel,stakeStakedAmount" />
+
+            <include
+                android:id="@+id/stakeInput"
+                layout="@layout/view_amount_input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                app:layout_constraintEnd_toEndOf="@id/stakeGuideEnd"
+                app:layout_constraintStart_toStartOf="@id/stakeGuideStart"
+                app:layout_constraintTop_toBottomOf="@id/stakeAmountLabelBarrier" />
+
+            <SeekBar
+                android:id="@+id/stakeAmountSeekBar"
+                style="@style/EverstakeTheme.AmountSeekBar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/stakeInput"
+                tools:max="1000"
+                tools:progress="400" />
+
+            <TextView
+                android:id="@+id/stakeAmountZeroPercentLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="@string/common_zero_percent_label"
+                app:layout_constraintEnd_toStartOf="@id/stakeAmountHundredPercentLabel"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintStart_toStartOf="@id/stakeGuideStart"
+                app:layout_constraintTop_toBottomOf="@id/stakeAmountSeekBar" />
+
+            <TextView
+                android:id="@+id/stakeAmountHundredPercentLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/common_hundred_percent_label"
+                app:layout_constraintEnd_toEndOf="@id/stakeGuideEnd"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintStart_toEndOf="@id/stakeAmountZeroPercentLabel"
+                app:layout_constraintTop_toTopOf="@id/stakeAmountZeroPercentLabel" />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/stakePercentageLabelBarrier"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="stakeAmountZeroPercentLabel,stakeAmountHundredPercentLabel" />
+
+            <TextView
+                android:id="@+id/stakeValidatorLabel"
+                style="@style/EverstakeTheme.HeaderInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/stake_select_label"
+                app:layout_constraintEnd_toEndOf="@+id/stakeGuideEnd"
+                app:layout_constraintStart_toStartOf="@+id/stakeGuideStart"
+                app:layout_constraintTop_toBottomOf="@id/stakePercentageLabelBarrier" />
+
+            <View
+                android:id="@+id/stakeValidatorLabelDivider"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="2dp"
+                android:background="@color/everstakeDivider"
+                app:layout_constraintEnd_toEndOf="@id/stakeGuideEnd"
+                app:layout_constraintStart_toStartOf="@id/stakeGuideStart"
+                app:layout_constraintTop_toBottomOf="@id/stakeValidatorLabel" />
+
+            <View
+                android:id="@+id/stakeSelectValidatorBg"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="?selectableItemBackground"
+                app:layout_constraintBottom_toTopOf="@id/stakeValidatorDivider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/stakeValidatorLabelDivider" />
+
+            <TextView
+                android:id="@+id/stakeValidatorName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="16dp"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@color/everstakeTextColorPrimary"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toStartOf="@+id/stakeValidatorReliableLabel"
+                app:layout_constraintStart_toStartOf="@id/stakeGuideStart"
+                app:layout_constraintTop_toBottomOf="@id/stakeValidatorLabelDivider"
+                tools:text="Everstake" />
+
+            <TextView
+                android:id="@+id/stakeValidatorFee"
+                style="@style/EverstakeTheme.SecondaryInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="@id/stakeValidatorName"
+                app:layout_constraintStart_toStartOf="@id/stakeValidatorName"
+                app:layout_constraintTop_toBottomOf="@id/stakeValidatorName"
+                tools:text="Fee: 1%" />
+
+            <TextView
+                android:id="@+id/stakeValidatorReliableLabel"
+                style="@style/EverstakeTheme.ReliableLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/stakeSelectValidatorBg"
+                app:layout_constraintEnd_toEndOf="@id/stakeGuideEnd"
+                app:layout_constraintTop_toTopOf="@id/stakeSelectValidatorBg" />
+
+            <View
+                android:id="@+id/stakeValidatorDivider"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="12dp"
+                android:background="@color/everstakeDivider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/stakeGuideStart"
+                app:layout_constraintTop_toBottomOf="@id/stakeValidatorFee" />
+
+            <Button
+                android:id="@+id/stakeButton"
+                style="@style/EverstakeTheme.PrimaryButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/stake_button_text"
+                app:layout_constraintEnd_toEndOf="@id/stakeGuideEnd"
+                app:layout_constraintStart_toStartOf="@id/stakeGuideStart"
+                app:layout_constraintTop_toBottomOf="@id/stakeValidatorDivider" />
+
+            <include
+                android:id="@+id/stakeIncomeContainer"
+                layout="@layout/view_income_summary"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/stakeGuideEnd"
+                app:layout_constraintStart_toStartOf="@id/stakeGuideStart"
+                app:layout_constraintTop_toBottomOf="@id/stakeButton" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+</LinearLayout>

@@ -12,6 +12,7 @@ import com.everstake.staking.sdk.R
 import com.everstake.staking.sdk.data.model.ui.CalculatorModel
 import com.everstake.staking.sdk.ui.base.BaseActivity
 import com.everstake.staking.sdk.ui.coin.select.CoinSelectActivity
+import com.everstake.staking.sdk.ui.stake.StakeActivity
 import com.everstake.staking.sdk.ui.validator.select.ValidatorSelectActivity
 import com.everstake.staking.sdk.util.bindString
 import com.everstake.staking.sdk.util.setSelectableItemBackground
@@ -74,6 +75,17 @@ internal class CalculatorActivity : BaseActivity<CalculatorViewModel>() {
         }
         calculatorReinvestCheckBox.setOnCheckedChangeListener { _, isChecked: Boolean ->
             viewModel.updateIncludeReinvest(isChecked)
+        }
+
+        calculatorStakeButton.setOnClickListener {
+            startActivity(
+                StakeActivity.getIntent(
+                    this,
+                    viewModel.getCoinId(),
+                    viewModel.getValidatorId(),
+                    inputAmount.text.toString()
+                )
+            )
         }
     }
 
