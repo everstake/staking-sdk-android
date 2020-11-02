@@ -34,13 +34,7 @@ internal class CalculatorUseCase(
         val coinInfoFlow: Flow<GetCoinsResponseModel> =
             coinListRepository.getCoinInfoFlow(coinIdFlow)
         val validatorInfoFlow: Flow<GetValidatorsApiResponse> =
-            validatorRepository.getValidatorFlow(coinIdFlow)
-                .combine(validatorIdFlow) { validators: List<GetValidatorsApiResponse>?, selectedValidatorId: String? ->
-                    validators?.takeIf { it.isNotEmpty() } ?: return@combine null
-                    validators.find { it.id == selectedValidatorId }
-                        ?: validators.firstOrNull() { it.isReliable }
-                        ?: validators.first()
-                }.filterNotNull()
+            validatorRepository.findValidatorInfo(coinIdFlow, validatorIdFlow)
 
         return combine(
             coinInfoFlow,

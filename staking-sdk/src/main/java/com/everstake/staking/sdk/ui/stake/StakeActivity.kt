@@ -103,7 +103,7 @@ internal class StakeActivity : BaseActivity<StakeViewModel>() {
         viewModel.stakeInfo.observe(this) { updateUI(it) }
 
         getValidatorId(intent)?.also { viewModel.updateValidatorId(it) }
-        getAmount(intent)?.also { inputAmount.setText(it) }
+        getAmount(intent)?.also { updateAmountText(it) }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
@@ -161,7 +161,7 @@ internal class StakeActivity : BaseActivity<StakeViewModel>() {
             spanColor
         )
 
-        if (inputAmount.text.toString() != amount) inputAmount.setText(amount)
+        updateAmountText(amount)
         inputAmountSymbol.text = coinSymbol
 
         val progressInt: Int = (progress * Constants.PROGRESS_MAX_VALUE.toBigDecimal()).toInt()
@@ -188,5 +188,12 @@ internal class StakeActivity : BaseActivity<StakeViewModel>() {
         incomeDailyText.text = dailyIncome
         incomeMonthlyText.text = monthlyIncome
         incomeYearlyText.text = yearlyIncome
+    }
+
+    private fun updateAmountText(amount: String) {
+        if (inputAmount.text.toString() != amount) {
+            inputAmount.setText(amount)
+            if (inputAmount.isFocused) inputAmount.setSelection(amount.length)
+        }
     }
 }

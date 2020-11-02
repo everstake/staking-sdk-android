@@ -3,6 +3,7 @@ package com.everstake.staking.sdk.data.usecase
 import com.everstake.staking.sdk.EverstakeStaking
 import com.everstake.staking.sdk.R
 import com.everstake.staking.sdk.data.Constants
+import com.everstake.staking.sdk.data.Constants.MAX_DISPLAY_PRECISION
 import com.everstake.staking.sdk.data.model.api.GetCoinsResponseModel
 import com.everstake.staking.sdk.data.model.api.GetValidatorsApiResponse
 import com.everstake.staking.sdk.data.model.ui.StakeModel
@@ -39,13 +40,7 @@ internal class GetStakeInfoUseCase(
             coinListRepository.getCoinInfoFlow(coinIdFlow)
         val balanceFlow: Flow<String?> = flowOf("10000"/* TODO add balance to SDK */)
         val validatorInfoFlow: Flow<GetValidatorsApiResponse> =
-            validatorRepository.getValidatorFlow(coinIdFlow)
-                .combine(validatorIdFlow) { validators: List<GetValidatorsApiResponse>?, selectedValidatorId: String? ->
-                    validators?.takeIf { it.isNotEmpty() } ?: return@combine null
-                    validators.find { it.id == selectedValidatorId }
-                        ?: validators.firstOrNull() { it.isReliable }
-                        ?: validators.first()
-                }.filterNotNull()
+            validatorRepository.findValidatorInfo(coinIdFlow, validatorIdFlow)
 
         return combine(coinInfoFlow, balanceFlow, amountFlow, progressFlow, validatorInfoFlow)
         { coinInfo: GetCoinsResponseModel?, balance: String?, amountStr: String?, progressIn: BigDecimal?, validatorInfo: GetValidatorsApiResponse? ->
@@ -64,7 +59,8 @@ internal class GetStakeInfoUseCase(
                     amount = totalBalance * progress
                 } else {
                     // Amount or TotalBalance changed, recalculate progress
-                    progress = amount.setScale(max(5, amount.scale())) / totalBalance
+                    progress =
+                        amount.setScale(max(MAX_DISPLAY_PRECISION, amount.scale())) / totalBalance
                 }
             } else {
                 amount = BigDecimal.ZERO

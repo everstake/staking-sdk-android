@@ -10,10 +10,7 @@ import com.everstake.staking.sdk.util.CacheType
 import com.everstake.staking.sdk.util.readCache
 import com.everstake.staking.sdk.util.storeCache
 import com.google.gson.Gson
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import java.util.concurrent.TimeUnit
 
 /**
@@ -70,4 +67,12 @@ internal class ValidatorRepository private constructor() {
         }.distinctUntilChanged().map { json: String? ->
             json?.let { gson.parseWithType(json) } ?: emptyList()
         }
+
+    fun findValidatorInfo(coinIdFlow: Flow<String>, validatorIdFlow: Flow<String?>): Flow<GetValidatorsApiResponse> =
+        getValidatorFlow(coinIdFlow).combine(validatorIdFlow) { validators: List<GetValidatorsApiResponse>?, selectedValidatorId: String? ->
+            validators?.takeIf { it.isNotEmpty() } ?: return@combine null
+            validators.find { it.id == selectedValidatorId }
+                ?: validators.firstOrNull() { it.isReliable }
+                ?: validators.first()
+        }.filterNotNull()
 }
