@@ -6,6 +6,8 @@
     <string name="common_reliable">Reliable</string>
     <string name="common_enter_amount_label">Enter amount</string>
     <string name="common_enter_amount_hint">0.00</string>
+    <string name="common_zero_percent_label">0%</string>
+    <string name="common_hundred_percent_label">100%</string>
     <!--  Stake(coin list)  -->
     <string name="coin_list_title">Stake</string>
     <string name="coin_list_info_menu">Staking info</string>
@@ -44,10 +46,14 @@
     <!--  Unstake  -->
     <string name="unstake_title">New unstake</string>
     <string name="unstake_staked">Staked:</string>
-    <string name="unstake_zero_percent_label">0%</string>
-    <string name="unstake_hundred_percent_label">100%</string>
     <string name="unstake_time_label">Unstake time</string>
     <string name="unstake_time_immediate">The funds will be returned immediately</string>
     <string name="unstake_time_format">The funds will return in %s</string>
     <string name="unstake_button_text">Unstake</string>
+    <!--  Stake  -->
+    <string name="stake_title">New stake</string>
+    <string name="stake_subtitle">Yearly income:</string>
+    <string name="stake_balance_label">Balance:</string>
+    <string name="stake_select_label">Select validator</string>
+    <string name="stake_button_text">Stake</string>
 </resources>

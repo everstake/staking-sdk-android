@@ -1,5 +1,6 @@
 package com.everstake.staking.sdk.data.usecase
 
+import com.everstake.staking.sdk.data.Constants.MAX_DISPLAY_PRECISION
 import com.everstake.staking.sdk.data.model.api.GetCoinsResponseModel
 import com.everstake.staking.sdk.data.model.api.PutStakeResponseModel
 import com.everstake.staking.sdk.data.model.ui.UnstakeModel
@@ -15,7 +16,7 @@ import kotlin.math.max
 /**
  * created by Alex Ivanov on 30.10.2020.
  */
-internal class UnstakeUseCase(
+internal class GetUnstakeInfoUseCase(
     private val coinListRepository: CoinListRepository = CoinListRepository.instance,
     private val stakedRepository: StakedRepository = StakedRepository.instance
 ) {
@@ -28,13 +29,9 @@ internal class UnstakeUseCase(
         progressFlow: Flow<BigDecimal>
     ): Flow<UnstakeModel> {
         val coinInfoFlow: Flow<GetCoinsResponseModel> =
-            coinIdFlow.combine(coinListRepository.getCoinListFlow()) { coinId: String?, coinList: List<GetCoinsResponseModel>? ->
-                coinList?.find { it.id == coinId }
-            }.filterNotNull()
+            coinListRepository.getCoinInfoFlow(coinIdFlow)
         val stakedInfoFlow: Flow<PutStakeResponseModel?> =
-            coinIdFlow.combine(stakedRepository.getStakedFlow()) { coinId: String?, stakedList: List<PutStakeResponseModel>? ->
-                stakedList?.find { it.coinId == coinId }
-            }
+            stakedRepository.getStakeInfoFlow(coinIdFlow)
 
         return combine(coinInfoFlow, stakedInfoFlow, amountFlow, progressFlow)
         { coinInfo: GetCoinsResponseModel?, stakedInfo: PutStakeResponseModel?, amountStr: String?, progressIn: BigDecimal? ->
@@ -51,7 +48,8 @@ internal class UnstakeUseCase(
                     amount = totalBalance * progress
                 } else {
                     // Amount or TotalBalance changed, recalculate progress
-                    progress = amount.setScale(max(5, amount.scale())) / totalBalance
+                    progress =
+                        amount.setScale(max(MAX_DISPLAY_PRECISION, amount.scale())) / totalBalance
                 }
             } else {
                 amount = BigDecimal.ZERO

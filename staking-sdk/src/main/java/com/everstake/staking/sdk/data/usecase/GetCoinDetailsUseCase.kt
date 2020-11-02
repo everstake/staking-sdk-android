@@ -12,7 +12,6 @@ import com.everstake.staking.sdk.util.formatAmount
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
-import java.lang.IllegalStateException
 import java.math.BigDecimal
 
 /**
@@ -22,19 +21,17 @@ internal class GetCoinDetailsUseCase(
     private val coinListRepository: CoinListRepository = CoinListRepository.instance,
     private val stakedRepository: StakedRepository = StakedRepository.instance
 ) {
-    fun getCoinDetailsFlow(coinIdFlow: Flow<String>): Flow<CoinDetailsModel> =
-        combine(
-            coinIdFlow,
-            coinListRepository.getCoinListFlow(),
-            stakedRepository.getStakedFlow()
-        ) { coinId: String?,
-            coinList: List<GetCoinsResponseModel>?,
-            stakedList: List<PutStakeResponseModel>? ->
-            coinId ?: return@combine null
-            coinList ?: return@combine null
-            val coinInfo: GetCoinsResponseModel = coinList.find { it.id == coinId }
-                ?: throw IllegalStateException("Coin with id $coinId is missing")
-            val stakedInfo: PutStakeResponseModel? = stakedList?.find { it.coinId == coinId }
+    fun getCoinDetailsFlow(coinIdFlow: Flow<String>): Flow<CoinDetailsModel> {
+        val coinInfoFlow: Flow<GetCoinsResponseModel> =
+            coinListRepository.getCoinInfoFlow(coinIdFlow)
+        val stakeInfoFlow: Flow<PutStakeResponseModel?> =
+            stakedRepository.getStakeInfoFlow(coinIdFlow)
+        return combine(
+            coinInfoFlow,
+            stakeInfoFlow
+        ) { coinInfo: GetCoinsResponseModel?,
+            stakedInfo: PutStakeResponseModel? ->
+            coinInfo ?: return@combine null
 
             val apr: String = bindString(
                 EverstakeStaking.app,
@@ -61,7 +58,7 @@ internal class GetCoinDetailsUseCase(
             val showClaim: Boolean = showStaked && claimAmount > BigDecimal.ZERO
 
             CoinDetailsModel(
-                id = coinId,
+                id = coinInfo.id,
                 displayName = "${coinInfo.name} (${coinInfo.symbol})",
                 iconUrl = coinInfo.iconUrl,
                 about = coinInfo.about,
@@ -76,4 +73,5 @@ internal class GetCoinDetailsUseCase(
                 availableToClaim = formatAmount(claimAmount, coinInfo.precision, coinInfo.symbol)
             )
         }.filterNotNull()
+    }
 }

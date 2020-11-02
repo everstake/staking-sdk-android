@@ -11,4 +11,6 @@ internal object Constants {
     val YEAR_IN_SECONDS: BigInteger = DAY_IN_SECONDS * 365.toBigInteger()
 
     const val PROGRESS_MAX_VALUE: Int = 1000
+
+    const val MAX_DISPLAY_PRECISION: Int = 8
 }

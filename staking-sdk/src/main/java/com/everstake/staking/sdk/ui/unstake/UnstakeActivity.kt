@@ -63,6 +63,7 @@ internal class UnstakeActivity : BaseActivity<UnstakeViewModel>() {
                     (progress.toDouble() / Constants.PROGRESS_MAX_VALUE).toBigDecimal()
                 viewModel.updateProgress(progressScale)
             }
+
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
@@ -94,7 +95,7 @@ internal class UnstakeActivity : BaseActivity<UnstakeViewModel>() {
             data = balance,
             dataColor = bindColor(this, R.color.everstakeTextColorPrimary)
         )
-        if (inputAmount.text.toString() != amount) inputAmount.setText(amount)
+        updateAmountText(amount)
         inputAmountSymbol.text = symbol
 
         val progressInt: Int = (progress * Constants.PROGRESS_MAX_VALUE.toBigDecimal()).toInt()
@@ -110,6 +111,13 @@ internal class UnstakeActivity : BaseActivity<UnstakeViewModel>() {
             )
         } else {
             bindString(this, R.string.unstake_time_immediate)
+        }
+    }
+
+    private fun updateAmountText(amount: String) {
+        if (inputAmount.text.toString() != amount) {
+            inputAmount.setText(amount)
+            if (inputAmount.isFocused) inputAmount.setSelection(amount.length)
         }
     }
 }

@@ -7,9 +7,7 @@ import com.everstake.staking.sdk.data.api.callEverstakeApi
 import com.everstake.staking.sdk.data.model.api.GetCoinsResponseModel
 import com.everstake.staking.sdk.util.*
 import com.google.gson.Gson
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import java.util.concurrent.TimeUnit
 
 /**
@@ -51,4 +49,9 @@ internal class CoinListRepository private constructor() {
     ).distinctUntilChanged().map { cachedData: CacheData ->
         Gson().parseWithType(cachedData.dataJson)
     }
+
+    fun getCoinInfoFlow(coinIdFlow: Flow<String>): Flow<GetCoinsResponseModel> =
+        coinIdFlow.combine(getCoinListFlow()) { coinId: String?, coinList: List<GetCoinsResponseModel>? ->
+            coinList?.find { it.id == coinId }
+        }.filterNotNull()
 }
