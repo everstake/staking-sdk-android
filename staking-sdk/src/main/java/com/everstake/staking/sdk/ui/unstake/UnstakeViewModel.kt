@@ -3,7 +3,7 @@ package com.everstake.staking.sdk.ui.unstake
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import com.everstake.staking.sdk.data.model.ui.UnstakeModel
-import com.everstake.staking.sdk.data.usecase.UnstakeUseCase
+import com.everstake.staking.sdk.data.usecase.GetUnstakeInfoUseCase
 import com.everstake.staking.sdk.ui.base.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -21,7 +21,7 @@ import java.math.BigDecimal
 @ExperimentalCoroutinesApi
 internal class UnstakeViewModel : BaseViewModel() {
 
-    private val unstakeUseCase: UnstakeUseCase = UnstakeUseCase()
+    private val unstakeUseCase: GetUnstakeInfoUseCase = GetUnstakeInfoUseCase()
 
     private val coinIdChannel: BroadcastChannel<String> = ConflatedBroadcastChannel()
     private val amountChannel: BroadcastChannel<String> = ConflatedBroadcastChannel()

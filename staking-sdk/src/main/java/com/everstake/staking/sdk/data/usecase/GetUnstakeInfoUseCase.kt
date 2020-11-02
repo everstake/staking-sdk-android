@@ -15,7 +15,7 @@ import kotlin.math.max
 /**
  * created by Alex Ivanov on 30.10.2020.
  */
-internal class UnstakeUseCase(
+internal class GetUnstakeInfoUseCase(
     private val coinListRepository: CoinListRepository = CoinListRepository.instance,
     private val stakedRepository: StakedRepository = StakedRepository.instance
 ) {

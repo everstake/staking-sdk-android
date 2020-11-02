@@ -43,12 +43,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/common_enter_amount_label"
-                app:layout_constraintEnd_toStartOf="@id/stakeStakedAmount"
+                app:layout_constraintEnd_toStartOf="@id/stakeBalance"
                 app:layout_constraintStart_toStartOf="@id/stakeGuideStart"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/stakeStakedAmount"
+                android:id="@+id/stakeBalance"
                 style="@style/EverstakeTheme.SecondaryInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:barrierDirection="bottom"
-                app:constraint_referenced_ids="stakeAmountLabel,stakeStakedAmount" />
+                app:constraint_referenced_ids="stakeAmountLabel,stakeBalance" />
 
             <include
                 android:id="@+id/stakeInput"

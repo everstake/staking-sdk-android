@@ -5,7 +5,7 @@ import com.everstake.staking.sdk.R
 import com.everstake.staking.sdk.data.Constants
 import com.everstake.staking.sdk.data.model.api.GetCoinsResponseModel
 import com.everstake.staking.sdk.data.model.api.GetValidatorsApiResponse
-import com.everstake.staking.sdk.data.model.ui.CalculatorModel
+import com.everstake.staking.sdk.data.model.ui.StakeModel
 import com.everstake.staking.sdk.data.repository.CoinListRepository
 import com.everstake.staking.sdk.data.repository.ValidatorRepository
 import com.everstake.staking.sdk.util.CalculatorHelper
@@ -14,25 +14,30 @@ import com.everstake.staking.sdk.util.formatAmount
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flowOf
 import java.math.BigDecimal
 import java.math.BigInteger
+import kotlin.math.max
 
 /**
- * created by Alex Ivanov on 26.10.2020.
+ * created by Alex Ivanov on 02.11.2020.
  */
-internal class CalculatorUseCase(
+internal class GetStakeInfoUseCase(
     private val coinListRepository: CoinListRepository = CoinListRepository.instance,
     private val validatorRepository: ValidatorRepository = ValidatorRepository.instance
 ) {
-    fun getCalculatorDataFlow(
+
+    private var previousProgress: BigDecimal = BigDecimal.ZERO
+
+    fun getStakeFlow(
         coinIdFlow: Flow<String>,
         validatorIdFlow: Flow<String?>,
         amountFlow: Flow<String>,
-        includeValidatorFeeFlow: Flow<Boolean>,
-        addReinvestmentFlow: Flow<Boolean>
-    ): Flow<CalculatorModel> {
+        progressFlow: Flow<BigDecimal>
+    ): Flow<StakeModel> {
         val coinInfoFlow: Flow<GetCoinsResponseModel> =
             coinListRepository.getCoinInfoFlow(coinIdFlow)
+        val balanceFlow: Flow<String?> = flowOf("10000"/* TODO add balance to SDK */)
         val validatorInfoFlow: Flow<GetValidatorsApiResponse> =
             validatorRepository.getValidatorFlow(coinIdFlow)
                 .combine(validatorIdFlow) { validators: List<GetValidatorsApiResponse>?, selectedValidatorId: String? ->
@@ -42,27 +47,33 @@ internal class CalculatorUseCase(
                         ?: validators.first()
                 }.filterNotNull()
 
-        return combine(
-            coinInfoFlow,
-            validatorInfoFlow,
-            amountFlow,
-            includeValidatorFeeFlow,
-            addReinvestmentFlow
-        ) { coinInfo: GetCoinsResponseModel?, validatorInfo: GetValidatorsApiResponse?, amountStr: String?, includeValidatorFee: Boolean?, includeReinvestment: Boolean? ->
+        return combine(coinInfoFlow, balanceFlow, amountFlow, progressFlow, validatorInfoFlow)
+        { coinInfo: GetCoinsResponseModel?, balance: String?, amountStr: String?, progressIn: BigDecimal?, validatorInfo: GetValidatorsApiResponse? ->
             coinInfo ?: return@combine null
+            amountStr ?: return@combine null
+            progressIn ?: return@combine null
             validatorInfo ?: return@combine null
 
-            val amount: BigDecimal = amountStr?.toBigDecimalOrNull() ?: BigDecimal.ZERO
-            /* Fee and percent are received as raw percent values ie. 10% = 10, we need to convert
-            * it to number representation of percent */
-            val periodScale: BigDecimal = if (includeValidatorFee == true) {
-                coinInfo.yieldPercent * (BigDecimal.ONE - validatorInfo.fee.scaleByPowerOfTen(-2))
+            val totalBalance: BigDecimal = balance?.toBigDecimalOrNull() ?: BigDecimal.ZERO
+            val initialAmount: BigDecimal = amountStr.toBigDecimalOrNull() ?: BigDecimal.ZERO
+            var amount: BigDecimal = initialAmount
+            var progress: BigDecimal = progressIn
+            if (totalBalance > BigDecimal.ZERO) {
+                if (previousProgress != progress) {
+                    // Progress changed, recalculate Amount
+                    amount = totalBalance * progress
+                } else {
+                    // Amount or TotalBalance changed, recalculate progress
+                    progress = amount.setScale(max(5, amount.scale())) / totalBalance
+                }
             } else {
-                coinInfo.yieldPercent
-            }.scaleByPowerOfTen(-2)
+                amount = BigDecimal.ZERO
+            }
+            this.previousProgress = progressIn
 
             val periodSeconds: BigInteger = coinInfo.yieldInterval
-            val calcHelper = CalculatorHelper(amount, periodScale, includeReinvestment ?: false)
+            val calcHelper =
+                CalculatorHelper(amount, coinInfo.yieldPercent.scaleByPowerOfTen(-2), false)
 
             val perYear: BigDecimal = calcHelper.calculate(
                 Constants.YEAR_IN_SECONDS,
@@ -77,9 +88,12 @@ internal class CalculatorUseCase(
                 periodSeconds
             )
 
-            CalculatorModel(
+            StakeModel(
                 coinId = coinInfo.id,
-                coinName = coinInfo.name,
+                balance = formatAmount(totalBalance, coinInfo.precision, coinInfo.symbol),
+                amount = if (amount == initialAmount) amountStr
+                else formatAmount(amount, coinInfo.precision),
+                progress = progress,
                 coinSymbol = coinInfo.symbol,
                 coinYearlyIncomePercent = bindString(
                     EverstakeStaking.app,

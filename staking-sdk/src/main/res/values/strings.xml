@@ -51,7 +51,7 @@
     <string name="unstake_time_format">The funds will return in %s</string>
     <string name="unstake_button_text">Unstake</string>
     <!--  Stake  -->
-    <string name="stake_title">Stake</string>
+    <string name="stake_title">New stake</string>
     <string name="stake_subtitle">Yearly income:</string>
     <string name="stake_balance_label">Balance:</string>
     <string name="stake_select_label">Select validator</string>
