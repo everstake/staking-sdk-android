@@ -3,7 +3,7 @@ package com.everstake.staking.sdk.ui.coin.select
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import com.everstake.staking.sdk.data.model.ui.CoinSelectModel
-import com.everstake.staking.sdk.data.usecase.GetCoinListForSelectUseCase
+import com.everstake.staking.sdk.data.usecase.coins.GetCoinListForSelectUseCase
 import com.everstake.staking.sdk.ui.base.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 

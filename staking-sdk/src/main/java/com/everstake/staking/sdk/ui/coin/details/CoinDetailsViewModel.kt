@@ -5,7 +5,7 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.everstake.staking.sdk.data.model.ui.CoinDetailsModel
 import com.everstake.staking.sdk.data.usecase.GetCoinDetailsUseCase
-import com.everstake.staking.sdk.data.usecase.UpdateCoinDetailsUseCase
+import com.everstake.staking.sdk.data.usecase.stake.UpdateCoinDetailsUseCase
 import com.everstake.staking.sdk.ui.base.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

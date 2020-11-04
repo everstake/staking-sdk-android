@@ -12,6 +12,8 @@ import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
+import com.everstake.staking.sdk.EverstakeAction
+import com.everstake.staking.sdk.EverstakeStaking
 import com.everstake.staking.sdk.R
 import com.everstake.staking.sdk.data.Constants
 import com.everstake.staking.sdk.data.model.ui.StakeModel
@@ -97,7 +99,9 @@ internal class StakeActivity : BaseActivity<StakeViewModel>() {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
         stakeButton.setOnClickListener {
-            Toast.makeText(this, "Call app callback", Toast.LENGTH_SHORT).show()
+            // TODO Call appropriate API
+            val symbol: String = viewModel.stakeInfo.value?.coinSymbol?: return@setOnClickListener
+            EverstakeStaking.appCallback.get()?.onAction(EverstakeAction.STAKE, symbol, mapOf())
         }
 
         viewModel.stakeInfo.observe(this) { updateUI(it) }

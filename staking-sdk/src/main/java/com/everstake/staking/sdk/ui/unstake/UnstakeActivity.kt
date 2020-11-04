@@ -6,9 +6,10 @@ import android.os.Bundle
 import android.text.TextWatcher
 import android.view.MenuItem
 import android.widget.SeekBar
-import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
+import com.everstake.staking.sdk.EverstakeAction
+import com.everstake.staking.sdk.EverstakeStaking
 import com.everstake.staking.sdk.R
 import com.everstake.staking.sdk.data.Constants
 import com.everstake.staking.sdk.data.model.ui.UnstakeModel
@@ -51,7 +52,9 @@ internal class UnstakeActivity : BaseActivity<UnstakeViewModel>() {
         setSupportActionBar(unstakeToolbar)
         unstakeAmountSeekBar.max = Constants.PROGRESS_MAX_VALUE
         unstakeButton.setOnClickListener {
-            Toast.makeText(this, "Call app callback", Toast.LENGTH_SHORT).show()
+            // TODO Call appropriate API
+            val symbol: String = viewModel.unstakeModel.value?.symbol ?: return@setOnClickListener
+            EverstakeStaking.appCallback.get()?.onAction(EverstakeAction.UNSTAKE, symbol, mapOf())
         }
         textWatcher = inputAmount.doOnTextChanged { text, _, _, _ ->
             viewModel.updateAmount(text?.toString() ?: "")

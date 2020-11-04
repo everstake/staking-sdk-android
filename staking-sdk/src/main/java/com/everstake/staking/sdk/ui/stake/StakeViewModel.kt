@@ -5,8 +5,8 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.everstake.staking.sdk.data.model.ui.StakeModel
 import com.everstake.staking.sdk.data.usecase.GetStakeInfoUseCase
-import com.everstake.staking.sdk.data.usecase.UpdateCoinDetailsUseCase
-import com.everstake.staking.sdk.data.usecase.UpdateValidatorListUseCase
+import com.everstake.staking.sdk.data.usecase.stake.UpdateCoinDetailsUseCase
+import com.everstake.staking.sdk.data.usecase.validator.UpdateValidatorListUseCase
 import com.everstake.staking.sdk.ui.base.BaseViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.BroadcastChannel

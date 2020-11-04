@@ -59,7 +59,8 @@ internal class GetCoinDetailsUseCase(
 
             CoinDetailsModel(
                 id = coinInfo.id,
-                displayName = "${coinInfo.name} (${coinInfo.symbol})",
+                coinName = coinInfo.name,
+                coinSymbol = coinInfo.symbol,
                 iconUrl = coinInfo.iconUrl,
                 about = coinInfo.about,
                 aboutUrl = coinInfo.aboutUrl,

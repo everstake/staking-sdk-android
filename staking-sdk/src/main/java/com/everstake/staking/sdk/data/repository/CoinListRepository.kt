@@ -8,12 +8,16 @@ import com.everstake.staking.sdk.data.model.api.GetCoinsResponseModel
 import com.everstake.staking.sdk.util.*
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.*
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 /**
  * created by Alex Ivanov on 09.10.2020.
  */
-internal class CoinListRepository private constructor() {
+internal class CoinListRepository
+private constructor(
+    private val userBalanceRepository: UserBalanceRepository = UserBalanceRepository.instance
+) {
 
     companion object {
         val instance: CoinListRepository by lazy { CoinListRepository() }
@@ -47,8 +51,13 @@ internal class CoinListRepository private constructor() {
     fun getCoinListFlow(): Flow<List<GetCoinsResponseModel>> = readCacheAsFlow(
         EverstakeStaking.app, CacheType.COIN
     ).distinctUntilChanged().map { cachedData: CacheData ->
-        Gson().parseWithType(cachedData.dataJson)
-    }
+        Gson().parseWithType<List<GetCoinsResponseModel>>(cachedData.dataJson)
+    }.combine(userBalanceRepository.getSupportedCoinsFlow())
+    { coinList: List<GetCoinsResponseModel>?, supportedCoins: List<String>? ->
+        coinList ?: return@combine null
+        supportedCoins ?: return@combine null
+        coinList.filter { supportedCoins.contains(it.symbol.toUpperCase(Locale.ENGLISH)) }
+    }.filterNotNull()
 
     fun getCoinInfoFlow(coinIdFlow: Flow<String>): Flow<GetCoinsResponseModel> =
         coinIdFlow.combine(getCoinListFlow()) { coinId: String?, coinList: List<GetCoinsResponseModel>? ->
