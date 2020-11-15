@@ -39,7 +39,7 @@ internal class ValidatorSelectViewModel : BaseViewModel() {
         viewModelScope.launch {
             coinIdChannel.send(coinId)
             selectedValidatorChannel.send(validatorId ?: "")
-            updateValidatorsUseCase.updateValidators(coinId)
+            updateValidatorsUseCase.updateValidators()
         }
     }
 }

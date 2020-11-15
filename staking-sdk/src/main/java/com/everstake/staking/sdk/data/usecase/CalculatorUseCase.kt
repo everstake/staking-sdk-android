@@ -4,10 +4,9 @@ import com.everstake.staking.sdk.EverstakeStaking
 import com.everstake.staking.sdk.R
 import com.everstake.staking.sdk.data.Constants
 import com.everstake.staking.sdk.data.model.api.GetCoinsResponseModel
-import com.everstake.staking.sdk.data.model.api.GetValidatorsApiResponse
+import com.everstake.staking.sdk.data.model.api.Validator
 import com.everstake.staking.sdk.data.model.ui.CalculatorModel
 import com.everstake.staking.sdk.data.repository.CoinListRepository
-import com.everstake.staking.sdk.data.repository.ValidatorRepository
 import com.everstake.staking.sdk.util.CalculatorHelper
 import com.everstake.staking.sdk.util.bindString
 import com.everstake.staking.sdk.util.formatAmount
@@ -22,7 +21,6 @@ import java.math.BigInteger
  */
 internal class CalculatorUseCase(
     private val coinListRepository: CoinListRepository = CoinListRepository.instance,
-    private val validatorRepository: ValidatorRepository = ValidatorRepository.instance
 ) {
     fun getCalculatorDataFlow(
         coinIdFlow: Flow<String>,
@@ -33,8 +31,8 @@ internal class CalculatorUseCase(
     ): Flow<CalculatorModel> {
         val coinInfoFlow: Flow<GetCoinsResponseModel> =
             coinListRepository.getCoinInfoFlow(coinIdFlow)
-        val validatorInfoFlow: Flow<GetValidatorsApiResponse> =
-            validatorRepository.findValidatorInfo(coinIdFlow, validatorIdFlow)
+        val validatorInfoFlow: Flow<Validator> =
+            coinListRepository.findValidatorInfoFlow(coinInfoFlow, validatorIdFlow)
 
         return combine(
             coinInfoFlow,
@@ -42,7 +40,7 @@ internal class CalculatorUseCase(
             amountFlow,
             includeValidatorFeeFlow,
             addReinvestmentFlow
-        ) { coinInfo: GetCoinsResponseModel?, validatorInfo: GetValidatorsApiResponse?, amountStr: String?, includeValidatorFee: Boolean?, includeReinvestment: Boolean? ->
+        ) { coinInfo: GetCoinsResponseModel?, validatorInfo: Validator?, amountStr: String?, includeValidatorFee: Boolean?, includeReinvestment: Boolean? ->
             coinInfo ?: return@combine null
             validatorInfo ?: return@combine null
 

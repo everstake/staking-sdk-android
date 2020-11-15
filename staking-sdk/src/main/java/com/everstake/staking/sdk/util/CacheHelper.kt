@@ -16,8 +16,7 @@ import java.util.*
  */
 internal enum class CacheType {
     COIN,
-    STAKE,
-    VALIDATORS;
+    STAKE;
 
     fun cacheFileName(): String {
         return "${this.name.toLowerCase(Locale.ENGLISH)}_cache.json"

@@ -5,6 +5,7 @@ import com.everstake.staking.sdk.data.api.ApiResult
 import com.everstake.staking.sdk.data.api.EverstakeApi
 import com.everstake.staking.sdk.data.api.callEverstakeApi
 import com.everstake.staking.sdk.data.model.api.GetCoinsResponseModel
+import com.everstake.staking.sdk.data.model.api.Validator
 import com.everstake.staking.sdk.util.*
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.*
@@ -63,4 +64,16 @@ private constructor(
         coinIdFlow.combine(getCoinListFlow()) { coinId: String?, coinList: List<GetCoinsResponseModel>? ->
             coinList?.find { it.id == coinId }
         }.filterNotNull()
+
+    fun findValidatorInfoFlow(
+        coinInfoFlow: Flow<GetCoinsResponseModel>,
+        validatorIdFlow: Flow<String?>
+    ): Flow<Validator> =
+        coinInfoFlow.map { it.validators }
+            .combine(validatorIdFlow) { validators: List<Validator>?, selectedValidatorId: String? ->
+                validators?.takeIf { it.isNotEmpty() } ?: return@combine null
+                validators.find { it.id == selectedValidatorId }
+                    ?: validators.firstOrNull() { it.isReliable }
+                    ?: validators.first()
+            }.filterNotNull()
 }

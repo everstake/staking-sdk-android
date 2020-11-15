@@ -48,7 +48,7 @@ internal class StakeViewModel : BaseViewModel() {
         validatorIdChannel.offer(null)
         viewModelScope.launch {
             val updateCoin = async { updateCoinUseCase.updateData() }
-            val updateValidator = async { updateValidatorUseCase.updateValidators(coinId) }
+            val updateValidator = async { updateValidatorUseCase.updateValidators() }
             updateCoin.await()
             updateValidator.await()
         }

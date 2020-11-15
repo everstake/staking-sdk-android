@@ -5,11 +5,10 @@ import com.everstake.staking.sdk.R
 import com.everstake.staking.sdk.data.Constants
 import com.everstake.staking.sdk.data.Constants.MAX_DISPLAY_PRECISION
 import com.everstake.staking.sdk.data.model.api.GetCoinsResponseModel
-import com.everstake.staking.sdk.data.model.api.GetValidatorsApiResponse
+import com.everstake.staking.sdk.data.model.api.Validator
 import com.everstake.staking.sdk.data.model.ui.StakeModel
 import com.everstake.staking.sdk.data.repository.CoinListRepository
 import com.everstake.staking.sdk.data.repository.UserBalanceRepository
-import com.everstake.staking.sdk.data.repository.ValidatorRepository
 import com.everstake.staking.sdk.util.CalculatorHelper
 import com.everstake.staking.sdk.util.bindString
 import com.everstake.staking.sdk.util.formatAmount
@@ -23,7 +22,6 @@ import kotlin.math.max
  */
 internal class GetStakeInfoUseCase(
     private val coinListRepository: CoinListRepository = CoinListRepository.instance,
-    private val validatorRepository: ValidatorRepository = ValidatorRepository.instance,
     private val userBalanceRepository: UserBalanceRepository = UserBalanceRepository.instance
 ) {
 
@@ -40,11 +38,11 @@ internal class GetStakeInfoUseCase(
         val balanceFlow: Flow<String?> = userBalanceRepository.getBalanceForCoinSymbol(
             coinInfoFlow.map { it.symbol }
         ).onStart { emit(null) }
-        val validatorInfoFlow: Flow<GetValidatorsApiResponse> =
-            validatorRepository.findValidatorInfo(coinIdFlow, validatorIdFlow)
+        val validatorInfoFlow: Flow<Validator> =
+            coinListRepository.findValidatorInfoFlow(coinInfoFlow, validatorIdFlow)
 
         return combine(coinInfoFlow, balanceFlow, amountFlow, progressFlow, validatorInfoFlow)
-        { coinInfo: GetCoinsResponseModel?, balance: String?, amountStr: String?, progressIn: BigDecimal?, validatorInfo: GetValidatorsApiResponse? ->
+        { coinInfo: GetCoinsResponseModel?, balance: String?, amountStr: String?, progressIn: BigDecimal?, validatorInfo: Validator? ->
             coinInfo ?: return@combine null
             amountStr ?: return@combine null
             progressIn ?: return@combine null
