@@ -7,7 +7,9 @@ interface EverstakeListener {
     fun onAction(
         actionType: EverstakeAction,
         coinSymbol: String,
-        payload: Map<String, Any>
+        amount: String,
+        validatorName: String,
+        validatorAddress: String
     )
 }
 

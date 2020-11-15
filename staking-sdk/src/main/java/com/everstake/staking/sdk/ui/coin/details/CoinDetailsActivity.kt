@@ -65,10 +65,15 @@ internal class CoinDetailsActivity : BaseActivity<CoinDetailsViewModel>() {
             startActivity(UnstakeActivity.getIntent(this, coinId))
         }
         coinDetailsStakeClaimButton.setOnClickListener {
-            // TODO call API, get tx info
-            val coinSymbol: String =
-                viewModel.coinDetails.value?.coinSymbol ?: return@setOnClickListener
-            EverstakeStaking.appCallback.get()?.onAction(EverstakeAction.CLAIM, coinSymbol, mapOf())
+            val coinDetails: CoinDetailsModel =
+                viewModel.coinDetails.value ?: return@setOnClickListener
+            EverstakeStaking.appCallback.get()?.onAction(
+                EverstakeAction.CLAIM,
+                coinDetails.coinSymbol,
+                coinDetails.claimAmount,
+                coinDetails.validatorName,
+                coinDetails.validatorAddress
+            )
         }
     }
 
@@ -108,9 +113,10 @@ internal class CoinDetailsActivity : BaseActivity<CoinDetailsViewModel>() {
             showStakedSection: Boolean,
             stakedAmount: String,
             validatorName: String,
+            _: String,
             yearlyIncome: String,
             showClaimSection: Boolean,
-            availableToClaim: String) = coinDetails
+            claimAmount: String) = coinDetails
 
         val displayName = "$coinName ($coinSymbol)"
         coinDetailsCoinTitle.text = displayName
@@ -152,7 +158,7 @@ internal class CoinDetailsActivity : BaseActivity<CoinDetailsViewModel>() {
 
         coinDetailsAvailableClaim.text = getDataInfoSpan(
             bindString(this, R.string.coin_details_available_rewards),
-            availableToClaim,
+            "$claimAmount $coinSymbol",
             stakedSpanColor
         )
 

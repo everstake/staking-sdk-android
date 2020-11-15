@@ -52,9 +52,15 @@ internal class UnstakeActivity : BaseActivity<UnstakeViewModel>() {
         setSupportActionBar(unstakeToolbar)
         unstakeAmountSeekBar.max = Constants.PROGRESS_MAX_VALUE
         unstakeButton.setOnClickListener {
-            // TODO Call appropriate API
-            val symbol: String = viewModel.unstakeModel.value?.symbol ?: return@setOnClickListener
-            EverstakeStaking.appCallback.get()?.onAction(EverstakeAction.UNSTAKE, symbol, mapOf())
+            val unstakeModel: UnstakeModel =
+                viewModel.unstakeModel.value ?: return@setOnClickListener
+            EverstakeStaking.appCallback.get()?.onAction(
+                EverstakeAction.UNSTAKE,
+                unstakeModel.symbol,
+                unstakeModel.amount,
+                unstakeModel.validatorName,
+                unstakeModel.validatorAddress
+            )
         }
         textWatcher = inputAmount.doOnTextChanged { text, _, _, _ ->
             viewModel.updateAmount(text?.toString() ?: "")

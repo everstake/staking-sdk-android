@@ -97,6 +97,7 @@ internal class GetStakeInfoUseCase(
                 ),
                 validatorId = validatorInfo.id,
                 validatorName = validatorInfo.name,
+                validatorAddress = validatorInfo.address,
                 validatorFee = bindString(
                     EverstakeStaking.app,
                     R.string.common_percent_format,

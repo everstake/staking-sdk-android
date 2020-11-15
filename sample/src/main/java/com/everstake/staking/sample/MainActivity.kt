@@ -15,11 +15,13 @@ class MainActivity : AppCompatActivity() {
         override fun onAction(
             actionType: EverstakeAction,
             coinSymbol: String,
-            payload: Map<String, Any>
+            amount: String,
+            validatorName: String,
+            validatorAddress: String
         ) {
             Log.d(
-                "Everstake Action",
-                "ActionType = $actionType\tcoinSymbol = $coinSymbol\tpayload = $payload˚"
+                "Everstake_Action",
+                "ActionType = $actionType\tcoinSymbol = $coinSymbol\tamount = $amount\tvalidatorName = $validatorName\tvalidatorAddress = $validatorAddress˚"
             )
             val refreshMap: Map<String, String> = balances.map { it.coinSymbol to it.address }
                 .toMap()

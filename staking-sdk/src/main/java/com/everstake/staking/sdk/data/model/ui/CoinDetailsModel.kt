@@ -15,7 +15,8 @@ internal data class CoinDetailsModel(
     val showStakedSection: Boolean,
     val stakedAmount: String,
     val validatorName: String,
+    val validatorAddress: String,
     val yearlyIncome: String,
     val showClaimSection: Boolean,
-    val availableToClaim: String
+    val claimAmount: String
 )

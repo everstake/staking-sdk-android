@@ -77,9 +77,10 @@ internal class GetCoinDetailsUseCase(
                 showStakedSection = showStaked,
                 stakedAmount = stakedAmount,
                 validatorName = stakedInfo?.validator?.name ?: "",
+                validatorAddress = stakedInfo?.validator?.address ?: "",
                 yearlyIncome = income,
                 showClaimSection = showClaim,
-                availableToClaim = formatAmount(claimAmount, coinInfo.precision, coinInfo.symbol)
+                claimAmount = formatAmount(claimAmount, coinInfo.precision)
             )
         }.filterNotNull()
     }
