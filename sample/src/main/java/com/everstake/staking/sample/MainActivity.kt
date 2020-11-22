@@ -28,7 +28,6 @@ class MainActivity : AppCompatActivity() {
                 .filter { it.key == coinSymbol }
             EverstakeStaking.refreshStaked(refreshMap)
         }
-
     }
     private val balances: List<EverstakeBalanceModel> = listOf(
         EverstakeBalanceModel("XTZ", "tz2B2xFMrTi1fHe7y94bMAFua6GPQM2XtTkV", "2099.8"),
