@@ -2,7 +2,6 @@ package com.everstake.staking.sdk.data.repository
 
 import com.everstake.staking.sdk.EverstakeStaking
 import com.everstake.staking.sdk.data.api.ApiResult
-import com.everstake.staking.sdk.data.api.EverstakeApi
 import com.everstake.staking.sdk.data.api.callEverstakeApi
 import com.everstake.staking.sdk.data.model.api.GetCoinsResponseModel
 import com.everstake.staking.sdk.data.model.api.Validator
@@ -26,7 +25,7 @@ private constructor(
 
     suspend fun refreshCoinList(
         updateTimeout: Long = TimeUnit.MINUTES.toMillis(10)
-    ): List<GetCoinsResponseModel> {
+    ): ApiResult<List<GetCoinsResponseModel>> {
         val cachedCoinList: List<GetCoinsResponseModel>? = readCache<List<GetCoinsResponseModel>>(
             EverstakeStaking.app,
             CacheType.COIN,
@@ -34,22 +33,17 @@ private constructor(
         )
         return if (cachedCoinList == null) {
             val apiResult: ApiResult<List<GetCoinsResponseModel>> =
-                callEverstakeApi { api: EverstakeApi ->
-                    api.getSupportedCoins()
-                }
+                callEverstakeApi { getSupportedCoins() }
             if (apiResult is ApiResult.Success) {
-                apiResult.result.also { result: List<GetCoinsResponseModel> ->
-                    storeCache(EverstakeStaking.app, CacheType.COIN, result)
-                }
-            } else {
-                emptyList()
+                storeCache(EverstakeStaking.app, CacheType.COIN, apiResult.result)
             }
+            apiResult
         } else {
-            cachedCoinList
+            ApiResult.Success(cachedCoinList)
         }
     }
 
-    fun getCoinListFlow(): Flow<List<GetCoinsResponseModel>> = readCacheAsFlow(
+    fun getCoinListFlowNullable(): Flow<List<GetCoinsResponseModel>?> = readCacheAsFlow(
         EverstakeStaking.app, CacheType.COIN
     ).distinctUntilChanged().map { cachedData: CacheData ->
         Gson().parseWithType<List<GetCoinsResponseModel>>(cachedData.dataJson)
@@ -58,7 +52,10 @@ private constructor(
         coinList ?: return@combine null
         supportedCoins ?: return@combine null
         coinList.filter { supportedCoins.contains(it.symbol.toUpperCase(Locale.ENGLISH)) }
-    }.filterNotNull()
+    }
+
+    fun getCoinListFlow(): Flow<List<GetCoinsResponseModel>> =
+        getCoinListFlowNullable().filterNotNull()
 
     fun getCoinInfoFlow(coinIdFlow: Flow<String>): Flow<GetCoinsResponseModel> =
         coinIdFlow.combine(getCoinListFlow()) { coinId: String?, coinList: List<GetCoinsResponseModel>? ->

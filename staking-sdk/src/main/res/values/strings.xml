@@ -8,13 +8,16 @@
     <string name="common_enter_amount_hint">0.00</string>
     <string name="common_zero_percent_label">0%</string>
     <string name="common_hundred_percent_label">100%</string>
+    <string name="common_empty_title">Unable to retrieve data</string>
+    <string name="common_empty_refresh">Refresh</string>
     <!--  Stake(coin list)  -->
     <string name="coin_list_title">Stake</string>
     <string name="coin_list_info_menu">Staking info</string>
     <string name="coin_list_staked">Staked</string>
     <string name="coin_list_ready_to_stake">Ready to stake</string>
     <string name="coin_list_coming_soon">Coming soon</string>
-    <!--  Coin Details  -->
+    <string name="coin_list_empty">No supported coins found, try again later</string>
+    <!--  Coin Details  -->w
     <string name="coin_details_info">Coin info</string>
     <string name="coin_details_apr">APR:</string>
     <string name="coin_details_service_fee">Service fee:</string>

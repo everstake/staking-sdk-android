@@ -13,7 +13,7 @@ internal class UpdateCoinDetailsUseCase(
     private val updateStakedUseCase: RefreshStakedUseCase = RefreshStakedUseCase()
 ) {
 
-    suspend fun updateData(updateTimeout: Long = TimeUnit.MINUTES.toMillis(10)): Unit =
+    suspend fun updateData(updateTimeout: Long = TimeUnit.MINUTES.toMillis(10)): Boolean =
         coroutineScope {
             val updateCoinList = async {
                 updateCoinListUseCase.updateCoins(updateTimeout)
@@ -21,8 +21,8 @@ internal class UpdateCoinDetailsUseCase(
             val updateStaked = async {
                 updateStakedUseCase.updateStaked(updateTimeout = updateTimeout)
             }
-            updateCoinList.await()
             updateStaked.await()
+            return@coroutineScope updateCoinList.await()
         }
 
 }

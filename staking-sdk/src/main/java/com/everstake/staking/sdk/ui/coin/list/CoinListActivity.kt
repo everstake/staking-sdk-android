@@ -5,11 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.everstake.staking.sdk.R
+import com.everstake.staking.sdk.data.State
 import com.everstake.staking.sdk.data.model.ui.CoinListModel
 import com.everstake.staking.sdk.data.model.ui.SectionData
 import com.everstake.staking.sdk.ui.base.BaseActivity
@@ -21,6 +23,7 @@ import com.everstake.staking.sdk.ui.coin.details.CoinDetailsActivity
 import com.everstake.staking.sdk.util.bindString
 import com.everstake.staking.sdk.util.dpToPx
 import kotlinx.android.synthetic.main.activity_coin_list.*
+import kotlinx.android.synthetic.main.view_empty_state.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -56,8 +59,34 @@ internal class CoinListActivity : BaseActivity<CoinListViewModel>() {
         coinListRecycler.addItemDecoration(dividerDecorator)
         coinListRecycler.addItemDecoration(textDecorator)
 
-        viewModel.sectionData.observe(this) {
-            updateList(it)
+        emptyRefresh.setOnClickListener { viewModel.refreshData() }
+
+        viewModel.state.observe(this) { state: State<List<SectionData<CoinListModel>>> ->
+            when (state) {
+                is State.Progress -> {
+                    coinListProgress.visibility = View.VISIBLE
+                    coinListEmpty.visibility = View.GONE
+                    coinListRecycler.visibility = View.GONE
+                }
+                is State.Error -> {
+                    coinListProgress.visibility = View.GONE
+                    coinListEmpty.visibility = View.VISIBLE
+                    coinListRecycler.visibility = View.GONE
+                    emptyTitle.setText(R.string.common_empty_title)
+                }
+                is State.Result -> {
+                    coinListProgress.visibility = View.GONE
+                    if (state.result.isNotEmpty()) {
+                        coinListRecycler.visibility = View.VISIBLE
+                        coinListEmpty.visibility = View.GONE
+                        updateList(state.result)
+                    } else {
+                        coinListEmpty.visibility = View.VISIBLE
+                        coinListRecycler.visibility = View.GONE
+                        emptyTitle.setText(R.string.coin_list_empty)
+                    }
+                }
+            }
         }
     }
 

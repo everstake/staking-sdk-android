@@ -2,7 +2,6 @@ package com.everstake.staking.sdk.data.repository
 
 import com.everstake.staking.sdk.EverstakeStaking
 import com.everstake.staking.sdk.data.api.ApiResult
-import com.everstake.staking.sdk.data.api.EverstakeApi
 import com.everstake.staking.sdk.data.api.callEverstakeApi
 import com.everstake.staking.sdk.data.model.api.PutStakeBodyModel
 import com.everstake.staking.sdk.data.model.api.PutStakeResponseModel
@@ -33,14 +32,13 @@ internal class StakedRepository private constructor() {
         )
         return if (cachedStakedList == null) {
             val apiResult: ApiResult<List<PutStakeResponseModel>> =
-                callEverstakeApi { api: EverstakeApi ->
-                    api.getStakedInfo(
+                callEverstakeApi {
+                    getStakedInfo(
                         coinIdToAddressMap.map { (coinId: String, address: String) ->
                             PutStakeBodyModel(coinId, address)
                         })
                 }
             if (apiResult is ApiResult.Success) {
-
                 apiResult.result.also { apiResultList: List<PutStakeResponseModel> ->
                     val cacheResult: List<PutStakeResponseModel> =
                         readCache<List<PutStakeResponseModel>>(
@@ -48,7 +46,8 @@ internal class StakedRepository private constructor() {
                             CacheType.STAKE,
                             Long.MAX_VALUE
                         ) ?: emptyList()
-                    val result: List<PutStakeResponseModel> = (apiResultList + cacheResult).distinctBy { it.coinId }
+                    val result: List<PutStakeResponseModel> =
+                        (apiResultList + cacheResult).distinctBy { it.coinId }
                     storeCache(EverstakeStaking.app, CacheType.STAKE, result)
                 }
             } else {

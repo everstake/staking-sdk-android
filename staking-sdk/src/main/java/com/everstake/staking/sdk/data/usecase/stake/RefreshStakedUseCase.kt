@@ -27,7 +27,7 @@ internal class RefreshStakedUseCase(
                 ?.takeIf { it.isNotEmpty() }
 
         val coinList: List<GetCoinsResponseModel> =
-            coinListRepository.getCoinListFlow().firstOrNull() ?: return
+            coinListRepository.getCoinListFlowNullable().firstOrNull() ?: return
 
         val coinIdToAddressMap: Map<String, String> =
             coinSymbolToAddressMap?.map { (coinSymbol: String, address: String) ->

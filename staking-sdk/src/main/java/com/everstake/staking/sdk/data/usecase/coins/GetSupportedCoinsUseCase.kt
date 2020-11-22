@@ -2,6 +2,7 @@ package com.everstake.staking.sdk.data.usecase.coins
 
 import com.everstake.staking.sdk.data.repository.CoinListRepository
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 
 /**
  * created by Alex Ivanov on 03.11.2020.
@@ -11,5 +12,6 @@ internal class GetSupportedCoinsUseCase(
 ) {
 
     suspend fun getSupportedCoins(): List<String> =
-        coinListRepository.getCoinListFlow().first().map { it.symbol }
+        coinListRepository.getCoinListFlowNullable().firstOrNull()?.map { it.symbol }
+            ?: listOf("XTZ")
 }
