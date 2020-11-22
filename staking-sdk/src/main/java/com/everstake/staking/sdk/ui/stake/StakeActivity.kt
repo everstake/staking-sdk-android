@@ -8,10 +8,11 @@ import android.text.TextWatcher
 import android.view.MenuItem
 import android.view.View
 import android.widget.SeekBar
-import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
+import com.everstake.staking.sdk.EverstakeAction
+import com.everstake.staking.sdk.EverstakeStaking
 import com.everstake.staking.sdk.R
 import com.everstake.staking.sdk.data.Constants
 import com.everstake.staking.sdk.data.model.ui.StakeModel
@@ -97,7 +98,14 @@ internal class StakeActivity : BaseActivity<StakeViewModel>() {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
         stakeButton.setOnClickListener {
-            Toast.makeText(this, "Call app callback", Toast.LENGTH_SHORT).show()
+            val stakeModel: StakeModel = viewModel.stakeInfo.value ?: return@setOnClickListener
+            EverstakeStaking.appCallback.get()?.onAction(
+                EverstakeAction.STAKE,
+                stakeModel.coinSymbol,
+                stakeModel.amount,
+                stakeModel.validatorName,
+                stakeModel.validatorAddress
+            )
         }
 
         viewModel.stakeInfo.observe(this) { updateUI(it) }
@@ -141,6 +149,7 @@ internal class StakeActivity : BaseActivity<StakeViewModel>() {
             coinYearlyIncomePercent: String,
             _: String,
             validatorName: String,
+            _: String,
             validatorFee: String,
             isReliableValidator: Boolean,
             dailyIncome: String,

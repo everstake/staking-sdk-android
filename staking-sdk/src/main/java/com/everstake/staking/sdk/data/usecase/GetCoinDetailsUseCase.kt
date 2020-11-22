@@ -38,11 +38,19 @@ internal class GetCoinDetailsUseCase(
                 R.string.common_percent_format,
                 coinInfo.apr
             )
-            val fee: String = coinInfo.fee.let { (min: BigDecimal, max: BigDecimal) ->
-                if (min != max) "$min-$max" else min.toString()
-            }.let {
-                bindString(EverstakeStaking.app, R.string.common_percent_format, it)
+
+            // Fee from 0 to 100 percent
+            var feeMin: BigDecimal = BigDecimal.valueOf(100)
+            var feeMax: BigDecimal = BigDecimal.ZERO
+            coinInfo.validators.map { it.fee }.forEach { validatorFee: BigDecimal ->
+                feeMin = minOf(feeMin, validatorFee)
+                feeMax = maxOf(feeMax, validatorFee)
             }
+            val fee: String = bindString(
+                EverstakeStaking.app,
+                R.string.common_percent_format,
+                (if (feeMin < feeMax) "$feeMin-$feeMax" else feeMax.toString())
+            )
 
             val showStaked: Boolean =
                 coinInfo.isActive && stakedInfo != null && stakedInfo.amount > BigDecimal.ZERO
@@ -59,7 +67,8 @@ internal class GetCoinDetailsUseCase(
 
             CoinDetailsModel(
                 id = coinInfo.id,
-                displayName = "${coinInfo.name} (${coinInfo.symbol})",
+                coinName = coinInfo.name,
+                coinSymbol = coinInfo.symbol,
                 iconUrl = coinInfo.iconUrl,
                 about = coinInfo.about,
                 aboutUrl = coinInfo.aboutUrl,
@@ -68,9 +77,10 @@ internal class GetCoinDetailsUseCase(
                 showStakedSection = showStaked,
                 stakedAmount = stakedAmount,
                 validatorName = stakedInfo?.validator?.name ?: "",
+                validatorAddress = stakedInfo?.validator?.address ?: "",
                 yearlyIncome = income,
                 showClaimSection = showClaim,
-                availableToClaim = formatAmount(claimAmount, coinInfo.precision, coinInfo.symbol)
+                claimAmount = formatAmount(claimAmount, coinInfo.precision)
             )
         }.filterNotNull()
     }

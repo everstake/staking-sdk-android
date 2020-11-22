@@ -16,8 +16,7 @@ import java.util.*
  */
 internal enum class CacheType {
     COIN,
-    STAKE,
-    VALIDATORS;
+    STAKE;
 
     fun cacheFileName(): String {
         return "${this.name.toLowerCase(Locale.ENGLISH)}_cache.json"
@@ -93,7 +92,7 @@ internal inline fun <reified T> readCache(
 ): T? {
     val cacheData: CacheData = readCacheFile(context, cacheType) ?: return null
     return if (System.currentTimeMillis() - cacheData.serializationTimestamp > cacheInvalidateTimeout) null
-    else gson.fromJson(cacheData.dataJson, T::class.java)
+    else gson.parseWithType(cacheData.dataJson)
 }
 
 internal fun readCacheAsFlow(

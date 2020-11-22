@@ -14,12 +14,27 @@
         app:navigationIcon="@drawable/ic_close"
         app:title="@string/coin_list_title" />
 
+    <ProgressBar
+        android:id="@+id/coinListProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        tools:visibility="gone" />
+
+    <include
+        android:id="@+id/coinListEmpty"
+        layout="@layout/view_empty_state"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:visibility="gone" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/coinListRecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?actionBarSize"
+        android:clipToPadding="false"
         android:paddingTop="4dp"
-        android:clipToPadding="false"/>
+        tools:visibility="visible" />
 
 </FrameLayout>

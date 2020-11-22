@@ -7,11 +7,12 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.everstake.staking.sdk.EverstakeAction
+import com.everstake.staking.sdk.EverstakeStaking
 import com.everstake.staking.sdk.R
 import com.everstake.staking.sdk.data.model.ui.CoinDetailsModel
 import com.everstake.staking.sdk.ui.base.BaseActivity
@@ -52,19 +53,27 @@ internal class CoinDetailsActivity : BaseActivity<CoinDetailsViewModel>() {
         viewModel.coinDetails.observe(this) { updateUI(it) }
 
         coinDetailsStakeButton.setOnClickListener {
-            val coinId: String = viewModel.coinDetails.value?.id ?: return@setOnClickListener
+            val coinId: String = getCoinId() ?: return@setOnClickListener
             startActivity(StakeActivity.getIntent(this, coinId))
         }
         coinDetailsCalculatorButton.setOnClickListener {
-            val coinId: String = viewModel.coinDetails.value?.id ?: return@setOnClickListener
+            val coinId: String = getCoinId() ?: return@setOnClickListener
             startActivity(CalculatorActivity.getIntent(this, coinId))
         }
         coinDetailsUnstakeButton.setOnClickListener {
-            val coinId: String = viewModel.coinDetails.value?.id ?: return@setOnClickListener
+            val coinId: String = getCoinId() ?: return@setOnClickListener
             startActivity(UnstakeActivity.getIntent(this, coinId))
         }
         coinDetailsStakeClaimButton.setOnClickListener {
-            Toast.makeText(this, "Not implemented", Toast.LENGTH_SHORT).show()
+            val coinDetails: CoinDetailsModel =
+                viewModel.coinDetails.value ?: return@setOnClickListener
+            EverstakeStaking.appCallback.get()?.onAction(
+                EverstakeAction.CLAIM,
+                coinDetails.coinSymbol,
+                coinDetails.claimAmount,
+                coinDetails.validatorName,
+                coinDetails.validatorAddress
+            )
         }
     }
 
@@ -94,7 +103,8 @@ internal class CoinDetailsActivity : BaseActivity<CoinDetailsViewModel>() {
     private fun updateUI(coinDetails: CoinDetailsModel) {
         val (
             _: String,
-            displayName: String,
+            coinName: String,
+            coinSymbol: String,
             iconUrl: String,
             about: String,
             _: String,
@@ -103,10 +113,12 @@ internal class CoinDetailsActivity : BaseActivity<CoinDetailsViewModel>() {
             showStakedSection: Boolean,
             stakedAmount: String,
             validatorName: String,
+            _: String,
             yearlyIncome: String,
             showClaimSection: Boolean,
-            availableToClaim: String) = coinDetails
+            claimAmount: String) = coinDetails
 
+        val displayName = "$coinName ($coinSymbol)"
         coinDetailsCoinTitle.text = displayName
         Glide.with(this).load(iconUrl).into(coinDetailsCoinImage)
 
@@ -146,10 +158,12 @@ internal class CoinDetailsActivity : BaseActivity<CoinDetailsViewModel>() {
 
         coinDetailsAvailableClaim.text = getDataInfoSpan(
             bindString(this, R.string.coin_details_available_rewards),
-            availableToClaim,
+            "$claimAmount $coinSymbol",
             stakedSpanColor
         )
 
         coinDetailsAboutText.text = about
     }
+
+    private fun getCoinId(): String? = viewModel.coinDetails.value?.id
 }

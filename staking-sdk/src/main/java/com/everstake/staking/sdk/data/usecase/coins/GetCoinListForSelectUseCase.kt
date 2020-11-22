@@ -1,4 +1,4 @@
-package com.everstake.staking.sdk.data.usecase
+package com.everstake.staking.sdk.data.usecase.coins
 
 import com.everstake.staking.sdk.EverstakeStaking
 import com.everstake.staking.sdk.R

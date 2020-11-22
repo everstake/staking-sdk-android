@@ -5,8 +5,7 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.everstake.staking.sdk.data.model.ui.StakeModel
 import com.everstake.staking.sdk.data.usecase.GetStakeInfoUseCase
-import com.everstake.staking.sdk.data.usecase.UpdateCoinDetailsUseCase
-import com.everstake.staking.sdk.data.usecase.UpdateValidatorListUseCase
+import com.everstake.staking.sdk.data.usecase.stake.UpdateCoinDetailsUseCase
 import com.everstake.staking.sdk.ui.base.BaseViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.BroadcastChannel
@@ -23,7 +22,6 @@ import java.math.BigDecimal
 internal class StakeViewModel : BaseViewModel() {
 
     private val updateCoinUseCase: UpdateCoinDetailsUseCase by lazy { UpdateCoinDetailsUseCase() }
-    private val updateValidatorUseCase: UpdateValidatorListUseCase by lazy { UpdateValidatorListUseCase() }
     private val stakeInfoUseCase: GetStakeInfoUseCase by lazy { GetStakeInfoUseCase() }
 
     private val coinIdChannel: BroadcastChannel<String> = ConflatedBroadcastChannel()
@@ -47,10 +45,7 @@ internal class StakeViewModel : BaseViewModel() {
         coinIdChannel.offer(coinId)
         validatorIdChannel.offer(null)
         viewModelScope.launch {
-            val updateCoin = async { updateCoinUseCase.updateData() }
-            val updateValidator = async { updateValidatorUseCase.updateValidators(coinId) }
-            updateCoin.await()
-            updateValidator.await()
+            updateCoinUseCase.updateData()
         }
     }
 

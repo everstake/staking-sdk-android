@@ -15,6 +15,7 @@ internal data class StakeModel(
     val coinYearlyIncomePercent: String,
     val validatorId: String,
     val validatorName: String,
+    val validatorAddress: String,
     val validatorFee: String,
     val isReliableValidator: Boolean,
     val dailyIncome: String,

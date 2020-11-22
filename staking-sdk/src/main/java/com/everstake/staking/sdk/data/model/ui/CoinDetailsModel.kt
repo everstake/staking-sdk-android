@@ -5,7 +5,8 @@ package com.everstake.staking.sdk.data.model.ui
  */
 internal data class CoinDetailsModel(
     val id: String,
-    val displayName: String,
+    val coinName: String,
+    val coinSymbol: String,
     val iconUrl: String,
     val about: String,
     val aboutUrl: String,
@@ -14,7 +15,8 @@ internal data class CoinDetailsModel(
     val showStakedSection: Boolean,
     val stakedAmount: String,
     val validatorName: String,
+    val validatorAddress: String,
     val yearlyIncome: String,
     val showClaimSection: Boolean,
-    val availableToClaim: String
+    val claimAmount: String
 )

@@ -2,8 +2,8 @@ package com.everstake.staking.sdk.data.repository
 
 import com.everstake.staking.sdk.EverstakeStaking
 import com.everstake.staking.sdk.data.api.ApiResult
-import com.everstake.staking.sdk.data.api.EverstakeApi
 import com.everstake.staking.sdk.data.api.callEverstakeApi
+import com.everstake.staking.sdk.data.model.api.PutStakeBodyModel
 import com.everstake.staking.sdk.data.model.api.PutStakeResponseModel
 import com.everstake.staking.sdk.util.*
 import com.google.gson.Gson
@@ -22,6 +22,7 @@ internal class StakedRepository private constructor() {
     }
 
     suspend fun refreshStaked(
+        coinIdToAddressMap: Map<String, String>,
         updateTimeout: Long = TimeUnit.MINUTES.toMillis(10)
     ): List<PutStakeResponseModel> {
         val cachedStakedList: List<PutStakeResponseModel>? = readCache<List<PutStakeResponseModel>>(
@@ -31,12 +32,22 @@ internal class StakedRepository private constructor() {
         )
         return if (cachedStakedList == null) {
             val apiResult: ApiResult<List<PutStakeResponseModel>> =
-                callEverstakeApi { api: EverstakeApi ->
-                    // TODO provide address list
-                    api.getStakedInfo(emptyList())
+                callEverstakeApi {
+                    getStakedInfo(
+                        coinIdToAddressMap.map { (coinId: String, address: String) ->
+                            PutStakeBodyModel(coinId, address)
+                        })
                 }
             if (apiResult is ApiResult.Success) {
-                apiResult.result.also { result: List<PutStakeResponseModel> ->
+                apiResult.result.also { apiResultList: List<PutStakeResponseModel> ->
+                    val cacheResult: List<PutStakeResponseModel> =
+                        readCache<List<PutStakeResponseModel>>(
+                            EverstakeStaking.app,
+                            CacheType.STAKE,
+                            Long.MAX_VALUE
+                        ) ?: emptyList()
+                    val result: List<PutStakeResponseModel> =
+                        (apiResultList + cacheResult).distinctBy { it.coinId }
                     storeCache(EverstakeStaking.app, CacheType.STAKE, result)
                 }
             } else {

@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.everstake.staking.sdk.data.model.ui.ValidatorListModel
-import com.everstake.staking.sdk.data.usecase.GetValidatorsListUseCase
-import com.everstake.staking.sdk.data.usecase.UpdateValidatorListUseCase
+import com.everstake.staking.sdk.data.usecase.validator.GetValidatorsListUseCase
+import com.everstake.staking.sdk.data.usecase.validator.UpdateValidatorListUseCase
 import com.everstake.staking.sdk.ui.base.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -39,7 +39,7 @@ internal class ValidatorSelectViewModel : BaseViewModel() {
         viewModelScope.launch {
             coinIdChannel.send(coinId)
             selectedValidatorChannel.send(validatorId ?: "")
-            updateValidatorsUseCase.updateValidators(coinId)
+            updateValidatorsUseCase.updateValidators()
         }
     }
 }

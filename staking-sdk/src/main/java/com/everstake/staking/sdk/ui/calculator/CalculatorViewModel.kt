@@ -5,8 +5,8 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.everstake.staking.sdk.data.model.ui.CalculatorModel
 import com.everstake.staking.sdk.data.usecase.CalculatorUseCase
-import com.everstake.staking.sdk.data.usecase.UpdateCoinDetailsUseCase
-import com.everstake.staking.sdk.data.usecase.UpdateValidatorListUseCase
+import com.everstake.staking.sdk.data.usecase.stake.UpdateCoinDetailsUseCase
+import com.everstake.staking.sdk.data.usecase.validator.UpdateValidatorListUseCase
 import com.everstake.staking.sdk.ui.base.BaseViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.BroadcastChannel
@@ -51,7 +51,7 @@ internal class CalculatorViewModel : BaseViewModel() {
         validatorIdChannel.offer(null)
         viewModelScope.launch {
             val updateCoin = async { updateCoinUseCase.updateData() }
-            val updateValidator = async { updateValidatorUseCase.updateValidators(coinId) }
+            val updateValidator = async { updateValidatorUseCase.updateValidators() }
             updateCoin.await()
             updateValidator.await()
         }

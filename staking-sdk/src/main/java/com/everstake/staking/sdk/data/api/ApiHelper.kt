@@ -3,6 +3,8 @@ package com.everstake.staking.sdk.data.api
 import com.everstake.staking.sdk.BuildConfig
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -51,9 +53,11 @@ private object ApiProvider {
     }
 }
 
-internal suspend fun <R> callEverstakeApi(block: suspend (api: EverstakeApi) -> R): ApiResult<R> =
-    try {
-        ApiResult.Success(block(ApiProvider.everstakeApi))
-    } catch (throwable: Throwable) {
-        ApiResult.Error.handleException(throwable)
+internal suspend fun <R> callEverstakeApi(block: suspend EverstakeApi.() -> R): ApiResult<R> =
+    withContext(Dispatchers.IO) {
+        try {
+            ApiResult.Success(ApiProvider.everstakeApi.block())
+        } catch (e: Throwable) {
+            ApiResult.Error.handleException(e)
+        }
     }

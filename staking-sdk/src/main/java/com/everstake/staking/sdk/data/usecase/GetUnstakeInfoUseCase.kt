@@ -63,7 +63,9 @@ internal class GetUnstakeInfoUseCase(
                 symbol = coinInfo.symbol,
                 progress = progress,
                 unstakeTimeSeconds = coinInfo.intervalUnstake,
-                canUnstake = totalBalance >= amount
+                canUnstake = totalBalance >= amount,
+                validatorName = stakedInfo?.validator?.name ?: "",
+                validatorAddress = stakedInfo?.validator?.address ?: ""
             )
         }.filterNotNull()
     }
