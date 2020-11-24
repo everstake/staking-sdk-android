@@ -25,7 +25,7 @@ internal class StakeViewModel : BaseViewModel() {
     private val stakeInfoUseCase: GetStakeInfoUseCase by lazy { GetStakeInfoUseCase() }
 
     private val coinIdChannel: BroadcastChannel<String> = ConflatedBroadcastChannel()
-    private val validatorIdChannel: BroadcastChannel<String?> = ConflatedBroadcastChannel()
+    private val validatorIdChannel: BroadcastChannel<List<String>> = ConflatedBroadcastChannel()
     private val amountChannel: BroadcastChannel<String> = ConflatedBroadcastChannel()
     private val progressChannel: BroadcastChannel<BigDecimal> = ConflatedBroadcastChannel()
 
@@ -43,7 +43,7 @@ internal class StakeViewModel : BaseViewModel() {
 
     fun updateCoinId(coinId: String) {
         coinIdChannel.offer(coinId)
-        validatorIdChannel.offer(null)
+        validatorIdChannel.offer(emptyList())
         viewModelScope.launch {
             updateCoinUseCase.updateData()
         }
@@ -51,10 +51,11 @@ internal class StakeViewModel : BaseViewModel() {
 
     fun getCoinId(): String = stakeInfo.value?.coinId ?: ""
 
-    fun updateValidatorId(validatorId: String) =
-        validatorIdChannel.offer(validatorId)
+    fun updateValidators(validator: Array<String>) =
+        validatorIdChannel.offer(validator.toList())
 
-    fun getValidatorId(): String = stakeInfo.value?.validatorId ?: ""
+    fun getSelectedValidator(): List<String> =
+        stakeInfo.value?.validators?.map { it.validatorId } ?: emptyList()
 
     fun updateAmount(amount: String) {
         if (stakeInfo.value?.amount == amount) return

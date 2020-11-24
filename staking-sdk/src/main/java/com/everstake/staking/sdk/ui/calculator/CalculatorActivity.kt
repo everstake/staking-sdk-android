@@ -84,7 +84,7 @@ internal class CalculatorActivity : BaseActivity<CalculatorViewModel>() {
                 StakeActivity.getIntent(
                     this,
                     viewModel.getCoinId(),
-                    viewModel.getSelectedValidators().firstOrNull(),
+                    viewModel.getSelectedValidators().toTypedArray(),
                     inputAmount.text.toString()
                 )
             )

@@ -139,9 +139,8 @@
             <View
                 android:id="@+id/stakeSelectValidatorBg"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_height="66dp"
                 android:background="?selectableItemBackground"
-                app:layout_constraintBottom_toTopOf="@id/stakeValidatorDivider"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/stakeValidatorLabelDivider" />
@@ -150,14 +149,17 @@
                 android:id="@+id/stakeValidatorName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
                 android:layout_marginEnd="16dp"
+                android:ellipsize="end"
                 android:fontFamily="sans-serif-medium"
+                android:maxLines="1"
                 android:textColor="@color/everstakeTextColorPrimary"
                 android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@id/stakeValidatorFee"
                 app:layout_constraintEnd_toStartOf="@+id/stakeValidatorReliableLabel"
                 app:layout_constraintStart_toStartOf="@id/stakeGuideStart"
-                app:layout_constraintTop_toBottomOf="@id/stakeValidatorLabelDivider"
+                app:layout_constraintTop_toTopOf="@id/stakeSelectValidatorBg"
+                app:layout_constraintVertical_chainStyle="packed"
                 tools:text="Everstake" />
 
             <TextView
@@ -166,9 +168,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="@id/stakeSelectValidatorBg"
                 app:layout_constraintEnd_toEndOf="@id/stakeValidatorName"
                 app:layout_constraintStart_toStartOf="@id/stakeValidatorName"
                 app:layout_constraintTop_toBottomOf="@id/stakeValidatorName"
+                app:layout_constraintVertical_chainStyle="packed"
                 tools:text="Fee: 1%" />
 
             <TextView
@@ -184,11 +188,10 @@
                 android:id="@+id/stakeValidatorDivider"
                 android:layout_width="0dp"
                 android:layout_height="1dp"
-                android:layout_marginTop="12dp"
                 android:background="@color/everstakeDivider"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/stakeGuideStart"
-                app:layout_constraintTop_toBottomOf="@id/stakeValidatorFee" />
+                app:layout_constraintTop_toBottomOf="@id/stakeSelectValidatorBg" />
 
             <Button
                 android:id="@+id/stakeButton"
