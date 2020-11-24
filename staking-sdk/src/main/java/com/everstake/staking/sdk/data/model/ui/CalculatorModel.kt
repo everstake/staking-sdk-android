@@ -5,14 +5,19 @@ package com.everstake.staking.sdk.data.model.ui
  */
 internal data class CalculatorModel(
     val coinId: String,
-    val coinName:String,
+    val coinName: String,
     val coinSymbol: String,
     val coinYearlyIncomePercent: String,
-    val validatorId: String,
-    val validatorName: String,
-    val validatorFee:String,
+    val allowMultipleValidator: Boolean,
+    val validators: List<CalculatorValidatorInfo>,
     val isReliableValidator: Boolean,
     val dailyIncome: String,
     val monthlyIncome: String,
     val yearlyIncome: String
+)
+
+internal data class CalculatorValidatorInfo(
+    val validatorId: String,
+    val validatorName: String,
+    val validatorFee: String
 )

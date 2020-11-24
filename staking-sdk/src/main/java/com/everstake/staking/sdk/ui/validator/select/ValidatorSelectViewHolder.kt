@@ -11,16 +11,32 @@ import kotlinx.android.synthetic.main.item_validator_info.view.*
 /**
  * created by Alex Ivanov on 24.10.2020.
  */
-internal class ValidatorSelectViewHolder(itemView: View) :
+internal class ValidatorSelectViewHolder(itemView: View, private val multiSelect: Boolean) :
     BaseViewHolder<ValidatorListModel>(itemView) {
 
     override fun bind(model: ValidatorListModel) {
         val (_, isSelected: Boolean, name: String, fee: String, isReliable: Boolean) = model
-
+        itemView.validatorInfoCheckbox.setOnCheckedChangeListener(null)
         itemView.validatorInfoContainer.setOnClickListener {
-            clickListener?.onClick(adapterPosition, model)
+            if (multiSelect) {
+                itemView.validatorInfoCheckbox.toggle()
+            } else {
+                clickListener?.onClick(adapterPosition, model)
+            }
         }
-        itemView.validatorInfoSelectedImg.visibility = if (isSelected) View.VISIBLE else View.INVISIBLE
+        if (multiSelect) {
+            itemView.validatorInfoSelectedImg.visibility = View.GONE
+            itemView.validatorInfoSubtitle.visibility = View.GONE
+            itemView.validatorInfoCheckbox.apply {
+                visibility = View.VISIBLE
+                isChecked = isSelected
+            }
+        } else {
+            itemView.validatorInfoSelectedImg.visibility =
+                if (isSelected) View.VISIBLE else View.INVISIBLE
+            itemView.validatorInfoSubtitle.visibility = View.VISIBLE
+            itemView.validatorInfoCheckbox.visibility = View.GONE
+        }
 
         itemView.validatorInfoTitle.text = name
         itemView.validatorInfoSubtitle.text =
@@ -32,6 +48,12 @@ internal class ValidatorSelectViewHolder(itemView: View) :
         } else {
             itemView.validatorInfoReliable.visibility = View.GONE
             itemView.validatorInfoContainer.setSelectableItemBackground()
+        }
+
+        if (multiSelect) {
+            itemView.validatorInfoCheckbox.setOnCheckedChangeListener { _, isChecked: Boolean ->
+                clickListener?.onClick(adapterPosition, model.copy(isSelected = isChecked))
+            }
         }
     }
 }

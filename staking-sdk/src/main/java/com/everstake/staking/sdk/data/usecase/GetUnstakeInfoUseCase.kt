@@ -57,10 +57,10 @@ internal class GetUnstakeInfoUseCase(
             this.previousProgress = progressIn
 
             UnstakeModel(
-                balance = formatAmount(totalBalance, coinInfo.precision, coinInfo.symbol),
+                balance = formatAmount(totalBalance, coinInfo.precision, coinInfo.coinSymbol),
                 amount = if (amount == initialAmount) amountStr
                 else formatAmount(amount, coinInfo.precision),
-                symbol = coinInfo.symbol,
+                symbol = coinInfo.coinSymbol,
                 progress = progress,
                 unstakeTimeSeconds = coinInfo.intervalUnstake,
                 canUnstake = totalBalance >= amount,

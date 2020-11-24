@@ -57,7 +57,7 @@ internal class GetCoinDetailsUseCase(
             val stakedAmount: String = formatAmount(
                 amount = stakedInfo?.amount ?: BigDecimal.ZERO,
                 precision = coinInfo.precision,
-                symbol = coinInfo.symbol
+                symbol = coinInfo.coinSymbol
             )
             val income: String =
                 bindString(EverstakeStaking.app, R.string.common_percent_format, coinInfo.apr)
@@ -68,7 +68,7 @@ internal class GetCoinDetailsUseCase(
             CoinDetailsModel(
                 id = coinInfo.id,
                 coinName = coinInfo.name,
-                coinSymbol = coinInfo.symbol,
+                coinSymbol = coinInfo.coinSymbol,
                 iconUrl = coinInfo.iconUrl,
                 about = coinInfo.about,
                 aboutUrl = coinInfo.aboutUrl,

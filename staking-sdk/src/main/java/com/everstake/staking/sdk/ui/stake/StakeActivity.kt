@@ -78,7 +78,8 @@ internal class StakeActivity : BaseActivity<StakeViewModel>() {
                 ValidatorSelectActivity.getIntent(
                     this,
                     viewModel.getCoinId(),
-                    viewModel.getValidatorId()
+                    arrayOf(viewModel.getValidatorId()),
+                    viewModel.allowMultiValidator()
                 ), CODE_VALIDATOR_SELECT
             )
         }
@@ -124,7 +125,7 @@ internal class StakeActivity : BaseActivity<StakeViewModel>() {
         if (resultCode != Activity.RESULT_OK) return
         when (requestCode) {
             CODE_VALIDATOR_SELECT -> viewModel.updateValidatorId(
-                data?.let { ValidatorSelectActivity.getValidatorId(it) } ?: return
+                data?.let { ValidatorSelectActivity.getValidatorId(it) }?.firstOrNull() ?: return
             )
         }
     }
@@ -147,6 +148,7 @@ internal class StakeActivity : BaseActivity<StakeViewModel>() {
             progress: BigDecimal,
             coinSymbol: String,
             coinYearlyIncomePercent: String,
+            _: Boolean,
             _: String,
             validatorName: String,
             _: String,

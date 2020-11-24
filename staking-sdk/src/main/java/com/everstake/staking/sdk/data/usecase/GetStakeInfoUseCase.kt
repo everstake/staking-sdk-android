@@ -5,6 +5,7 @@ import com.everstake.staking.sdk.R
 import com.everstake.staking.sdk.data.Constants
 import com.everstake.staking.sdk.data.Constants.MAX_DISPLAY_PRECISION
 import com.everstake.staking.sdk.data.model.api.GetCoinsResponseModel
+import com.everstake.staking.sdk.data.model.api.StakeType
 import com.everstake.staking.sdk.data.model.api.Validator
 import com.everstake.staking.sdk.data.model.ui.StakeModel
 import com.everstake.staking.sdk.data.repository.CoinListRepository
@@ -36,10 +37,15 @@ internal class GetStakeInfoUseCase(
         val coinInfoFlow: Flow<GetCoinsResponseModel> =
             coinListRepository.getCoinInfoFlow(coinIdFlow)
         val balanceFlow: Flow<String?> = userBalanceRepository.getBalanceForCoinSymbol(
-            coinInfoFlow.map { it.symbol }
+            coinInfoFlow.map { it.coinSymbol }
         ).onStart { emit(null) }
         val validatorInfoFlow: Flow<Validator> =
-            coinListRepository.findValidatorInfoFlow(coinInfoFlow, validatorIdFlow)
+            // fixme
+            coinListRepository.findValidatorInfoFlow(
+                coinInfoFlow,
+                validatorIdFlow.map { listOf(it ?: "") }
+            )
+                .map { it.first() }
 
         return combine(coinInfoFlow, balanceFlow, amountFlow, progressFlow, validatorInfoFlow)
         { coinInfo: GetCoinsResponseModel?, balance: String?, amountStr: String?, progressIn: BigDecimal?, validatorInfo: Validator? ->
@@ -85,16 +91,17 @@ internal class GetStakeInfoUseCase(
 
             StakeModel(
                 coinId = coinInfo.id,
-                balance = formatAmount(totalBalance, coinInfo.precision, coinInfo.symbol),
+                balance = formatAmount(totalBalance, coinInfo.precision, coinInfo.coinSymbol),
                 amount = if (amount == initialAmount) amountStr
                 else formatAmount(amount, coinInfo.precision),
                 progress = progress,
-                coinSymbol = coinInfo.symbol,
+                coinSymbol = coinInfo.coinSymbol,
                 coinYearlyIncomePercent = bindString(
                     EverstakeStaking.app,
                     R.string.common_percent_format,
                     coinInfo.apr
                 ),
+                allowMultipleValidator = coinInfo.stakeType == StakeType.OneStakeToMultipleValidators,
                 validatorId = validatorInfo.id,
                 validatorName = validatorInfo.name,
                 validatorAddress = validatorInfo.address,
@@ -104,9 +111,9 @@ internal class GetStakeInfoUseCase(
                     validatorInfo.fee
                 ),
                 isReliableValidator = validatorInfo.isReliable,
-                dailyIncome = formatAmount(perDay, coinInfo.precision, coinInfo.symbol),
-                monthlyIncome = formatAmount(perMonth, coinInfo.precision, coinInfo.symbol),
-                yearlyIncome = formatAmount(perYear, coinInfo.precision, coinInfo.symbol)
+                dailyIncome = formatAmount(perDay, coinInfo.precision, coinInfo.coinSymbol),
+                monthlyIncome = formatAmount(perMonth, coinInfo.precision, coinInfo.coinSymbol),
+                yearlyIncome = formatAmount(perYear, coinInfo.precision, coinInfo.coinSymbol)
             )
         }.filterNotNull()
     }

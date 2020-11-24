@@ -65,4 +65,6 @@ internal class StakeViewModel : BaseViewModel() {
         if (stakeInfo.value?.progress == progress) return
         progressChannel.offer(progress)
     }
+
+    fun allowMultiValidator(): Boolean = stakeInfo.value?.allowMultipleValidator ?: false
 }

@@ -46,6 +46,7 @@
     <string name="select_coin_title">Select currency</string>
     <!--  Select validator  -->
     <string name="select_validator_title">Select validator</string>
+    <string name="select_validator_confirm_button">Confirm</string>
     <!--  Unstake  -->
     <string name="unstake_title">New unstake</string>
     <string name="unstake_staked">Staked:</string>

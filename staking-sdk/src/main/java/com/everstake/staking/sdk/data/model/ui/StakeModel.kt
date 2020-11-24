@@ -13,6 +13,7 @@ internal data class StakeModel(
     val progress: BigDecimal,
     val coinSymbol: String,
     val coinYearlyIncomePercent: String,
+    val allowMultipleValidator: Boolean,
     val validatorId: String,
     val validatorName: String,
     val validatorAddress: String,

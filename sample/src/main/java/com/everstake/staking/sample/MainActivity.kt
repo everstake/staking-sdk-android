@@ -30,12 +30,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private val balances: List<EverstakeBalanceModel> = listOf(
-        EverstakeBalanceModel("XTZ", "tz2B2xFMrTi1fHe7y94bMAFua6GPQM2XtTkV", "2099.8"),
-        EverstakeBalanceModel("ICX", "cx299d88908ab371d586c8dfe0ed42899a899e6e5b", "41.43"),
+        EverstakeBalanceModel("XTZ", "tz1LLNkQK4UQV6QcFShiXJ2vT2ELw449MzAA", "285974.184392"),
+        EverstakeBalanceModel("ICX", "hx3e7ef35bfb8d65023dc25e79d9f9652d645a9b4f", "137.095"),
         EverstakeBalanceModel(
             "ATOM",
-            "cosmos1xxkueklal9vejv9unqu80w9vptyepfa95pd53u",
-            "921587.707249"
+            "cosmos1gdmscydnyl0pj6lcjzmeuhr6g5g68u97z3jm8l",
+            "15625306.963111"
         ),
         EverstakeBalanceModel("BAND", "band1gla2nv4alquzmga9xtgnfxsv50f8flzuxhm5ac", "0")
     )

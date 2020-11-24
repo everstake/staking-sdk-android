@@ -26,14 +26,15 @@ internal class CalculatorViewModel : BaseViewModel() {
     private val calculatorUseCase: CalculatorUseCase by lazy { CalculatorUseCase() }
 
     private val coinIdChannel: BroadcastChannel<String> = ConflatedBroadcastChannel()
-    private val validatorIdChannel: BroadcastChannel<String?> = ConflatedBroadcastChannel()
+    private val selectedValidatorChannel: BroadcastChannel<List<String>> =
+        ConflatedBroadcastChannel()
     private val amountChannel: BroadcastChannel<String> = ConflatedBroadcastChannel()
     private val includeFee: BroadcastChannel<Boolean> = ConflatedBroadcastChannel()
     private val includeReinvest: BroadcastChannel<Boolean> = ConflatedBroadcastChannel()
 
     val calculatorData: LiveData<CalculatorModel> = calculatorUseCase.getCalculatorDataFlow(
         coinIdChannel.asFlow().distinctUntilChanged(),
-        validatorIdChannel.asFlow().distinctUntilChanged(),
+        selectedValidatorChannel.asFlow().distinctUntilChanged(),
         amountChannel.asFlow().distinctUntilChanged(),
         includeFee.asFlow().distinctUntilChanged(),
         includeReinvest.asFlow().distinctUntilChanged()
@@ -41,6 +42,7 @@ internal class CalculatorViewModel : BaseViewModel() {
 
     init {
         amountChannel.offer("0")
+        selectedValidatorChannel.offer(emptyList())
         includeFee.offer(false)
         includeReinvest.offer(false)
     }
@@ -48,7 +50,7 @@ internal class CalculatorViewModel : BaseViewModel() {
     fun updateCoinId(coinId: String) {
         if (calculatorData.value?.coinId == coinId) return
         coinIdChannel.offer(coinId)
-        validatorIdChannel.offer(null)
+        selectedValidatorChannel.offer(emptyList())
         viewModelScope.launch {
             val updateCoin = async { updateCoinUseCase.updateData() }
             val updateValidator = async { updateValidatorUseCase.updateValidators() }
@@ -59,10 +61,11 @@ internal class CalculatorViewModel : BaseViewModel() {
 
     fun getCoinId(): String = calculatorData.value?.coinId ?: ""
 
-    fun updateValidatorId(validatorId: String) =
-        validatorIdChannel.offer(validatorId)
+    fun updateSelectedValidators(selectedValidators: List<String>) =
+        selectedValidatorChannel.offer(selectedValidators)
 
-    fun getValidatorId(): String = calculatorData.value?.validatorId ?: ""
+    fun getSelectedValidators(): List<String> =
+        calculatorData.value?.validators?.map { it.validatorId } ?: emptyList()
 
     fun updateAmount(amount: String) =
         amountChannel.offer(amount)
@@ -72,4 +75,6 @@ internal class CalculatorViewModel : BaseViewModel() {
 
     fun updateIncludeReinvest(includeReinvest: Boolean) =
         this.includeReinvest.offer(includeReinvest)
+
+    fun allowMultiValidator(): Boolean = calculatorData.value?.allowMultipleValidator ?: false
 }

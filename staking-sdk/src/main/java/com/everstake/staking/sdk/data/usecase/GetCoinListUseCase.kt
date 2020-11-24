@@ -37,7 +37,7 @@ internal class GetCoinListUseCase(
                 val stakedAmount: String? =
                     stakedList?.find { it.coinId == apiModel.id }
                         ?.takeIf { it.amount > BigDecimal.ZERO }
-                        ?.let { formatAmount(it.amount, apiModel.precision, apiModel.symbol) }
+                        ?.let { formatAmount(it.amount, apiModel.precision, apiModel.coinSymbol) }
 
                 CoinListModel(
                     id = apiModel.id,
