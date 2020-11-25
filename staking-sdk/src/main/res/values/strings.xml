@@ -24,6 +24,7 @@
     <string name="coin_details_stake">Stake</string>
     <string name="coin_details_calculator">Open Calculator</string>
     <string name="coin_details_staked">Staked</string>
+    <string name="coin_details_staked_list">List of stakes</string>
     <string name="coin_details_unstake">Unstake</string>
     <string name="coin_details_validator">Validator:</string>
     <string name="coin_details_income">Yearly income:</string>

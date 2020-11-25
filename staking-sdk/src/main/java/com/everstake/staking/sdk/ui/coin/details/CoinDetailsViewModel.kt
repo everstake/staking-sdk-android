@@ -45,8 +45,4 @@ internal class CoinDetailsViewModel : BaseViewModel() {
     }
 
     fun getCoinId(): String? = coinDetails.value?.id
-
-    fun getValidatorIdList(): List<String> =
-        coinDetails.value?.validatorId?.let { listOf(it) } ?: emptyList()
-
 }

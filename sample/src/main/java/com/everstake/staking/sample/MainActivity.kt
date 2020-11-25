@@ -3,10 +3,7 @@ package com.everstake.staking.sample
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import com.everstake.staking.sdk.EverstakeAction
-import com.everstake.staking.sdk.EverstakeBalanceModel
-import com.everstake.staking.sdk.EverstakeListener
-import com.everstake.staking.sdk.EverstakeStaking
+import com.everstake.staking.sdk.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -16,12 +13,13 @@ class MainActivity : AppCompatActivity() {
             actionType: EverstakeAction,
             coinSymbol: String,
             amount: String,
-            validatorName: String,
-            validatorAddress: String
+            validatorsInfo: List<ValidatorInfo>
         ) {
             Log.d(
                 "Everstake_Action",
-                "ActionType = $actionType\tcoinSymbol = $coinSymbol\tamount = $amount\tvalidatorName = $validatorName\tvalidatorAddress = $validatorAddress˚"
+                "ActionType = $actionType\tcoinSymbol = $coinSymbol\tamount = $amount\tvalidators = ${
+                    validatorsInfo.joinToString(", ")
+                }"
             )
             val refreshMap: Map<String, String> = balances.map { it.coinSymbol to it.address }
                 .toMap()

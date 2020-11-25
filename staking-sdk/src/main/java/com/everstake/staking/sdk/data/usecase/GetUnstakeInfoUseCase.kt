@@ -3,6 +3,7 @@ package com.everstake.staking.sdk.data.usecase
 import com.everstake.staking.sdk.data.Constants.MAX_DISPLAY_PRECISION
 import com.everstake.staking.sdk.data.model.api.GetCoinsResponseModel
 import com.everstake.staking.sdk.data.model.api.PutStakeResponseModel
+import com.everstake.staking.sdk.data.model.api.StakeType
 import com.everstake.staking.sdk.data.model.api.Validator
 import com.everstake.staking.sdk.data.model.ui.UnstakeModel
 import com.everstake.staking.sdk.data.model.ui.UnstakeValidatorModel
@@ -52,7 +53,13 @@ internal class GetUnstakeInfoUseCase(
                 stakedInfo?.validators?.filter { selectedValidators?.contains(it.id) == true }
                     ?: emptyList()
             // In case 1 to N there will be multiple validators, but the will have the same amount in other cases there will be only one validator
-            val totalBalance: BigDecimal = validators.firstOrNull()?.amount ?: BigDecimal.ZERO
+            val totalBalance: BigDecimal =
+                if (coinInfo.stakeType == StakeType.OneStakeToMultipleValidators) {
+                    stakedInfo?.amount
+                } else {
+                    validators.firstOrNull()?.amount
+                } ?: BigDecimal.ZERO
+
             val initialAmount: BigDecimal = amountStr.toBigDecimalOrNull() ?: BigDecimal.ZERO
             var amount: BigDecimal = initialAmount
             var progress: BigDecimal = progressIn
