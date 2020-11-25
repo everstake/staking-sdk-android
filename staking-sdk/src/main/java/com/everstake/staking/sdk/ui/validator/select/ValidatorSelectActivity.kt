@@ -36,23 +36,23 @@ internal class ValidatorSelectActivity : BaseActivity<ValidatorSelectViewModel>(
         fun getIntent(
             context: Context,
             coinId: String,
-            selectedValidator: Array<String>?,
+            selectedValidator: List<String> = emptyList(),
             allowMultiSelect: Boolean = false
         ): Intent =
             Intent(context, ValidatorSelectActivity::class.java)
                 .putExtra(KEY_COIN_ID, coinId)
-                .putExtra(KEY_VALIDATOR_ID, selectedValidator)
+                .putStringArrayListExtra(KEY_VALIDATOR_ID, ArrayList(selectedValidator))
                 .putExtra(KEY_ALLOW_MULTISELECT, allowMultiSelect)
 
-        fun getValidatorId(intent: Intent): Array<String> =
-            intent.getStringArrayExtra(KEY_VALIDATOR_ID) ?: emptyArray()
+        fun getValidators(intent: Intent): List<String> =
+            intent.getStringArrayListExtra(KEY_VALIDATOR_ID) ?: emptyList()
 
         private fun getAllowMultiSelect(intent: Intent): Boolean = intent.getBooleanExtra(
             KEY_ALLOW_MULTISELECT, false
         )
 
-        private fun getResultIntent(validatorId: Array<String>): Intent =
-            Intent().putExtra(KEY_VALIDATOR_ID, validatorId)
+        private fun getResultIntent(validators: List<String>): Intent =
+            Intent().putStringArrayListExtra(KEY_VALIDATOR_ID, ArrayList(validators))
 
         private fun getCoinId(intent: Intent): String? = intent.getStringExtra(KEY_COIN_ID)
     }
@@ -73,7 +73,7 @@ internal class ValidatorSelectActivity : BaseActivity<ValidatorSelectViewModel>(
                 if (isMultiSelect) {
                     viewModel.updateSelected(model, isMultiSelect)
                 } else {
-                    setResult(Activity.RESULT_OK, getResultIntent(arrayOf(model.id)))
+                    setResult(Activity.RESULT_OK, getResultIntent(listOf(model.id)))
                     onBackPressed()
                 }
             }
@@ -83,8 +83,8 @@ internal class ValidatorSelectActivity : BaseActivity<ValidatorSelectViewModel>(
         super.onCreate(savedInstanceState)
 
         val coinId: String = getCoinId(intent) ?: return Unit.also { finish() }
-        val validatorIdArray: Array<String> = getValidatorId(intent)
-        viewModel.initViewModel(coinId, validatorIdArray)
+        val validatorIdList: List<String> = getValidators(intent)
+        viewModel.initViewModel(coinId, validatorIdList)
 
         setSupportActionBar(selectValidatorToolbar)
         selectValidatorRecycler.addItemDecoration(decorator)

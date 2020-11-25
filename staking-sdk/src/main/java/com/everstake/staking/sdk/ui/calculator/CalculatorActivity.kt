@@ -60,7 +60,7 @@ internal class CalculatorActivity : BaseActivity<CalculatorViewModel>() {
                 ValidatorSelectActivity.getIntent(
                     this,
                     viewModel.getCoinId(),
-                    viewModel.getSelectedValidators().toTypedArray(),
+                    viewModel.getSelectedValidators(),
                     viewModel.allowMultiValidator()
                 ), CODE_VALIDATOR_SELECT
             )
@@ -84,7 +84,7 @@ internal class CalculatorActivity : BaseActivity<CalculatorViewModel>() {
                 StakeActivity.getIntent(
                     this,
                     viewModel.getCoinId(),
-                    viewModel.getSelectedValidators().toTypedArray(),
+                    viewModel.getSelectedValidators(),
                     inputAmount.text.toString()
                 )
             )
@@ -104,7 +104,7 @@ internal class CalculatorActivity : BaseActivity<CalculatorViewModel>() {
                 data?.let { CoinSelectActivity.getCoinIdFromResult(it) } ?: return
             )
             CODE_VALIDATOR_SELECT -> viewModel.updateSelectedValidators(
-                data?.let { ValidatorSelectActivity.getValidatorId(it) }?.toList() ?: return
+                data?.let { ValidatorSelectActivity.getValidators(it) } ?: return
             )
         }
     }
@@ -138,7 +138,8 @@ internal class CalculatorActivity : BaseActivity<CalculatorViewModel>() {
             }
         }
 
-        calculatorValidatorName.text = calculatorData.validators.joinToString(", ") { it.validatorName }
+        calculatorValidatorName.text =
+            calculatorData.validators.joinToString(", ") { it.validatorName }
         if (calculatorData.allowMultipleValidator) {
             calculatorValidatorFee.visibility = View.GONE
         } else if (calculatorData.validators.isNotEmpty()) {

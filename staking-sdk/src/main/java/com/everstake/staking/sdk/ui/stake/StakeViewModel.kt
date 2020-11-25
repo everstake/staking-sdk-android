@@ -51,8 +51,8 @@ internal class StakeViewModel : BaseViewModel() {
 
     fun getCoinId(): String = stakeInfo.value?.coinId ?: ""
 
-    fun updateValidators(validator: Array<String>) =
-        validatorIdChannel.offer(validator.toList())
+    fun updateValidators(validator: List<String>) =
+        validatorIdChannel.offer(validator)
 
     fun getSelectedValidator(): List<String> =
         stakeInfo.value?.validators?.map { it.validatorId } ?: emptyList()

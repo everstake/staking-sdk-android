@@ -11,5 +11,5 @@ internal data class PutStakeResponseModel(
     val coinId: String,
     val amount: BigDecimal,
     val amountToClaim: BigDecimal?,
-    val validator: Validator?
+    val validators: List<Validator>?
 )

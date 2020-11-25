@@ -14,6 +14,11 @@ internal data class UnstakeModel(
     val progress: BigDecimal,
     val unstakeTimeSeconds: BigInteger,
     val canUnstake: Boolean,
+    val validators: List<UnstakeValidatorModel>
+
+)
+
+internal data class UnstakeValidatorModel(
     val validatorName: String,
     val validatorAddress: String
 )

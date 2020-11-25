@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide
 import com.everstake.staking.sdk.EverstakeAction
 import com.everstake.staking.sdk.EverstakeStaking
 import com.everstake.staking.sdk.R
+import com.everstake.staking.sdk.ValidatorInfo
 import com.everstake.staking.sdk.data.model.ui.CoinDetailsModel
 import com.everstake.staking.sdk.ui.base.BaseActivity
 import com.everstake.staking.sdk.ui.calculator.CalculatorActivity
@@ -53,16 +54,16 @@ internal class CoinDetailsActivity : BaseActivity<CoinDetailsViewModel>() {
         viewModel.coinDetails.observe(this) { updateUI(it) }
 
         coinDetailsStakeButton.setOnClickListener {
-            val coinId: String = getCoinId() ?: return@setOnClickListener
+            val coinId: String = viewModel.getCoinId() ?: return@setOnClickListener
             startActivity(StakeActivity.getIntent(this, coinId))
         }
         coinDetailsCalculatorButton.setOnClickListener {
-            val coinId: String = getCoinId() ?: return@setOnClickListener
+            val coinId: String = viewModel.getCoinId() ?: return@setOnClickListener
             startActivity(CalculatorActivity.getIntent(this, coinId))
         }
         coinDetailsUnstakeButton.setOnClickListener {
-            val coinId: String = getCoinId() ?: return@setOnClickListener
-            startActivity(UnstakeActivity.getIntent(this, coinId))
+            val coinId: String = viewModel.getCoinId() ?: return@setOnClickListener
+            startActivity(UnstakeActivity.getIntent(this, coinId, viewModel.getValidatorIdList()))
         }
         coinDetailsStakeClaimButton.setOnClickListener {
             val coinDetails: CoinDetailsModel =
@@ -71,8 +72,13 @@ internal class CoinDetailsActivity : BaseActivity<CoinDetailsViewModel>() {
                 EverstakeAction.CLAIM,
                 coinDetails.coinSymbol,
                 coinDetails.claimAmount,
-                coinDetails.validatorName,
-                coinDetails.validatorAddress
+                // fixme
+                listOf(
+                    ValidatorInfo(
+                        coinDetails.validatorName,
+                        coinDetails.validatorAddress
+                    )
+                )
             )
         }
     }
@@ -112,6 +118,7 @@ internal class CoinDetailsActivity : BaseActivity<CoinDetailsViewModel>() {
             serviceFee: String,
             showStakedSection: Boolean,
             stakedAmount: String,
+            _: String,
             validatorName: String,
             _: String,
             yearlyIncome: String,
@@ -164,6 +171,4 @@ internal class CoinDetailsActivity : BaseActivity<CoinDetailsViewModel>() {
 
         coinDetailsAboutText.text = about
     }
-
-    private fun getCoinId(): String? = viewModel.coinDetails.value?.id
 }

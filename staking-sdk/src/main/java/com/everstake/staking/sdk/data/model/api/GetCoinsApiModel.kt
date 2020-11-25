@@ -38,7 +38,7 @@ internal data class Validator(
     val fee: BigDecimal,
     val isReliable: Boolean,
     val address: String,
-    val amount: String?
+    val amount: BigDecimal?
 )
 
 internal enum class StakeType {

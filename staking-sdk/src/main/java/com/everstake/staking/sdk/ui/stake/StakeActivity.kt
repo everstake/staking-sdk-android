@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.everstake.staking.sdk.EverstakeAction
 import com.everstake.staking.sdk.EverstakeStaking
 import com.everstake.staking.sdk.R
+import com.everstake.staking.sdk.ValidatorInfo
 import com.everstake.staking.sdk.data.Constants
 import com.everstake.staking.sdk.data.model.ui.StakeModel
 import com.everstake.staking.sdk.data.model.ui.StakeValidatorInfo
@@ -47,18 +48,18 @@ internal class StakeActivity : BaseActivity<StakeViewModel>() {
         fun getIntent(
             context: Context,
             coinId: String,
-            validators: Array<String>? = emptyArray(),
+            validators: List<String> = emptyList(),
             amount: String? = null
         ): Intent =
             Intent(context, StakeActivity::class.java)
                 .putExtra(KEY_COIN_ID, coinId)
-                .putExtra(KEY_VALIDATORS, validators)
+                .putStringArrayListExtra(KEY_VALIDATORS, ArrayList(validators))
                 .putExtra(KEY_AMOUNT, amount)
 
         private fun getCoinId(intent: Intent): String? = intent.getStringExtra(KEY_COIN_ID)
 
-        private fun getValidators(intent: Intent): Array<String> =
-            (intent.getStringArrayExtra(KEY_VALIDATORS) ?: emptyArray())
+        private fun getValidators(intent: Intent): List<String> =
+            (intent.getStringArrayListExtra(KEY_VALIDATORS) ?: emptyList())
                 .also { intent.removeExtra(KEY_VALIDATORS) }
 
         private fun getAmount(intent: Intent): String? = intent.getStringExtra(KEY_AMOUNT)
@@ -79,7 +80,7 @@ internal class StakeActivity : BaseActivity<StakeViewModel>() {
                 ValidatorSelectActivity.getIntent(
                     this,
                     viewModel.getCoinId(),
-                    viewModel.getSelectedValidator().toTypedArray(),
+                    viewModel.getSelectedValidator(),
                     viewModel.allowMultiValidator()
                 ), CODE_VALIDATOR_SELECT
             )
@@ -101,13 +102,13 @@ internal class StakeActivity : BaseActivity<StakeViewModel>() {
         })
         stakeButton.setOnClickListener {
             val stakeModel: StakeModel = viewModel.stakeInfo.value ?: return@setOnClickListener
-            val validatorInfo: StakeValidatorInfo = stakeModel.validators.first()
+            val validators: List<ValidatorInfo> =
+                stakeModel.validators.map { ValidatorInfo(it.validatorName, it.validatorAddress) }
             EverstakeStaking.appCallback.get()?.onAction(
                 EverstakeAction.STAKE,
                 stakeModel.coinSymbol,
                 stakeModel.amount,
-                validatorInfo.validatorName,
-                validatorInfo.validatorAddress
+                validators
             )
         }
 
@@ -127,7 +128,7 @@ internal class StakeActivity : BaseActivity<StakeViewModel>() {
         if (resultCode != Activity.RESULT_OK) return
         when (requestCode) {
             CODE_VALIDATOR_SELECT -> viewModel.updateValidators(
-                data?.let { ValidatorSelectActivity.getValidatorId(it) } ?: return
+                data?.let { ValidatorSelectActivity.getValidators(it) } ?: return
             )
         }
     }

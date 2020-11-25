@@ -35,10 +35,10 @@ internal class ValidatorSelectViewModel : BaseViewModel() {
         selectedValidatorChannel.asFlow().distinctUntilChanged()
     ).asLiveData(Dispatchers.IO)
 
-    fun initViewModel(coinId: String, validatorIdArray: Array<String>) {
+    fun initViewModel(coinId: String, validatorIdArray: List<String>) {
         viewModelScope.launch {
             coinIdChannel.send(coinId)
-            updateSelectedValidators(listOf(*validatorIdArray))
+            updateSelectedValidators(validatorIdArray)
             updateValidatorsUseCase.updateValidators()
         }
     }
@@ -57,8 +57,8 @@ internal class ValidatorSelectViewModel : BaseViewModel() {
         }
     }
 
-    fun getSelectedValidators(): Array<String> {
-        return lastSelectedValidatorList.toTypedArray()
+    fun getSelectedValidators(): List<String> {
+        return lastSelectedValidatorList
     }
 
     private fun updateSelectedValidators(validators: List<String>) {

@@ -8,10 +8,11 @@ interface EverstakeListener {
         actionType: EverstakeAction,
         coinSymbol: String,
         amount: String,
-        validatorName: String,
-        validatorAddress: String
+        validatorsInfo: List<ValidatorInfo>
     )
 }
+
+data class ValidatorInfo(val validatorName: String, val validatorAddress: String)
 
 enum class EverstakeAction {
     STAKE, UNSTAKE, CLAIM
