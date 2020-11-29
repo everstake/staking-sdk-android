@@ -23,11 +23,11 @@ internal class GetValidatorsListUseCase(
     ): Flow<List<ValidatorListModel>> = coinListRepository
         .getCoinInfoFlow(coinIdFlow)
         .map { it.validators }
-        .combine(validatorId) { validatorList: List<Validator>?, selectedValidatorIdArray: List<String>? ->
+        .combine(validatorId) { validatorList: List<Validator>?, selectedValidatorIdList: List<String>? ->
             validatorList?.map { (id: String, name: String, fee: BigDecimal, isReliable: Boolean) ->
                 ValidatorListModel(
                     id = id,
-                    isSelected = selectedValidatorIdArray?.contains(id) ?: false,
+                    isSelected = selectedValidatorIdList?.contains(id) ?: false,
                     name = name,
                     fee = bindString(EverstakeStaking.app, R.string.common_percent_format, fee),
                     isReliable = isReliable
