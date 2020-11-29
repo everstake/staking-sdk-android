@@ -37,6 +37,6 @@ internal class UserBalanceRepository private constructor() {
 
     fun getBalanceForCoinSymbol(coinSymbolFlow: Flow<String>): Flow<String?> =
         coinSymbolFlow.combine(getAddressInfoFlow()) { coinSymbol: String?, addressInfoList: List<EverstakeBalanceModel>? ->
-            addressInfoList?.find { it.coinSymbol == coinSymbol }?.balance
+            addressInfoList?.find { it.coinSymbol.equals(coinSymbol, true) }?.balance
         }
 }

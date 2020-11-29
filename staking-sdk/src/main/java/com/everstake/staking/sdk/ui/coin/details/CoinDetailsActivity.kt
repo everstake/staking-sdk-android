@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import androidx.annotation.ColorInt
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.lifecycle.ViewModelProvider
@@ -14,15 +13,20 @@ import com.bumptech.glide.Glide
 import com.everstake.staking.sdk.EverstakeAction
 import com.everstake.staking.sdk.EverstakeStaking
 import com.everstake.staking.sdk.R
+import com.everstake.staking.sdk.ValidatorInfo
+import com.everstake.staking.sdk.data.model.api.StakeType
 import com.everstake.staking.sdk.data.model.ui.CoinDetailsModel
+import com.everstake.staking.sdk.data.model.ui.CoinDetailsValidatorInfo
 import com.everstake.staking.sdk.ui.base.BaseActivity
 import com.everstake.staking.sdk.ui.calculator.CalculatorActivity
+import com.everstake.staking.sdk.ui.coin.details.epoxy.*
 import com.everstake.staking.sdk.ui.stake.StakeActivity
 import com.everstake.staking.sdk.ui.unstake.UnstakeActivity
 import com.everstake.staking.sdk.util.bindColor
 import com.everstake.staking.sdk.util.bindString
 import com.everstake.staking.sdk.util.getDataInfoSpan
 import kotlinx.android.synthetic.main.activity_coin_details.*
+import kotlinx.android.synthetic.main.view_stake_detail.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 
@@ -53,27 +57,12 @@ internal class CoinDetailsActivity : BaseActivity<CoinDetailsViewModel>() {
         viewModel.coinDetails.observe(this) { updateUI(it) }
 
         coinDetailsStakeButton.setOnClickListener {
-            val coinId: String = getCoinId() ?: return@setOnClickListener
+            val coinId: String = viewModel.getCoinId() ?: return@setOnClickListener
             startActivity(StakeActivity.getIntent(this, coinId))
         }
         coinDetailsCalculatorButton.setOnClickListener {
-            val coinId: String = getCoinId() ?: return@setOnClickListener
+            val coinId: String = viewModel.getCoinId() ?: return@setOnClickListener
             startActivity(CalculatorActivity.getIntent(this, coinId))
-        }
-        coinDetailsUnstakeButton.setOnClickListener {
-            val coinId: String = getCoinId() ?: return@setOnClickListener
-            startActivity(UnstakeActivity.getIntent(this, coinId))
-        }
-        coinDetailsStakeClaimButton.setOnClickListener {
-            val coinDetails: CoinDetailsModel =
-                viewModel.coinDetails.value ?: return@setOnClickListener
-            EverstakeStaking.appCallback.get()?.onAction(
-                EverstakeAction.CLAIM,
-                coinDetails.coinSymbol,
-                coinDetails.claimAmount,
-                coinDetails.validatorName,
-                coinDetails.validatorAddress
-            )
         }
     }
 
@@ -102,19 +91,18 @@ internal class CoinDetailsActivity : BaseActivity<CoinDetailsViewModel>() {
 
     private fun updateUI(coinDetails: CoinDetailsModel) {
         val (
-            _: String,
+            coinId: String,
             coinName: String,
             coinSymbol: String,
+            stakeType: StakeType,
             iconUrl: String,
             about: String,
             _: String,
             apr: String,
             serviceFee: String,
             showStakedSection: Boolean,
-            stakedAmount: String,
-            validatorName: String,
-            _: String,
-            yearlyIncome: String,
+            totalStakedAmount: String,
+            validators: List<CoinDetailsValidatorInfo>,
             showClaimSection: Boolean,
             claimAmount: String) = coinDetails
 
@@ -136,34 +124,67 @@ internal class CoinDetailsActivity : BaseActivity<CoinDetailsViewModel>() {
             headerSpanColor
         )
 
-        coinDetailsStakedGroup.visibility =
-            if (showStakedSection) View.VISIBLE else View.GONE
-        coinDetailsStakedAmount.text = stakedAmount
+        val showList: Boolean =
+            validators.size > 1 && stakeType == StakeType.MultiStakeToOneValidator
 
-        @ColorInt
-        val stakedSpanColor: Int = bindColor(this, R.color.everstakeTextColorPrimary)
+        val unstakeClick: (idsList: List<String>) -> Unit = { idsList: List<String> ->
+            startActivity(
+                UnstakeActivity.getIntent(
+                    this@CoinDetailsActivity,
+                    coinId,
+                    idsList
+                )
+            )
+        }
+        val claimClick: () -> Unit = {
+            EverstakeStaking.appCallback.get()?.onAction(
+                EverstakeAction.CLAIM,
+                coinDetails.coinSymbol,
+                coinDetails.claimAmount,
+                validators.map {
+                    ValidatorInfo(
+                        it.validatorName,
+                        it.validatorAddress
+                    )
+                }
+            )
+        }
 
-        coinDetailsStakedValidator.text = getDataInfoSpan(
-            bindString(this, R.string.coin_details_validator),
-            validatorName,
-            stakedSpanColor
-        )
-        coinDetailsStakeYearProfit.text = getDataInfoSpan(
-            bindString(this, R.string.coin_details_income),
-            yearlyIncome,
-            stakedSpanColor
-        )
-
-        coinDetailsClaimGroup.visibility = if (showClaimSection) View.VISIBLE else View.GONE
-
-        coinDetailsAvailableClaim.text = getDataInfoSpan(
-            bindString(this, R.string.coin_details_available_rewards),
-            "$claimAmount $coinSymbol",
-            stakedSpanColor
-        )
-
-        coinDetailsAboutText.text = about
+        coinDetailsRecycler.withModels {
+            if (showStakedSection) {
+                stakedHeaderView {
+                    id("stakedHeader")
+                    showList(showList)
+                }
+                if (showList) {
+                    validators.forEach {
+                        singleStakeView {
+                            id(it.validatorId)
+                            validator(it)
+                            unstakeClickListener(unstakeClick)
+                        }
+                    }
+                } else {
+                    stakeView {
+                        id("staked")
+                        totalStakedAmount(totalStakedAmount)
+                        validators(validators)
+                        unstakeClickListener(unstakeClick)
+                    }
+                }
+                if (showClaimSection) {
+                    claimView {
+                        id("claim")
+                        claimAmount(claimAmount)
+                        coinSymbol(coinSymbol)
+                        claimClickListener(claimClick)
+                    }
+                }
+            }
+            aboutView {
+                id("about")
+                about(about)
+            }
+        }
     }
-
-    private fun getCoinId(): String? = viewModel.coinDetails.value?.id
 }

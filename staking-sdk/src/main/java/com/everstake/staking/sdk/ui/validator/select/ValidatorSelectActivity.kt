@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,21 +31,38 @@ internal class ValidatorSelectActivity : BaseActivity<ValidatorSelectViewModel>(
     companion object {
         private const val KEY_COIN_ID = "SelectValidator.CoinId"
         private const val KEY_VALIDATOR_ID = "SelectValidator.ValidatorId"
+        private const val KEY_ALLOW_MULTISELECT = "SelectValidator.AllowMultiSelect"
 
-        fun getIntent(context: Context, coinId: String, selectedValidator: String?): Intent =
+        fun getIntent(
+            context: Context,
+            coinId: String,
+            selectedValidator: List<String> = emptyList(),
+            allowMultiSelect: Boolean = false
+        ): Intent =
             Intent(context, ValidatorSelectActivity::class.java)
                 .putExtra(KEY_COIN_ID, coinId)
-                .putExtra(KEY_VALIDATOR_ID, selectedValidator)
+                .putStringArrayListExtra(KEY_VALIDATOR_ID, ArrayList(selectedValidator))
+                .putExtra(KEY_ALLOW_MULTISELECT, allowMultiSelect)
 
-        fun getValidatorId(intent: Intent): String? = intent.getStringExtra(KEY_VALIDATOR_ID)
+        fun getValidators(intent: Intent): List<String> =
+            intent.getStringArrayListExtra(KEY_VALIDATOR_ID) ?: emptyList()
 
-        private fun getResultIntent(validatorId: String): Intent =
-            Intent().putExtra(KEY_VALIDATOR_ID, validatorId)
+        private fun getAllowMultiSelect(intent: Intent): Boolean = intent.getBooleanExtra(
+            KEY_ALLOW_MULTISELECT, false
+        )
+
+        private fun getResultIntent(validators: List<String>): Intent =
+            Intent().putStringArrayListExtra(KEY_VALIDATOR_ID, ArrayList(validators))
 
         private fun getCoinId(intent: Intent): String? = intent.getStringExtra(KEY_COIN_ID)
     }
 
-    private val adapter: ValidatorSelectAdapter by lazy { ValidatorSelectAdapter() }
+    private val isMultiSelect: Boolean by lazy {
+        getAllowMultiSelect(intent)
+    }
+    private val adapter: ValidatorSelectAdapter by lazy {
+        ValidatorSelectAdapter(isMultiSelect)
+    }
     private val decorator: RecyclerView.ItemDecoration by lazy {
         DividerDecorator(marginLeft = dpToPx(72))
     }
@@ -52,8 +70,12 @@ internal class ValidatorSelectActivity : BaseActivity<ValidatorSelectViewModel>(
         object : RecyclerClickListener<ValidatorListModel>() {
             override fun onClick(pos: Int, model: ValidatorListModel?) {
                 model ?: return
-                setResult(Activity.RESULT_OK, getResultIntent(model.id))
-                onBackPressed()
+                if (isMultiSelect) {
+                    viewModel.updateSelected(model, isMultiSelect)
+                } else {
+                    setResult(Activity.RESULT_OK, getResultIntent(listOf(model.id)))
+                    onBackPressed()
+                }
             }
         }
 
@@ -61,8 +83,8 @@ internal class ValidatorSelectActivity : BaseActivity<ValidatorSelectViewModel>(
         super.onCreate(savedInstanceState)
 
         val coinId: String = getCoinId(intent) ?: return Unit.also { finish() }
-        val validatorId: String? = getValidatorId(intent)
-        viewModel.initViewModel(coinId, validatorId)
+        val validatorIdList: List<String> = getValidators(intent)
+        viewModel.initViewModel(coinId, validatorIdList)
 
         setSupportActionBar(selectValidatorToolbar)
         selectValidatorRecycler.addItemDecoration(decorator)
@@ -70,8 +92,17 @@ internal class ValidatorSelectActivity : BaseActivity<ValidatorSelectViewModel>(
         adapter.setClickListener(clickListener)
         selectValidatorRecycler.adapter = adapter
 
+        selectValidatorConfirm.visibility = if (isMultiSelect) View.VISIBLE else View.GONE
+        selectValidatorConfirm.setOnClickListener {
+            setResult(Activity.RESULT_OK, getResultIntent(viewModel.getSelectedValidators()))
+            onBackPressed()
+        }
+
         viewModel.listData.observe(this) { validators: List<ValidatorListModel> ->
             lifecycleScope.launch { adapter.applyChanges(validators) }
+            val hasSelectedValidators: Boolean = validators.any { it.isSelected }
+            selectValidatorConfirm.isEnabled = hasSelectedValidators
+            selectValidatorConfirm.alpha = if (hasSelectedValidators) 1.0F else 0.7F
         }
     }
 

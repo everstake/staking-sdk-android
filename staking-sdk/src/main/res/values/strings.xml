@@ -22,8 +22,9 @@
     <string name="coin_details_apr">APR:</string>
     <string name="coin_details_service_fee">Service fee:</string>
     <string name="coin_details_stake">Stake</string>
-    <string name="coin_details_calculator">Open Calculator</string>
+    <string name="coin_details_calculator">Calculator</string>
     <string name="coin_details_staked">Staked</string>
+    <string name="coin_details_staked_list">List of stakes</string>
     <string name="coin_details_unstake">Unstake</string>
     <string name="coin_details_validator">Validator:</string>
     <string name="coin_details_income">Yearly income:</string>
@@ -46,6 +47,7 @@
     <string name="select_coin_title">Select currency</string>
     <!--  Select validator  -->
     <string name="select_validator_title">Select validator</string>
+    <string name="select_validator_confirm_button">Confirm</string>
     <!--  Unstake  -->
     <string name="unstake_title">New unstake</string>
     <string name="unstake_staked">Staked:</string>

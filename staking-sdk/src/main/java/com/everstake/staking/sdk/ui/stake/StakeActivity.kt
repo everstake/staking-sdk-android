@@ -14,8 +14,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.everstake.staking.sdk.EverstakeAction
 import com.everstake.staking.sdk.EverstakeStaking
 import com.everstake.staking.sdk.R
+import com.everstake.staking.sdk.ValidatorInfo
 import com.everstake.staking.sdk.data.Constants
 import com.everstake.staking.sdk.data.model.ui.StakeModel
+import com.everstake.staking.sdk.data.model.ui.StakeValidatorInfo
 import com.everstake.staking.sdk.ui.base.BaseActivity
 import com.everstake.staking.sdk.ui.validator.select.ValidatorSelectActivity
 import com.everstake.staking.sdk.util.bindColor
@@ -38,7 +40,7 @@ internal class StakeActivity : BaseActivity<StakeViewModel>() {
 
     companion object {
         private const val KEY_COIN_ID = "Stake.CoinId"
-        private const val KEY_VALIDATOR_ID = "Stake.ValidatorId"
+        private const val KEY_VALIDATORS = "Stake.Validators"
         private const val KEY_AMOUNT = "Stake.Amount"
 
         private const val CODE_VALIDATOR_SELECT = 1612
@@ -46,19 +48,19 @@ internal class StakeActivity : BaseActivity<StakeViewModel>() {
         fun getIntent(
             context: Context,
             coinId: String,
-            validatorId: String? = null,
+            validators: List<String> = emptyList(),
             amount: String? = null
         ): Intent =
             Intent(context, StakeActivity::class.java)
                 .putExtra(KEY_COIN_ID, coinId)
-                .putExtra(KEY_VALIDATOR_ID, validatorId)
+                .putStringArrayListExtra(KEY_VALIDATORS, ArrayList(validators))
                 .putExtra(KEY_AMOUNT, amount)
 
         private fun getCoinId(intent: Intent): String? = intent.getStringExtra(KEY_COIN_ID)
 
-        private fun getValidatorId(intent: Intent): String? =
-            intent.getStringExtra(KEY_VALIDATOR_ID)
-                .also { intent.removeExtra(KEY_VALIDATOR_ID) }
+        private fun getValidators(intent: Intent): List<String> =
+            (intent.getStringArrayListExtra(KEY_VALIDATORS) ?: emptyList())
+                .also { intent.removeExtra(KEY_VALIDATORS) }
 
         private fun getAmount(intent: Intent): String? = intent.getStringExtra(KEY_AMOUNT)
             .also { intent.removeExtra(KEY_AMOUNT) }
@@ -78,7 +80,8 @@ internal class StakeActivity : BaseActivity<StakeViewModel>() {
                 ValidatorSelectActivity.getIntent(
                     this,
                     viewModel.getCoinId(),
-                    viewModel.getValidatorId()
+                    viewModel.getSelectedValidator(),
+                    viewModel.allowMultiValidator()
                 ), CODE_VALIDATOR_SELECT
             )
         }
@@ -99,18 +102,19 @@ internal class StakeActivity : BaseActivity<StakeViewModel>() {
         })
         stakeButton.setOnClickListener {
             val stakeModel: StakeModel = viewModel.stakeInfo.value ?: return@setOnClickListener
+            val validators: List<ValidatorInfo> =
+                stakeModel.validators.map { ValidatorInfo(it.validatorName, it.validatorAddress) }
             EverstakeStaking.appCallback.get()?.onAction(
                 EverstakeAction.STAKE,
                 stakeModel.coinSymbol,
                 stakeModel.amount,
-                stakeModel.validatorName,
-                stakeModel.validatorAddress
+                validators
             )
         }
 
         viewModel.stakeInfo.observe(this) { updateUI(it) }
 
-        getValidatorId(intent)?.also { viewModel.updateValidatorId(it) }
+        getValidators(intent).also { viewModel.updateValidators(it) }
         getAmount(intent)?.also { updateAmountText(it) }
     }
 
@@ -123,8 +127,8 @@ internal class StakeActivity : BaseActivity<StakeViewModel>() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode != Activity.RESULT_OK) return
         when (requestCode) {
-            CODE_VALIDATOR_SELECT -> viewModel.updateValidatorId(
-                data?.let { ValidatorSelectActivity.getValidatorId(it) } ?: return
+            CODE_VALIDATOR_SELECT -> viewModel.updateValidators(
+                data?.let { ValidatorSelectActivity.getValidators(it) } ?: return
             )
         }
     }
@@ -147,10 +151,8 @@ internal class StakeActivity : BaseActivity<StakeViewModel>() {
             progress: BigDecimal,
             coinSymbol: String,
             coinYearlyIncomePercent: String,
-            _: String,
-            validatorName: String,
-            _: String,
-            validatorFee: String,
+            allowMultipleValidator: Boolean,
+            validators: List<StakeValidatorInfo>,
             isReliableValidator: Boolean,
             dailyIncome: String,
             monthlyIncome: String,
@@ -185,12 +187,17 @@ internal class StakeActivity : BaseActivity<StakeViewModel>() {
                 setSelectableItemBackground()
             }
         }
-        stakeValidatorName.text = validatorName
-        stakeValidatorFee.text = bindString(
-            this,
-            R.string.common_fee_format,
-            validatorFee
-        )
+        stakeValidatorName.text = validators.joinToString(", ") { it.validatorName }
+        if (allowMultipleValidator) {
+            stakeValidatorFee.visibility = View.GONE
+        } else if (validators.isNotEmpty()) {
+            stakeValidatorFee.visibility = View.VISIBLE
+            stakeValidatorFee.text = bindString(
+                this,
+                R.string.common_fee_format,
+                validators.first().validatorFee
+            )
+        }
         stakeValidatorReliableLabel.visibility =
             if (isReliableValidator) View.VISIBLE else View.GONE
 

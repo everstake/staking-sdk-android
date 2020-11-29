@@ -44,4 +44,5 @@ internal class CoinDetailsViewModel : BaseViewModel() {
         }
     }
 
+    fun getCoinId(): String? = coinDetails.value?.id
 }

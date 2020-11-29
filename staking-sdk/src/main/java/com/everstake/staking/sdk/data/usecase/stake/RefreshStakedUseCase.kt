@@ -31,7 +31,8 @@ internal class RefreshStakedUseCase(
 
         val coinIdToAddressMap: Map<String, String> =
             coinSymbolToAddressMap?.map { (coinSymbol: String, address: String) ->
-                val coinInfo: GetCoinsResponseModel? = coinList.find { it.symbol == coinSymbol }
+                val coinInfo: GetCoinsResponseModel? =
+                    coinList.find { it.coinSymbol.equals(coinSymbol, true) }
                 if (coinInfo != null) Pair(coinInfo.id, address) else null
             }?.filterNotNull()
                 ?.takeIf { it.isNotEmpty() }

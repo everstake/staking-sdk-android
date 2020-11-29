@@ -4,8 +4,10 @@ import com.everstake.staking.sdk.EverstakeStaking
 import com.everstake.staking.sdk.R
 import com.everstake.staking.sdk.data.Constants
 import com.everstake.staking.sdk.data.model.api.GetCoinsResponseModel
+import com.everstake.staking.sdk.data.model.api.StakeType
 import com.everstake.staking.sdk.data.model.api.Validator
 import com.everstake.staking.sdk.data.model.ui.CalculatorModel
+import com.everstake.staking.sdk.data.model.ui.CalculatorValidatorInfo
 import com.everstake.staking.sdk.data.repository.CoinListRepository
 import com.everstake.staking.sdk.util.CalculatorHelper
 import com.everstake.staking.sdk.util.bindString
@@ -24,31 +26,34 @@ internal class CalculatorUseCase(
 ) {
     fun getCalculatorDataFlow(
         coinIdFlow: Flow<String>,
-        validatorIdFlow: Flow<String?>,
+        selectedValidatorsFlow: Flow<List<String>>,
         amountFlow: Flow<String>,
         includeValidatorFeeFlow: Flow<Boolean>,
         addReinvestmentFlow: Flow<Boolean>
     ): Flow<CalculatorModel> {
         val coinInfoFlow: Flow<GetCoinsResponseModel> =
             coinListRepository.getCoinInfoFlow(coinIdFlow)
-        val validatorInfoFlow: Flow<Validator> =
-            coinListRepository.findValidatorInfoFlow(coinInfoFlow, validatorIdFlow)
+        val validatorsInfoFlow: Flow<List<Validator>> =
+            coinListRepository.findValidatorInfoFlow(coinInfoFlow, selectedValidatorsFlow)
 
         return combine(
             coinInfoFlow,
-            validatorInfoFlow,
+            validatorsInfoFlow,
             amountFlow,
             includeValidatorFeeFlow,
             addReinvestmentFlow
-        ) { coinInfo: GetCoinsResponseModel?, validatorInfo: Validator?, amountStr: String?, includeValidatorFee: Boolean?, includeReinvestment: Boolean? ->
+        ) { coinInfo: GetCoinsResponseModel?, validators: List<Validator>?, amountStr: String?, includeValidatorFee: Boolean?, includeReinvestment: Boolean? ->
             coinInfo ?: return@combine null
-            validatorInfo ?: return@combine null
+            validators ?: return@combine null
 
             val amount: BigDecimal = amountStr?.toBigDecimalOrNull() ?: BigDecimal.ZERO
             /* Fee and percent are received as raw percent values ie. 10% = 10, we need to convert
             * it to number representation of percent */
             val periodScale: BigDecimal = if (includeValidatorFee == true) {
-                coinInfo.yieldPercent * (BigDecimal.ONE - validatorInfo.fee.scaleByPowerOfTen(-2))
+                val fee: BigDecimal = validators.fold(BigDecimal.ZERO) { acc, validator ->
+                    acc + validator.fee.scaleByPowerOfTen(-2)
+                }
+                coinInfo.yieldPercent * (BigDecimal.ONE - fee)
             } else {
                 coinInfo.yieldPercent
             }.scaleByPowerOfTen(-2)
@@ -72,23 +77,28 @@ internal class CalculatorUseCase(
             CalculatorModel(
                 coinId = coinInfo.id,
                 coinName = coinInfo.name,
-                coinSymbol = coinInfo.symbol,
+                coinSymbol = coinInfo.coinSymbol,
                 coinYearlyIncomePercent = bindString(
                     EverstakeStaking.app,
                     R.string.common_percent_format,
                     coinInfo.apr
                 ),
-                validatorId = validatorInfo.id,
-                validatorName = validatorInfo.name,
-                validatorFee = bindString(
-                    EverstakeStaking.app,
-                    R.string.common_percent_format,
-                    validatorInfo.fee
-                ),
-                isReliableValidator = validatorInfo.isReliable,
-                dailyIncome = formatAmount(perDay, coinInfo.precision, coinInfo.symbol),
-                monthlyIncome = formatAmount(perMonth, coinInfo.precision, coinInfo.symbol),
-                yearlyIncome = formatAmount(perYear, coinInfo.precision, coinInfo.symbol)
+                allowMultipleValidator = coinInfo.stakeType == StakeType.OneStakeToMultipleValidators,
+                validators = validators.map {
+                    CalculatorValidatorInfo(
+                        validatorId = it.id,
+                        validatorName = it.name,
+                        validatorFee = bindString(
+                            EverstakeStaking.app,
+                            R.string.common_percent_format,
+                            it.fee
+                        )
+                    )
+                },
+                isReliableValidator = validators.any { it.isReliable },
+                dailyIncome = formatAmount(perDay, coinInfo.precision, coinInfo.coinSymbol),
+                monthlyIncome = formatAmount(perMonth, coinInfo.precision, coinInfo.coinSymbol),
+                yearlyIncome = formatAmount(perYear, coinInfo.precision, coinInfo.coinSymbol)
             )
         }.filterNotNull()
     }

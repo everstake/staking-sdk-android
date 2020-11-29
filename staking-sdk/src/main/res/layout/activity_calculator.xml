@@ -134,9 +134,8 @@
             <View
                 android:id="@+id/calculatorSelectValidatorBg"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_height="66dp"
                 android:background="?selectableItemBackground"
-                app:layout_constraintBottom_toTopOf="@id/calculatorValidatorDivider"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/calculatorCoinDivider" />
@@ -145,14 +144,17 @@
                 android:id="@+id/calculatorValidatorName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
                 android:layout_marginEnd="16dp"
+                android:ellipsize="end"
                 android:fontFamily="sans-serif-medium"
+                android:maxLines="1"
                 android:textColor="@color/everstakeTextColorPrimary"
                 android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@id/calculatorValidatorFee"
                 app:layout_constraintEnd_toStartOf="@+id/calculatorValidatorLabel"
                 app:layout_constraintStart_toStartOf="@id/calculatorGuideStart"
-                app:layout_constraintTop_toBottomOf="@id/calculatorCoinDivider"
+                app:layout_constraintTop_toTopOf="@id/calculatorSelectValidatorBg"
+                app:layout_constraintVertical_chainStyle="packed"
                 tools:text="Everstake" />
 
             <TextView
@@ -161,10 +163,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/calculatorSelectValidatorBg"
                 app:layout_constraintEnd_toEndOf="@id/calculatorValidatorName"
                 app:layout_constraintStart_toStartOf="@id/calculatorValidatorName"
                 app:layout_constraintTop_toBottomOf="@id/calculatorValidatorName"
-                tools:text="Fee: 1%" />
+                app:layout_constraintVertical_chainStyle="packed"
+                tools:text="Fee: 1%"
+                tools:visibility="gone" />
 
             <TextView
                 android:id="@+id/calculatorValidatorLabel"
@@ -179,11 +184,10 @@
                 android:id="@+id/calculatorValidatorDivider"
                 android:layout_width="0dp"
                 android:layout_height="1dp"
-                android:layout_marginTop="12dp"
                 android:background="@color/everstakeDivider"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/calculatorGuideStart"
-                app:layout_constraintTop_toBottomOf="@id/calculatorValidatorFee" />
+                app:layout_constraintTop_toBottomOf="@id/calculatorSelectValidatorBg" />
 
             <include
                 android:id="@+id/calculatorIncomeContainer"

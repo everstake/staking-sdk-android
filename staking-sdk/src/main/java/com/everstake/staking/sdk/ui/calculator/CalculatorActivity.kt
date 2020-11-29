@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.TextWatcher
 import android.view.MenuItem
+import android.view.View
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.everstake.staking.sdk.R
@@ -59,7 +60,8 @@ internal class CalculatorActivity : BaseActivity<CalculatorViewModel>() {
                 ValidatorSelectActivity.getIntent(
                     this,
                     viewModel.getCoinId(),
-                    viewModel.getValidatorId()
+                    viewModel.getSelectedValidators(),
+                    viewModel.allowMultiValidator()
                 ), CODE_VALIDATOR_SELECT
             )
         }
@@ -82,7 +84,7 @@ internal class CalculatorActivity : BaseActivity<CalculatorViewModel>() {
                 StakeActivity.getIntent(
                     this,
                     viewModel.getCoinId(),
-                    viewModel.getValidatorId(),
+                    viewModel.getSelectedValidators(),
                     inputAmount.text.toString()
                 )
             )
@@ -101,8 +103,8 @@ internal class CalculatorActivity : BaseActivity<CalculatorViewModel>() {
             CODE_COIN_SELECT -> viewModel.updateCoinId(
                 data?.let { CoinSelectActivity.getCoinIdFromResult(it) } ?: return
             )
-            CODE_VALIDATOR_SELECT -> viewModel.updateValidatorId(
-                data?.let { ValidatorSelectActivity.getValidatorId(it) } ?: return
+            CODE_VALIDATOR_SELECT -> viewModel.updateSelectedValidators(
+                data?.let { ValidatorSelectActivity.getValidators(it) } ?: return
             )
         }
     }
@@ -135,12 +137,19 @@ internal class CalculatorActivity : BaseActivity<CalculatorViewModel>() {
                 setSelectableItemBackground()
             }
         }
-        calculatorValidatorName.text = calculatorData.validatorName
-        calculatorValidatorFee.text = bindString(
-            this,
-            R.string.common_fee_format,
-            calculatorData.validatorFee
-        )
+
+        calculatorValidatorName.text =
+            calculatorData.validators.joinToString(", ") { it.validatorName }
+        if (calculatorData.allowMultipleValidator) {
+            calculatorValidatorFee.visibility = View.GONE
+        } else if (calculatorData.validators.isNotEmpty()) {
+            calculatorValidatorFee.visibility = View.VISIBLE
+            calculatorValidatorFee.text = bindString(
+                this,
+                R.string.common_fee_format,
+                calculatorData.validators.first().validatorFee
+            )
+        }
 
         incomeDailyText.text = calculatorData.dailyIncome
         incomeMonthlyText.text = calculatorData.monthlyIncome

@@ -5,6 +5,7 @@ import com.everstake.staking.sdk.R
 import com.everstake.staking.sdk.data.model.api.GetCoinsResponseModel
 import com.everstake.staking.sdk.data.model.api.PutStakeResponseModel
 import com.everstake.staking.sdk.data.model.ui.CoinDetailsModel
+import com.everstake.staking.sdk.data.model.ui.CoinDetailsValidatorInfo
 import com.everstake.staking.sdk.data.repository.CoinListRepository
 import com.everstake.staking.sdk.data.repository.StakedRepository
 import com.everstake.staking.sdk.util.bindString
@@ -53,14 +54,12 @@ internal class GetCoinDetailsUseCase(
             )
 
             val showStaked: Boolean =
-                coinInfo.isActive && stakedInfo != null && stakedInfo.amount > BigDecimal.ZERO
+                coinInfo.isActive && stakedInfo != null && stakedInfo.amount > BigDecimal.ZERO && !stakedInfo.validators.isNullOrEmpty()
             val stakedAmount: String = formatAmount(
                 amount = stakedInfo?.amount ?: BigDecimal.ZERO,
                 precision = coinInfo.precision,
-                symbol = coinInfo.symbol
+                symbol = coinInfo.coinSymbol
             )
-            val income: String =
-                bindString(EverstakeStaking.app, R.string.common_percent_format, coinInfo.apr)
 
             val claimAmount: BigDecimal = stakedInfo?.amountToClaim ?: BigDecimal.ZERO
             val showClaim: Boolean = showStaked && claimAmount > BigDecimal.ZERO
@@ -68,17 +67,27 @@ internal class GetCoinDetailsUseCase(
             CoinDetailsModel(
                 id = coinInfo.id,
                 coinName = coinInfo.name,
-                coinSymbol = coinInfo.symbol,
+                coinSymbol = coinInfo.coinSymbol,
+                stakeType = coinInfo.stakeType,
                 iconUrl = coinInfo.iconUrl,
                 about = coinInfo.about,
                 aboutUrl = coinInfo.aboutUrl,
                 apr = apr,
                 serviceFee = fee,
                 showStakedSection = showStaked,
-                stakedAmount = stakedAmount,
-                validatorName = stakedInfo?.validator?.name ?: "",
-                validatorAddress = stakedInfo?.validator?.address ?: "",
-                yearlyIncome = income,
+                totalStakedAmount = stakedAmount,
+                validators = stakedInfo?.validators?.map {
+                    CoinDetailsValidatorInfo(
+                        validatorId = it.id,
+                        validatorName = it.name,
+                        validatorAddress = it.address,
+                        stakedAmount = formatAmount(
+                            it.amount ?: BigDecimal.ZERO,
+                            coinInfo.precision,
+                            coinInfo.coinSymbol
+                        )
+                    )
+                } ?: emptyList(),
                 showClaimSection = showClaim,
                 claimAmount = formatAmount(claimAmount, coinInfo.precision)
             )

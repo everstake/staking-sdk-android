@@ -18,7 +18,7 @@ import kotlin.reflect.KClass
 private object ApiProvider {
 
     val everstakeApi: EverstakeApi by lazy {
-        provideAPIService(EverstakeApi::class, "https://wallet-sdk-static.herokuapp.com/")
+        provideAPIService(EverstakeApi::class, "https://wallet-sdk.everstake.one/")
     }
 
     private fun <T : Any> provideAPIService(serviceClass: KClass<T>, url: String): T =

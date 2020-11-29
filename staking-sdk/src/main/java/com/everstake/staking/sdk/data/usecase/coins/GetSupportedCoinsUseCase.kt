@@ -12,6 +12,6 @@ internal class GetSupportedCoinsUseCase(
 ) {
 
     suspend fun getSupportedCoins(): List<String> =
-        coinListRepository.getCoinListFlowNullable().firstOrNull()?.map { it.symbol }
+        coinListRepository.getCoinListFlowNullable().firstOrNull()?.map { it.coinSymbol }
             ?: listOf("XTZ")
 }

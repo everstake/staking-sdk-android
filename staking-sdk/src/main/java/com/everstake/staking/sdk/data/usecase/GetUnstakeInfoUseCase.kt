@@ -3,7 +3,10 @@ package com.everstake.staking.sdk.data.usecase
 import com.everstake.staking.sdk.data.Constants.MAX_DISPLAY_PRECISION
 import com.everstake.staking.sdk.data.model.api.GetCoinsResponseModel
 import com.everstake.staking.sdk.data.model.api.PutStakeResponseModel
+import com.everstake.staking.sdk.data.model.api.StakeType
+import com.everstake.staking.sdk.data.model.api.Validator
 import com.everstake.staking.sdk.data.model.ui.UnstakeModel
+import com.everstake.staking.sdk.data.model.ui.UnstakeValidatorModel
 import com.everstake.staking.sdk.data.repository.CoinListRepository
 import com.everstake.staking.sdk.data.repository.StakedRepository
 import com.everstake.staking.sdk.util.formatAmount
@@ -25,6 +28,7 @@ internal class GetUnstakeInfoUseCase(
 
     fun getUnstakeFlow(
         coinIdFlow: Flow<String>,
+        selectedValidatorsFlow: Flow<List<String>>,
         amountFlow: Flow<String>,
         progressFlow: Flow<BigDecimal>
     ): Flow<UnstakeModel> {
@@ -33,12 +37,29 @@ internal class GetUnstakeInfoUseCase(
         val stakedInfoFlow: Flow<PutStakeResponseModel?> =
             stakedRepository.getStakeInfoFlow(coinIdFlow)
 
-        return combine(coinInfoFlow, stakedInfoFlow, amountFlow, progressFlow)
-        { coinInfo: GetCoinsResponseModel?, stakedInfo: PutStakeResponseModel?, amountStr: String?, progressIn: BigDecimal? ->
+        return combine(
+            coinInfoFlow,
+            stakedInfoFlow,
+            selectedValidatorsFlow,
+            amountFlow,
+            progressFlow
+        )
+        { coinInfo: GetCoinsResponseModel?, stakedInfo: PutStakeResponseModel?, selectedValidators: List<String>?, amountStr: String?, progressIn: BigDecimal? ->
             coinInfo ?: return@combine null
             amountStr ?: return@combine null
             progressIn ?: return@combine null
-            val totalBalance: BigDecimal = stakedInfo?.amount ?: BigDecimal.ZERO
+
+            val validators: List<Validator> =
+                stakedInfo?.validators?.filter { selectedValidators?.contains(it.id) == true }
+                    ?: emptyList()
+            // In case 1 to N there will be multiple validators, but the will have the same amount in other cases there will be only one validator
+            val totalBalance: BigDecimal =
+                if (coinInfo.stakeType == StakeType.OneStakeToMultipleValidators) {
+                    stakedInfo?.amount
+                } else {
+                    validators.firstOrNull()?.amount
+                } ?: BigDecimal.ZERO
+
             val initialAmount: BigDecimal = amountStr.toBigDecimalOrNull() ?: BigDecimal.ZERO
             var amount: BigDecimal = initialAmount
             var progress: BigDecimal = progressIn
@@ -57,15 +78,14 @@ internal class GetUnstakeInfoUseCase(
             this.previousProgress = progressIn
 
             UnstakeModel(
-                balance = formatAmount(totalBalance, coinInfo.precision, coinInfo.symbol),
+                balance = formatAmount(totalBalance, coinInfo.precision, coinInfo.coinSymbol),
                 amount = if (amount == initialAmount) amountStr
                 else formatAmount(amount, coinInfo.precision),
-                symbol = coinInfo.symbol,
+                symbol = coinInfo.coinSymbol,
                 progress = progress,
                 unstakeTimeSeconds = coinInfo.intervalUnstake,
                 canUnstake = totalBalance >= amount,
-                validatorName = stakedInfo?.validator?.name ?: "",
-                validatorAddress = stakedInfo?.validator?.address ?: ""
+                validators = validators.map { UnstakeValidatorModel(it.name, it.address) }
             )
         }.filterNotNull()
     }

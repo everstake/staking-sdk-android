@@ -10,7 +10,8 @@ import com.everstake.staking.sdk.ui.base.list.BaseViewHolder
 /**
  * created by Alex Ivanov on 24.10.2020.
  */
-internal class ValidatorSelectAdapter : BaseRecyclerAdapter<ValidatorListModel>() {
+internal class ValidatorSelectAdapter(private val multiSelect: Boolean = false) :
+    BaseRecyclerAdapter<ValidatorListModel>() {
     override fun provideViewHolder(
         layoutInflater: LayoutInflater,
         parent: ViewGroup,
@@ -20,6 +21,7 @@ internal class ValidatorSelectAdapter : BaseRecyclerAdapter<ValidatorListModel>(
             R.layout.item_validator_info,
             parent,
             false
-        )
+        ),
+        multiSelect
     )
 }

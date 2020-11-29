@@ -24,22 +24,27 @@ internal class UnstakeViewModel : BaseViewModel() {
     private val unstakeUseCase: GetUnstakeInfoUseCase = GetUnstakeInfoUseCase()
 
     private val coinIdChannel: BroadcastChannel<String> = ConflatedBroadcastChannel()
+    private val selectedValidatorsChannel: BroadcastChannel<List<String>> =
+        ConflatedBroadcastChannel()
     private val amountChannel: BroadcastChannel<String> = ConflatedBroadcastChannel()
     private val progressChannel: BroadcastChannel<BigDecimal> = ConflatedBroadcastChannel()
 
     val unstakeModel: LiveData<UnstakeModel> = unstakeUseCase.getUnstakeFlow(
         coinIdFlow = coinIdChannel.asFlow().distinctUntilChanged(),
+        selectedValidatorsFlow = selectedValidatorsChannel.asFlow().distinctUntilChanged(),
         amountFlow = amountChannel.asFlow().distinctUntilChanged(),
         progressFlow = progressChannel.asFlow().distinctUntilChanged()
     ).asLiveData(Dispatchers.IO)
 
     init {
+        selectedValidatorsChannel.offer(emptyList())
         amountChannel.offer("")
         progressChannel.offer(BigDecimal.ZERO)
     }
 
-    fun setCoinId(coinId: String) {
+    fun initViewModel(coinId: String, validators: List<String>) {
         coinIdChannel.offer(coinId)
+        selectedValidatorsChannel.offer(validators)
     }
 
     fun updateAmount(amount: String) {

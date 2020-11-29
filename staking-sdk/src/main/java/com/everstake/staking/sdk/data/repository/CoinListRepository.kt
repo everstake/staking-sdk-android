@@ -8,7 +8,6 @@ import com.everstake.staking.sdk.data.model.api.Validator
 import com.everstake.staking.sdk.util.*
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.*
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 /**
@@ -51,7 +50,9 @@ private constructor(
     { coinList: List<GetCoinsResponseModel>?, supportedCoins: List<String>? ->
         coinList ?: return@combine null
         supportedCoins ?: return@combine null
-        coinList.filter { supportedCoins.contains(it.symbol.toUpperCase(Locale.ENGLISH)) }
+        coinList.filter { coin ->
+            supportedCoins.any { supportedCoin -> supportedCoin.equals(coin.coinSymbol, true) }
+        }
     }
 
     fun getCoinListFlow(): Flow<List<GetCoinsResponseModel>> =
@@ -64,13 +65,14 @@ private constructor(
 
     fun findValidatorInfoFlow(
         coinInfoFlow: Flow<GetCoinsResponseModel>,
-        validatorIdFlow: Flow<String?>
-    ): Flow<Validator> =
+        selectedValidatorsFlow: Flow<List<String>>
+    ): Flow<List<Validator>> =
         coinInfoFlow.map { it.validators }
-            .combine(validatorIdFlow) { validators: List<Validator>?, selectedValidatorId: String? ->
+            .combine(selectedValidatorsFlow) { validators: List<Validator>?, selectedValidators: List<String> ->
                 validators?.takeIf { it.isNotEmpty() } ?: return@combine null
-                validators.find { it.id == selectedValidatorId }
-                    ?: validators.firstOrNull() { it.isReliable }
-                    ?: validators.first()
+                validators.filter { selectedValidators.contains(it.id) }
+                    .takeIf { it.isNotEmpty() }
+                    ?: validators.firstOrNull { it.isReliable }?.let { listOf(it) }
+                    ?: listOf(validators.first())
             }.filterNotNull()
 }

@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.everstake.staking.sdk.EverstakeAction
 import com.everstake.staking.sdk.EverstakeStaking
 import com.everstake.staking.sdk.R
+import com.everstake.staking.sdk.ValidatorInfo
 import com.everstake.staking.sdk.data.Constants
 import com.everstake.staking.sdk.data.model.ui.UnstakeModel
 import com.everstake.staking.sdk.ui.base.BaseActivity
@@ -34,11 +35,17 @@ internal class UnstakeActivity : BaseActivity<UnstakeViewModel>() {
 
     companion object {
         private const val KEY_COIN_ID = "Unstake.CoinId"
+        private const val KEY_VALIDATORS = "Unstake.Validators"
 
-        fun getIntent(context: Context, coinId: String): Intent =
-            Intent(context, UnstakeActivity::class.java).putExtra(KEY_COIN_ID, coinId)
+        fun getIntent(context: Context, coinId: String, validators: List<String>): Intent =
+            Intent(context, UnstakeActivity::class.java)
+                .putExtra(KEY_COIN_ID, coinId)
+                .putStringArrayListExtra(KEY_VALIDATORS, ArrayList(validators))
 
         private fun getCoinId(intent: Intent): String? = intent.getStringExtra(KEY_COIN_ID)
+
+        private fun getValidators(intent: Intent): List<String> =
+            intent.getStringArrayListExtra(KEY_VALIDATORS) ?: emptyList()
     }
 
     private var textWatcher: TextWatcher? = null
@@ -47,7 +54,7 @@ internal class UnstakeActivity : BaseActivity<UnstakeViewModel>() {
         super.onCreate(savedInstanceState)
 
         val coinId: String = getCoinId(intent) ?: return Unit.also { finish() }
-        viewModel.setCoinId(coinId)
+        viewModel.initViewModel(coinId, getValidators(intent))
 
         setSupportActionBar(unstakeToolbar)
         unstakeAmountSeekBar.max = Constants.PROGRESS_MAX_VALUE
@@ -58,8 +65,7 @@ internal class UnstakeActivity : BaseActivity<UnstakeViewModel>() {
                 EverstakeAction.UNSTAKE,
                 unstakeModel.symbol,
                 unstakeModel.amount,
-                unstakeModel.validatorName,
-                unstakeModel.validatorAddress
+                unstakeModel.validators.map { ValidatorInfo(it.validatorName, it.validatorAddress) }
             )
         }
         textWatcher = inputAmount.doOnTextChanged { text, _, _, _ ->

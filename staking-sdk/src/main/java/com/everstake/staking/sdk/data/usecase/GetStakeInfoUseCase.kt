@@ -5,8 +5,10 @@ import com.everstake.staking.sdk.R
 import com.everstake.staking.sdk.data.Constants
 import com.everstake.staking.sdk.data.Constants.MAX_DISPLAY_PRECISION
 import com.everstake.staking.sdk.data.model.api.GetCoinsResponseModel
+import com.everstake.staking.sdk.data.model.api.StakeType
 import com.everstake.staking.sdk.data.model.api.Validator
 import com.everstake.staking.sdk.data.model.ui.StakeModel
+import com.everstake.staking.sdk.data.model.ui.StakeValidatorInfo
 import com.everstake.staking.sdk.data.repository.CoinListRepository
 import com.everstake.staking.sdk.data.repository.UserBalanceRepository
 import com.everstake.staking.sdk.util.CalculatorHelper
@@ -24,29 +26,31 @@ internal class GetStakeInfoUseCase(
     private val coinListRepository: CoinListRepository = CoinListRepository.instance,
     private val userBalanceRepository: UserBalanceRepository = UserBalanceRepository.instance
 ) {
-
     private var previousProgress: BigDecimal = BigDecimal.ZERO
 
     fun getStakeFlow(
         coinIdFlow: Flow<String>,
-        validatorIdFlow: Flow<String?>,
+        validatorsFlow: Flow<List<String>>,
         amountFlow: Flow<String>,
         progressFlow: Flow<BigDecimal>
     ): Flow<StakeModel> {
         val coinInfoFlow: Flow<GetCoinsResponseModel> =
             coinListRepository.getCoinInfoFlow(coinIdFlow)
         val balanceFlow: Flow<String?> = userBalanceRepository.getBalanceForCoinSymbol(
-            coinInfoFlow.map { it.symbol }
+            coinInfoFlow.map { it.coinSymbol }
         ).onStart { emit(null) }
-        val validatorInfoFlow: Flow<Validator> =
-            coinListRepository.findValidatorInfoFlow(coinInfoFlow, validatorIdFlow)
+        val validatorsInfoFlow: Flow<List<Validator>> =
+            coinListRepository.findValidatorInfoFlow(
+                coinInfoFlow,
+                validatorsFlow
+            )
 
-        return combine(coinInfoFlow, balanceFlow, amountFlow, progressFlow, validatorInfoFlow)
-        { coinInfo: GetCoinsResponseModel?, balance: String?, amountStr: String?, progressIn: BigDecimal?, validatorInfo: Validator? ->
+        return combine(coinInfoFlow, balanceFlow, amountFlow, progressFlow, validatorsInfoFlow)
+        { coinInfo: GetCoinsResponseModel?, balance: String?, amountStr: String?, progressIn: BigDecimal?, validatorsInfo: List<Validator>? ->
             coinInfo ?: return@combine null
             amountStr ?: return@combine null
             progressIn ?: return@combine null
-            validatorInfo ?: return@combine null
+            validatorsInfo ?: return@combine null
 
             val totalBalance: BigDecimal = balance?.toBigDecimalOrNull() ?: BigDecimal.ZERO
             val initialAmount: BigDecimal = amountStr.toBigDecimalOrNull() ?: BigDecimal.ZERO
@@ -85,28 +89,33 @@ internal class GetStakeInfoUseCase(
 
             StakeModel(
                 coinId = coinInfo.id,
-                balance = formatAmount(totalBalance, coinInfo.precision, coinInfo.symbol),
+                balance = formatAmount(totalBalance, coinInfo.precision, coinInfo.coinSymbol),
                 amount = if (amount == initialAmount) amountStr
                 else formatAmount(amount, coinInfo.precision),
                 progress = progress,
-                coinSymbol = coinInfo.symbol,
+                coinSymbol = coinInfo.coinSymbol,
                 coinYearlyIncomePercent = bindString(
                     EverstakeStaking.app,
                     R.string.common_percent_format,
                     coinInfo.apr
                 ),
-                validatorId = validatorInfo.id,
-                validatorName = validatorInfo.name,
-                validatorAddress = validatorInfo.address,
-                validatorFee = bindString(
-                    EverstakeStaking.app,
-                    R.string.common_percent_format,
-                    validatorInfo.fee
-                ),
-                isReliableValidator = validatorInfo.isReliable,
-                dailyIncome = formatAmount(perDay, coinInfo.precision, coinInfo.symbol),
-                monthlyIncome = formatAmount(perMonth, coinInfo.precision, coinInfo.symbol),
-                yearlyIncome = formatAmount(perYear, coinInfo.precision, coinInfo.symbol)
+                allowMultipleValidator = coinInfo.stakeType == StakeType.OneStakeToMultipleValidators,
+                validators = validatorsInfo.map {
+                    StakeValidatorInfo(
+                        validatorId = it.id,
+                        validatorName = it.name,
+                        validatorFee = bindString(
+                            EverstakeStaking.app,
+                            R.string.common_percent_format,
+                            it.fee
+                        ),
+                        validatorAddress = it.address
+                    )
+                },
+                isReliableValidator = validatorsInfo.any { it.isReliable },
+                dailyIncome = formatAmount(perDay, coinInfo.precision, coinInfo.coinSymbol),
+                monthlyIncome = formatAmount(perMonth, coinInfo.precision, coinInfo.coinSymbol),
+                yearlyIncome = formatAmount(perYear, coinInfo.precision, coinInfo.coinSymbol)
             )
         }.filterNotNull()
     }
