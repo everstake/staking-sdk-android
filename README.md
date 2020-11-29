@@ -4,7 +4,7 @@
 
 ## Features
 
-- Simple API and integration for any android wallet
+Simple API and integration for an android wallet
 
 ## Example
 
