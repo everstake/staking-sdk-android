@@ -54,5 +54,7 @@ EverstakeStaking.refreshStaked(coinSymbolToAddressMap) // updates staked amount 
 - Get available coins
 ````kotlin
 EverstakeStaking.getAvailableCoins() // returns list of coin symbols
+- Update address balance
+EverstakeStaking.updateBalances(balances) // list of models with coin symbol, address and balance
 ````
 #### 
