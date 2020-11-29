@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="EverstakeTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/everstakeColorPrimary</item>
+        <item name="colorPrimaryVariant">@color/everstakeColorPrimaryDark</item>
+        <item name="colorOnPrimary">@color/everstakeTextColorPrimary</item>
+        <item name="colorSecondary">@color/everstakeColorAccent</item>
+        <item name="colorOnSecondary">@color/everstakeTextColorPrimaryInverted</item>
+        <item name="android:windowBackground">@color/everstakeWindowBackground</item>
+    </style>
+
+    <style name="EverstakeTheme.HeaderInfo">
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineSpacingExtra">4sp</item>
+        <item name="android:alpha">0.4</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="EverstakeTheme.PrimaryInfo">
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineSpacingExtra">6sp</item>
+        <item name="android:textColor">@color/everstakeTextColorPrimary</item>
+        <item name="android:letterSpacing">0.03</item>
+    </style>
+
+    <style name="EverstakeTheme.SecondaryInfo">
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineSpacingExtra">4sp</item>
+        <item name="android:textColor">@color/everstakeTextColorSecondary</item>
+        <item name="android:letterSpacing">0.02</item>
+    </style>
+
+    <style name="EverstakeTheme.PrimaryButton" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/everstakeTextColorPrimaryInverted</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:letterSpacing">0.04</item>
+        <item name="backgroundTint">@color/everstakeColorAccent</item>
+        <item name="cornerRadius">4dp</item>
+        <item name="android:padding">16dp</item>
+    </style>
+
+    <style name="EverstakeTheme.AccentButton" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">#7CB518</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:letterSpacing">0.05</item>
+        <item name="backgroundTint">#EFF7E2</item>
+        <item name="cornerRadius">4dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingBottom">8dp</item>
+    </style>
+
+    <style name="EverstakeTheme.AmountInput">
+        <item name="android:layout_marginStart">12dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginEnd">12dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:textSize">32sp</item>
+        <item name="android:textColor">@color/everstakeTextColorPrimary</item>
+        <item name="android:background">@null</item>
+    </style>
+
+    <style name="EverstakeTheme.ReliableLabel">
+        <item name="android:text">@string/common_reliable</item>
+        <item name="android:background">@drawable/reliable_bg</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineSpacingExtra">2sp</item>
+        <item name="android:textColor">@color/everstakeTextColorPrimaryInverted</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+    </style>
+
+    <style name="EverstakeTheme.AmountSeekBar">
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:progressDrawable">@drawable/seek_background</item>
+        <item name="android:splitTrack">false</item>
+        <item name="android:thumb">@drawable/seek_thumb</item>
+    </style>
+
+</resources>

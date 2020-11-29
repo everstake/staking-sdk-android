@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/stakeCoinContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackground"
+        android:gravity="center_vertical"
+        android:minHeight="72dp"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        tools:ignore="UselessParent">
+
+        <ImageView
+            android:id="@+id/stakeCoinImage"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="@null"
+            tools:src='@drawable/ic_info' />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minWidth="160dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/stakeCoinTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:letterSpacing="0.01"
+                android:lineSpacingExtra="5sp"
+                android:textColor="@color/everstakeTextColorPrimary"
+                android:textSize="16sp"
+                tools:text="Tezos" />
+
+            <TextView
+                android:id="@+id/stakeCoinSubtitle"
+                style="@style/EverstakeTheme.SecondaryInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="10%" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/stakeCoinAmount"
+            style="@style/EverstakeTheme.PrimaryInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            tools:text="0.124 XTZ" />
+
+    </LinearLayout>
+
+</FrameLayout>

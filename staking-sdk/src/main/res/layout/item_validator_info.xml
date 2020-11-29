@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/validatorInfoContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:minHeight="72dp"
+    android:orientation="horizontal"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="12dp"
+    tools:background="@drawable/reliable_validator_bg">
+
+    <CheckBox
+        android:id="@+id/validatorInfoCheckbox"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:padding="8dp" />
+
+    <ImageView
+        android:id="@+id/validatorInfoSelectedImg"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:contentDescription="@null"
+        android:padding="8dp"
+        android:src='@drawable/ic_check'
+        tools:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_weight="1"
+        android:minWidth="160dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/validatorInfoTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:letterSpacing="0.01"
+            android:lineSpacingExtra="5sp"
+            android:textColor="@color/everstakeTextColorPrimary"
+            android:textSize="16sp"
+            tools:text="Everstake" />
+
+        <TextView
+            android:id="@+id/validatorInfoSubtitle"
+            style="@style/EverstakeTheme.SecondaryInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Fee: 1%" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/validatorInfoReliable"
+        style="@style/EverstakeTheme.ReliableLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp" />
+
+</LinearLayout>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="everstakeColorPrimary">#FFFFFF</color>
+    <color name="everstakeColorPrimaryDark">#C4C4C4</color>
+    <color name="everstakeColorAccent">#000000</color>
+    <color name="everstakeWindowBackground">#FFFFFF</color>
+
+    <color name="everstakeTextColorPrimary">#DE000000</color>
+    <color name="everstakeTextColorPrimaryInverted">#DEFFFFFF</color>
+    <color name="everstakeTextColorSecondary">#99000000</color>
+    <color name="everstakeTextColorSecondaryInverted">#99FFFFFF</color>
+
+    <color name="everstakeDivider">#1F000000</color>
+
+    <color name="everstakeDetailsHeaderBg">#1D1D1D</color>
+    <color name="everstakeReliableColor">#7CB518</color>
+</resources>

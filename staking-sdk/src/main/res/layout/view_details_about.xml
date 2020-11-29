@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coinDetailsAboutContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingHorizontal="16dp">
+
+    <TextView
+        android:id="@+id/coinDetailsAboutLabel"
+        style="@style/EverstakeTheme.HeaderInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/coin_details_about" />
+
+    <TextView
+        android:id="@+id/coinDetailsAboutText"
+        style="@style/EverstakeTheme.PrimaryInfo"
+        tools:text="This is text about some coin bla bla"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="8dp"
+        android:letterSpacing="0.01"
+        android:lineSpacingExtra="6sp"
+        android:textColor="@color/everstakeTextColorPrimary"
+        android:textSize="14sp" />
+
+</LinearLayout>
