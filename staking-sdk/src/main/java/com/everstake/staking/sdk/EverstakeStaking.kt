@@ -1,6 +1,5 @@
 package com.everstake.staking.sdk
 
-import android.app.Application
 import android.content.Context
 import com.everstake.staking.sdk.data.usecase.coins.GetSupportedCoinsUseCase
 import com.everstake.staking.sdk.data.usecase.coins.UpdateCoinListUseCase
@@ -18,13 +17,13 @@ import java.util.concurrent.TimeUnit
  */
 object EverstakeStaking {
 
-    internal lateinit var app: Application
+    internal lateinit var app: Context
     internal var appCallback: WeakReference<EverstakeListener> = WeakReference(null)
 
     /**
      * WarmUp SDK for future use. Syncs coinList, if required, for future use
      */
-    fun init(application: Application) {
+    fun init(application: Context) {
         this.app = application
         GlobalScope.launch {
             UpdateCoinListUseCase().updateCoins(TimeUnit.DAYS.toMillis(1))
@@ -35,6 +34,9 @@ object EverstakeStaking {
      * Open staking flow
      */
     fun launchStaking(context: Context, listener: EverstakeListener) {
+        if (!::app.isInitialized) {
+            init(context.applicationContext)
+        }
         appCallback = WeakReference(listener)
         context.startActivity(CoinListActivity.getIntent(context))
     }
