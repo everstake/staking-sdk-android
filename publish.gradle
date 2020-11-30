@@ -1,0 +1,50 @@
+apply plugin: 'maven-publish'
+
+def LIB_GROUP_ID = 'com.everstake'
+def LIB_ARTIFACT_ID = 'staking-sdk'
+def LIB_VERSION = '1.0.2'
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+
+task sourceJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier "sources"
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GithubPackages"
+            url = uri("https://maven.pkg.github.com/everstake/staking-sdk-android")
+            credentials {
+                username = System.getenv('GITHUB_USER') ?: localProperties['GITHUB_USER']
+                password = System.getenv('GITHUB_PERSONAL_ACCESS_TOKEN') ?: localProperties['GITHUB_PERSONAL_ACCESS_TOKEN']
+            }
+        }
+        maven {
+            name = 'LocalArtifactTest'
+            url = "file://${buildDir}/repo"
+        }
+    }
+    publications {
+        stakingSdk(MavenPublication) {
+            groupId LIB_GROUP_ID
+            artifactId LIB_ARTIFACT_ID
+            version LIB_VERSION
+            artifact("$rootDir/staking-sdk/build/outputs/aar/staking-sdk-release.aar")
+            artifact(sourceJar)
+
+            pom.withXml {
+                def dependenciesNode = asNode().appendNode('dependencies')
+
+                //Iterate over the compile dependencies (we don't want the test ones), adding a <dependency> node for each
+                configurations.api.allDependencies.each {
+                    def dependencyNode = dependenciesNode.appendNode('dependency')
+                    dependencyNode.appendNode('groupId', it.group)
+                    dependencyNode.appendNode('artifactId', it.name)
+                    dependencyNode.appendNode('version', it.version)
+                }
+            }
+        }
+    }
+}

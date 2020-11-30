@@ -30,8 +30,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation project(':staking-sdk')
+//    implementation project(':staking-sdk')
+    implementation 'com.everstake:staking-sdk:1.0.2'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.2.0'
-
 }
