@@ -6,17 +6,32 @@
 
 Simple API and integration for an android wallet
 
-## Example
-
-See sample usage in `sample` module.
-
 ## Installation
 
-### Import library into your project
+#### In your root `build.gradle` add
+````groovy
+allprojects {
+    repositories {
+       ....
+        maven {
+            url = uri("https://maven.pkg.github.com/everstake/staking-sdk-android")
+            credentials {
+                username = GITHUB_USER_NAME
+                password = GITHUB_PERSONAL_ACCESS_TOKEN
+            }
+        }
+    }
+}
+````
+#### Add dependency to your app `build.gradle`
+````groovy
+dependencies {
+    ...
+    implementation 'com.everstake:staking-sdk:1.0.2'
+}
+````
 
-TODO upload to maven central or similar
-
-### Usage
+## Usage
 
 #### In Application class
 ````kotlin
@@ -60,3 +75,6 @@ EverstakeStaking.getAvailableCoins() // returns list of coin symbols
 EverstakeStaking.updateBalances(balances) // list of models with coin symbol, address and balance
 ````
 #### 
+### Example
+
+See sample usage in `sample` module.
