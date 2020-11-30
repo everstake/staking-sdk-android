@@ -1,4 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 buildscript {
     ext {
         kotlin_version = '1.4.20'
@@ -25,6 +27,14 @@ allprojects {
     repositories {
         google()
         jcenter()
+//        mavenLocal()
+        maven {
+            url = uri("https://maven.pkg.github.com/everstake/staking-sdk-android")
+            credentials {
+                username = System.getenv('GITHUB_USER') ?: localProperties['GITHUB_USER']
+                password = System.getenv('GITHUB_PERSONAL_ACCESS_TOKEN') ?: localProperties['GITHUB_PERSONAL_ACCESS_TOKEN']
+            }
+        }
     }
 }
 

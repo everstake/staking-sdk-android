@@ -2,15 +2,17 @@ package com.everstake.staking.sdk.ui.coin.list
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.everstake.staking.sdk.R
+import com.everstake.staking.sdk.data.Constants
 import com.everstake.staking.sdk.data.State
 import com.everstake.staking.sdk.data.model.ui.CoinListModel
 import com.everstake.staking.sdk.data.model.ui.SectionData
@@ -98,7 +100,7 @@ internal class CoinListActivity : BaseActivity<CoinListViewModel>() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         android.R.id.home -> onBackPressed().let { true }
         R.id.menu_info -> {
-            Toast.makeText(this, "Not implemented", Toast.LENGTH_SHORT).show()
+            CustomTabsIntent.Builder().build().launchUrl(this, Uri.parse(Constants.EVERSTAKE_URL))
             true
         }
         else -> super.onOptionsItemSelected(item)
